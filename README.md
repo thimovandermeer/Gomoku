@@ -1,0 +1,2 @@
+# Gomoku
+Our Gomoku project 
