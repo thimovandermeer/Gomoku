@@ -1,7 +1,7 @@
 #include <iostream>
-#include "inc/Graphics.hpp"
-#include "inc/Validator.hpp"
-#include "inc/Gomoku.hpp"
+#include "Graphics.hpp"
+#include "Validator.hpp"
+#include "Gomoku.hpp"
 
 int main() {
 
