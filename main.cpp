@@ -6,8 +6,7 @@ int main() {
 
     Graphics graphics{};
     Validator validator{};
-    std::cerr << "ptr in main " << &graphics << std::endl;
-    Gomoku gomoku(&validator, &graphics);
+    Gomoku gomoku(validator, graphics);
 
     return 0;
 }

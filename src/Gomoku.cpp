@@ -6,11 +6,11 @@
 
 
 void Gomoku::updateBoardNegative() {
-    _graphics->updateBoardNegative();
+//    _graphics->updateBoardNegative();
 }
 
 void Gomoku::updateBoardPositive() {
-    _graphics->updateBoardPositive();
+//    _graphics->updateBoardPositive();
 }
 
 void Gomoku::doMove() {

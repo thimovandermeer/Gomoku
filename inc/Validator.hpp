@@ -24,6 +24,7 @@ enum State {ACCEPTED, ERROR};
 
 class IValidator {
 public:
+    virtual std::unique_ptr<IValidator> clone() const = 0;
     virtual ~IValidator() = default;
     virtual State validate(const std::vector<std::vector<Tile>> &board, const Coordinates& coord, const Player& player) = 0;
 };
@@ -32,6 +33,9 @@ class Validator : public IValidator {
 public:
     Validator() = default;
     ~Validator() override = default;
+    std::unique_ptr<IValidator> clone() const override {
+        return std::make_unique<Validator>(*this);
+    }
 
     State validate(const std::vector<std::vector<Tile>> &board, const Coordinates& coord, const Player& player) override;
 
