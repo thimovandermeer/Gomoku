@@ -3,3 +3,7 @@
 //
 
 #include "Validator.hpp"
+
+bool Validator::validate(std::vector<std::vector<tile>> board, Coordinates, player) {
+
+}
