@@ -3,7 +3,7 @@
 //
 
 #include <gtest/gtest.h>
-#include "/Users/thvan-de/CLionProjects/Gomoku/inc/Validator.hpp"
+#include "Gomoku.hpp"
 
 // move this function to utils folder
 std::vector<std::vector<Tile>> create_empty_board() {

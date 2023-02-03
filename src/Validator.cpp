@@ -4,6 +4,6 @@
 #include "../inc/Validator.hpp"
 
 
-bool Validator::validate(std::vector<std::vector<Tile>> board, Coordinates coords, Player player) {
-    return true;
+bool Validator::validate(std::vector<std::vector<Tile>> board, const Coordinates& coord, const Player& player) {
+    return false;
 }

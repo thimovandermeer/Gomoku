@@ -4,11 +4,9 @@
 
 #ifndef GOMOKU_VALIDATOR_HPP
 #define GOMOKU_VALIDATOR_HPP
-
 #include <vector>
-#include "Gomoku.hpp"
 
-
+enum class Tile;
 
 struct Coordinates {
     int x;
@@ -19,17 +17,15 @@ enum Player {PLAYERONE, PLAYERTWO};
 class IValidator {
 public:
     virtual ~IValidator() = default;
-    virtual bool validate(std::vector<std::vector<Tile>> board, Coordinates coord, Player player) = 0;
+    virtual bool validate(std::vector<std::vector<Tile>> board, const Coordinates& coord, const Player& player) = 0;
 };
 
 class Validator : public IValidator {
 public:
     Validator() = default;
     ~Validator() override = default;
-    bool validate(std::vector<std::vector<Tile>> board, Coordinates, Player);
-private:
 
-
+    bool validate(std::vector<std::vector<Tile>> board, const Coordinates& coord, const Player& player) override;
 };
 
 

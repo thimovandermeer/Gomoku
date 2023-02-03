@@ -18,5 +18,5 @@ void Gomoku::doMove() {
 }
 
 void Gomoku::validateMove() {
-    _validator->validate();
+//    _validator->validate();
 }
