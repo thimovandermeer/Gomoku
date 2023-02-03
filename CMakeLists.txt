@@ -22,8 +22,12 @@ set(EXTRA_COMPILER_FLAGS
 		)
 
 add_executable(gomoku main.cpp)
+add_executable(gomoku_test
+		#		test sources in `test` folder
+		)
 add_subdirectory(src)
 target_include_directories(gomoku PUBLIC inc)
+target_include_directories(gomoku_test PUBLIC inc)
 target_compile_options(gomoku PUBLIC
 		${EXTRA_COMPILER_FLAGS}
 		)
@@ -31,9 +35,7 @@ target_link_options(gomoku PUBLIC
 		-fsanitize=address
 		)
 
-add_executable(gomoku_test
-#		test sources in `test` folder
-		)
+
 add_subdirectory(test)
 target_link_libraries( gomoku_test
 		GTest::gtest_main

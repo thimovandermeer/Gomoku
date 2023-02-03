@@ -8,22 +8,22 @@
 #include "Validator.hpp"
 #include "Graphics.hpp"
 
+enum class Tile{PLAYERONE, PLAYERTWO, FREE};
 
-enum class tile{PLAYERONE, PLAYERTWO, FREE};
-
+class IValidator;
 class Gomoku {
     Gomoku();
     ~Gomoku() = default;
 
 private:
-    IValidator validator;
-    IGraphics graphics;
+    std::unique_ptr<IValidator> validator;
+    std::unique_ptr<IGraphics> graphics;
 
     void updateBoardNegative();
     void updateBoardPositive();
     void doMove();
     void validateMove();
-    std::vector<std::vector<tile>> board;
+    std::vector<std::vector<Tile>> board;
 
 };
 
