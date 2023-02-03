@@ -18,14 +18,16 @@ enum Player {PLAYERONE, PLAYERTWO};
 
 class IValidator {
 public:
+    virtual ~IValidator() = default;
     virtual bool validate(std::vector<std::vector<Tile>> board, Coordinates coord, Player player) = 0;
 };
 
 class Validator : public IValidator {
 public:
-    Validator(){};
-    ~Validator(){};
+    Validator() = default;
+    ~Validator() override = default;
     bool validate(std::vector<std::vector<Tile>> board, Coordinates, Player);
+private:
 
 
 };

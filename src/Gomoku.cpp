@@ -2,17 +2,15 @@
 // Created by Jonas Bennink Bolt on 2/3/23.
 //
 
-#include "../inc/Gomoku.hpp"
+#include "Gomoku.hpp"
 
-
-Gomoku::Gomoku() = default;
 
 void Gomoku::updateBoardNegative() {
-    graphics->updateBoardNegative();
+    _graphics->updateBoardNegative();
 }
 
 void Gomoku::updateBoardPositive() {
-    graphics->updateBoardPositive();
+    _graphics->updateBoardPositive();
 }
 
 void Gomoku::doMove() {
@@ -20,6 +18,5 @@ void Gomoku::doMove() {
 }
 
 void Gomoku::validateMove() {
-    validator->validate();
+    _validator->validate();
 }
-
