@@ -142,6 +142,19 @@ TEST(double_two_two_in_a_row, check_on_board_bigger_than_new) {
 	ASSERT_EQ(result.left_boundary_coordinates.x, coord_two.x);
 }
 
+TEST(double_two_two_in_a_row, check_size_double_two_vector) {
+	DoubleThreeCheck threeCheck = DoubleThreeCheck();
+	auto board = create_double_two_board_horizontally();
+	Coordinates coord;
+	coord.y = 11;
+	coord.x = 12;
+
+	threeCheck.two_in_a_row(board, coord, PLAYERONE);
+	ASSERT_EQ(1, threeCheck.double_two_size());
+}
+
+
+
 
 
 

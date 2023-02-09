@@ -8,9 +8,6 @@
 void DoubleThreeCheck::DoubleThreeChecker(const std::vector<std::vector<Tile>> &board, const Coordinates &coord,
 										  const Player &player)
 {
-//	_board = board;
-//	_coord = coord;
-//	_player = player;
 	std::string reason;
 	this->set_state(ACCEPTED, reason);
 }
@@ -76,6 +73,10 @@ Doubles 		DoubleThreeCheck::boundary_check(Coordinates coordinates_on_board, Coo
 	return doubles;
 }
 
+size_t		DoubleThreeCheck::double_two_size() {
+	return _doubleTwoList.size();
+}
+
 void 		DoubleThreeCheck::two_in_a_row(const std::vector<std::vector<Tile>> &board, const Coordinates &coord, const Player& play)
 {
 	auto current_coordinates = check_two_in_a_row(board, coord, play);
@@ -85,16 +86,7 @@ void 		DoubleThreeCheck::two_in_a_row(const std::vector<std::vector<Tile>> &boar
 	}
 }
 
-bool 		DoubleThreeCheck::find_double_three(std::vector <std::vector<Tile>> &board)
+bool 		DoubleThreeCheck::find_double_three()
 {
-//	std::vector< std::vector<Tile> >::iterator row;
-//	std::vector<Tile>::iterator col;
-//	for (row = board.begin(); row != board.end(); row++) {
-//		for (col = row->begin(); col != row->end(); col++) {
-//			if(static_cast<Player>(*col) == _player) {
-//				LOG("is this the case?");
-//
-//			}
-//		}
-//	}
+	return false;
 }

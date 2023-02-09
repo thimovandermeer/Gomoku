@@ -28,8 +28,9 @@ public:
 		return std::make_unique<DoubleThreeCheck>(*this);
 	}
 
+	size_t	double_two_size();
 	void DoubleThreeChecker(const std::vector<std::vector<Tile>> &board, const Coordinates& coord, const Player& player) override;
-	bool find_double_three(std::vector<std::vector<Tile>> &board);
+	bool find_double_three();
 
 	Doubles boundary_check(Coordinates coordinates_on_board, Coordinates new_coordinates);
 	void two_in_a_row(const std::vector<std::vector<Tile>> &board, const Coordinates &coord, const Player& play);
