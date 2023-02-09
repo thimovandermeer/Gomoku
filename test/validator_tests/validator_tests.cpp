@@ -4,17 +4,12 @@
 
 #include <gtest/gtest.h>
 #include "Gomoku.hpp"
+#include "utils.hpp"
 
-#define MAX_BOARD_SIZE 19
+
 
 // move this function to utils folder
-std::vector<std::vector<Tile>> create_empty_board() {
-    return{MAX_BOARD_SIZE, {MAX_BOARD_SIZE, Tile::FREE}};
-}
 
-std::vector<std::vector<Tile>> create_filled_board() {
-    return{MAX_BOARD_SIZE, {MAX_BOARD_SIZE, Tile::PLAYERONE}};
-}
 
 // create unit test for above function
 TEST(validator_tests, create_empty_board_test) {
