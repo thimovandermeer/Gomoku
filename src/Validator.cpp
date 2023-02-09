@@ -8,10 +8,10 @@
 #include "logger.hpp"
 #include "Gomoku.hpp"
 
-State Validator::validate(const std::vector<std::vector<Tile>> &board, const Coordinates& coord, const Player& player) {
+errorState Validator::validate(const std::vector<std::vector<Tile>> &board, const Coordinates& coord, const Player& player) {
     this->set_data(board, coord, player);
     this->board_validation();
-    if(_state == ERROR)
+    if(_state.state == ERROR)
         return _state;
     this->coordinates_validation();
     return _state;
@@ -21,7 +21,8 @@ void Validator::set_data(const std::vector<std::vector<Tile>> &board, const Coor
     this->set_board(board);
     this->set_coordinates(coord);
     this->set_player(player);
-    this->set_state(ACCEPTED);
+	std::string reason;
+    this->set_state(ACCEPTED, reason);
 }
 
 void Validator::set_board(const std::vector<std::vector<Tile>> &board) {
@@ -39,14 +40,15 @@ void Validator::set_player(const Player &player) {
 void Validator::board_validation() {
     if(_board.size() > MAX_BOARD_SIZE){
         LOG("Board is bigger than max size");
-        set_state(ERROR);
+		std::string reason = "Board is bigger than max size";
+        set_state(ERROR, reason);
     }
 }
 
 void Validator::coordinates_validation() {
     LOG("coords x %i coords y %i", _coord.x, _coord.y);
     this->boundary_checking();
-    if(_state == ERROR)
+    if(_state.state == ERROR)
         return;
     LOG("KOM IK UBERHAUPT BY DE TAKEN CHECK");
     this->taken_check();
@@ -59,11 +61,13 @@ void Validator::player_validation() {
 void Validator::boundary_checking() {
     if(_coord.x >= MAX_BOARD_SIZE || _coord.y >= MAX_BOARD_SIZE) {
         LOG("coords is bigger than max board size");
-        set_state(ERROR);
+		std::string reason = "coords is bigger than max board size";
+        set_state(ERROR, reason);
     }
     if (_coord.x < 0 || _coord.y < 0) {
         LOG("coords is smaller than 0");
-        set_state(ERROR);
+		std::string reason = "coords is smaller than 0";
+        set_state(ERROR, reason);
     }
 }
 
@@ -71,12 +75,14 @@ void Validator::taken_check() {
     LOG("Coordinates %i %i with ", _coord.y, _coord.x);
     if( _board[_coord.y][_coord.x] != Tile::FREE) {
         LOG("Coordinates %i %i are not free", _coord.y, _coord.x);
-        set_state(ERROR);
+		std::string reason = "Coordinates are not free";
+        set_state(ERROR, reason);
     }
 }
 
-void Validator::set_state(State newState) {
-    _state = newState;
+void Validator::set_state(State newState, std::string &errorReason) {
+	_state.error_reason = errorReason;
+    _state.state = newState;
 }
 
 
