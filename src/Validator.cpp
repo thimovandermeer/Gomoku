@@ -50,7 +50,6 @@ void Validator::coordinates_validation() {
     this->boundary_checking();
     if(_state.state == ERROR)
         return;
-    LOG("KOM IK UBERHAUPT BY DE TAKEN CHECK");
     this->taken_check();
 }
 

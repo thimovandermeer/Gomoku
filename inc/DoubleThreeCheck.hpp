@@ -7,6 +7,11 @@
 #include <memory>
 #include "../inc/Validator.hpp"
 
+struct DoubleThree {
+	Coordinates left_boundary_coordinates;
+	Coordinates right_boundary_coordinates;
+};
+
 class IDoubleThreeCheck {
 public:
 	virtual ~IDoubleThreeCheck() = default;
@@ -17,17 +22,26 @@ public:
 class DoubleThreeCheck: public IDoubleThreeCheck
 {
 public:
+	DoubleThreeCheck() = default;
+	~DoubleThreeCheck() = default;
 	std::unique_ptr<IDoubleThreeCheck> clone() const override {
 		return std::make_unique<DoubleThreeCheck>(*this);
 	}
 
 	void DoubleThreeChecker(const std::vector<std::vector<Tile>> &board, const Coordinates& coord, const Player& player) override;
+	bool find_double_three(std::vector<std::vector<Tile>> &board);
+	void two_in_a_row();
+	Coordinates check_two_in_a_row(const std::vector<std::vector<Tile>> &board, const Coordinates &coord, const Player& player);
 private:
-	errorState set_state(State newState, std::string &errorReason);
-	std::vector<std::vector<Tile>>  	_board;
-	Coordinates                     	_coord;
-	Player                          	_player;
-	errorState                           _state;
+	std::vector<DoubleThree>	doubleThreeList;
+
+
+	void set_state(State newState, std::string &errorReason);
+//	std::vector<std::vector<Tile>>  	_board;
+//	Coordinates                     	_coord;
+//	Player                          	_player;
+	errorState                          _state;
+
 };
 
 

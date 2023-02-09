@@ -7,9 +7,6 @@
 #include "../inc/DoubleThreeCheck.hpp"
 #include "utils.hpp"
 
-//std::vector<std::vector<Tile>> create_empty_board() {
-//	return{MAX_BOARD_SIZE, {MAX_BOARD_SIZE, Tile::FREE}};
-//}
 
 std::vector<std::vector<Tile>> create_double_three_board_horizontally() {
 	std::vector<std::vector<Tile>> board = create_empty_board();
@@ -35,23 +32,91 @@ std::vector<std::vector<Tile>> create_double_three_board_cross() {
 	return board;
 }
 
-TEST(double_three_check_tests, find_double_three_horizontally) {
-	// create board with double three on it
-	std::vector<std::vector<Tile>> board = create_double_three_board_horizontally();
-	DoubleThreeCheck threeCheck = DoubleThreeCheck();
-	ASSERT_TRUE(threeCheck.find_double_three(board));
+std::vector<std::vector<Tile>> create_double_two_board_horizontally() {
+	std::vector<std::vector<Tile>> board = create_empty_board();
+	board[10][11] = Tile::PLAYERONE;
+	return board;
 }
 
-TEST(double_three_check_tests, find_double_three_vertically) {
-	// create board with double three on it
-	std::vector<std::vector<Tile>> board = create_double_three_board_vertically();
+TEST(double_two_check_tests, find_double_two_horizontally) {
 	DoubleThreeCheck threeCheck = DoubleThreeCheck();
-	ASSERT_TRUE(threeCheck.find_double_three(board));
+	auto board = create_double_two_board_horizontally();
+	Coordinates coord;
+	coord.y = 10;
+	coord.x = 12;
+
+	auto result = threeCheck.check_two_in_a_row(board, coord, PLAYERONE);
+	ASSERT_EQ(result.y, 10);
+	ASSERT_EQ(result.x, 11);
 }
 
-TEST(double_three_check_tests, find_double_three_cross) {
-	// create board with double three on it
-	std::vector<std::vector<Tile>> board = create_double_three_board_cross();
+TEST(double_two_check_tests, find_double_two_vertically) {
 	DoubleThreeCheck threeCheck = DoubleThreeCheck();
-	ASSERT_TRUE(threeCheck.find_double_three(board));
+	auto board = create_double_two_board_horizontally();
+	Coordinates coord;
+	coord.y = 11;
+	coord.x = 11;
+
+	auto result = threeCheck.check_two_in_a_row(board, coord, PLAYERONE);
+	ASSERT_EQ(result.y, 10);
+	ASSERT_EQ(result.x, 11);
 }
+
+TEST(double_two_check_tests, find_double_two_cross_up) {
+	DoubleThreeCheck threeCheck = DoubleThreeCheck();
+	auto board = create_double_two_board_horizontally();
+	Coordinates coord;
+	coord.y = 11;
+	coord.x = 12;
+
+	auto result = threeCheck.check_two_in_a_row(board, coord, PLAYERONE);
+	ASSERT_EQ(result.y, 10);
+	ASSERT_EQ(result.x, 11);
+}
+
+TEST(double_two_check_tests, find_double_two_cross_down) {
+	DoubleThreeCheck threeCheck = DoubleThreeCheck();
+	auto board = create_double_two_board_horizontally();
+	Coordinates coord;
+	coord.y = 9;
+	coord.x = 11;
+
+	auto result = threeCheck.check_two_in_a_row(board, coord, PLAYERONE);
+	ASSERT_EQ(result.y, 10);
+	ASSERT_EQ(result.x, 11);
+}
+
+TEST(double_two_check_tests, no_double_two_possible) {		DoubleThreeCheck threeCheck = DoubleThreeCheck();
+	auto board = create_double_two_board_horizontally();
+	Coordinates coord;
+	coord.y = 17;
+	coord.x = 17;
+
+	auto result = threeCheck.check_two_in_a_row(board, coord, PLAYERONE);
+	ASSERT_EQ(result.y, -1);
+	ASSERT_EQ(result.x, -1);
+}
+
+
+
+
+//TEST(double_three_check_tests, find_double_three_horizontally) {
+//	// create board with double three on it
+//	std::vector<std::vector<Tile>> board = create_double_three_board_horizontally();
+//	DoubleThreeCheck threeCheck = DoubleThreeCheck();
+//	ASSERT_TRUE(threeCheck.find_double_three(board));
+//}
+//
+//TEST(double_three_check_tests, find_double_three_vertically) {
+//	// create board with double three on it
+//	std::vector<std::vector<Tile>> board = create_double_three_board_vertically();
+//	DoubleThreeCheck threeCheck = DoubleThreeCheck();
+//	ASSERT_TRUE(threeCheck.find_double_three(board));
+//}
+//
+//TEST(double_three_check_tests, find_double_three_cross) {
+//	// create board with double three on it
+//	std::vector<std::vector<Tile>> board = create_double_three_board_cross();
+//	DoubleThreeCheck threeCheck = DoubleThreeCheck();
+//	ASSERT_TRUE(threeCheck.find_double_three(board));
+//}

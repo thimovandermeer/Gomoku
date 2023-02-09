@@ -6,6 +6,7 @@
 #define GOMOKU_VALIDATOR_HPP
 #include <vector>
 #include <string>
+#define MAX_BOARD_SIZE 19
 
 enum class Tile;
 
