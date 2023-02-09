@@ -86,7 +86,7 @@ void 		DoubleThreeCheck::two_in_a_row(const std::vector<std::vector<Tile>> &boar
 	}
 }
 
-bool 		DoubleThreeCheck::find_double_three()
+bool 		DoubleThreeCheck::find_double_three(Coordinates newCoords)
 {
-	return false;
+	checkLeft
 }
