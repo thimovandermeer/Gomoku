@@ -63,9 +63,26 @@ Coordinates		DoubleThreeCheck::check_two_in_a_row(const std::vector<std::vector<
 		return already_on_board_coords;
 	}
 }
-void 		DoubleThreeCheck::two_in_a_row()
-{
 
+Doubles 		DoubleThreeCheck::boundary_check(Coordinates coordinates_on_board, Coordinates new_coordinates) {
+	auto doubles = Doubles();
+	if(coordinates_on_board.y < new_coordinates.y || coordinates_on_board.x < new_coordinates.x) {
+		doubles.left_boundary_coordinates = coordinates_on_board;
+		doubles.right_boundary_coordinates = new_coordinates;
+	} else {
+		doubles.left_boundary_coordinates = new_coordinates;
+		doubles.right_boundary_coordinates = coordinates_on_board;
+	}
+	return doubles;
+}
+
+void 		DoubleThreeCheck::two_in_a_row(const std::vector<std::vector<Tile>> &board, const Coordinates &coord, const Player& play)
+{
+	auto current_coordinates = check_two_in_a_row(board, coord, play);
+	if(current_coordinates.y != -1) {
+		auto doubletwo_elem = boundary_check(current_coordinates, coord);
+		_doubleTwoList.push_back(doubletwo_elem);
+	}
 }
 
 bool 		DoubleThreeCheck::find_double_three(std::vector <std::vector<Tile>> &board)

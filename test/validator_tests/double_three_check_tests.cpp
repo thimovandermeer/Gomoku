@@ -97,6 +97,52 @@ TEST(double_two_check_tests, no_double_two_possible) {		DoubleThreeCheck threeCh
 	ASSERT_EQ(result.x, -1);
 }
 
+TEST(double_two_boundary_checks, check_on_board_smaller_than_new) {
+	DoubleThreeCheck threeCheck = DoubleThreeCheck();
+	Coordinates coord_one;
+	coord_one.y = 9;
+	coord_one.x = 11;
+
+	Coordinates coord_two;
+	coord_two.y = 10;
+	coord_two.x = 11;
+
+	auto result = threeCheck.boundary_check(coord_one, coord_two);
+	ASSERT_EQ(result.left_boundary_coordinates.y, coord_one.y);
+	ASSERT_EQ(result.left_boundary_coordinates.x, coord_one.x);
+}
+
+TEST(double_two_boundary_checks, check_on_board_bigger_than_new) {
+	DoubleThreeCheck threeCheck = DoubleThreeCheck();
+	Coordinates coord_one;
+	coord_one.y = 9;
+	coord_one.x = 11;
+
+	Coordinates coord_two;
+	coord_two.y = 8;
+	coord_two.x = 11;
+
+	auto result = threeCheck.boundary_check(coord_one, coord_two);
+	ASSERT_EQ(result.left_boundary_coordinates.y, coord_two.y);
+	ASSERT_EQ(result.left_boundary_coordinates.x, coord_two.x);
+}
+
+TEST(double_two_two_in_a_row, check_on_board_bigger_than_new) {
+	DoubleThreeCheck threeCheck = DoubleThreeCheck();
+	Coordinates coord_one;
+	coord_one.y = 9;
+	coord_one.x = 11;
+
+	Coordinates coord_two;
+	coord_two.y = 8;
+	coord_two.x = 11;
+
+	auto result = threeCheck.boundary_check(coord_one, coord_two);
+	ASSERT_EQ(result.left_boundary_coordinates.y, coord_two.y);
+	ASSERT_EQ(result.left_boundary_coordinates.x, coord_two.x);
+}
+
+
 
 
 
