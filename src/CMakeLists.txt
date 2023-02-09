@@ -3,6 +3,8 @@ target_sources(gomoku PRIVATE
 		Graphics.cpp
 		Validator.cpp
 		logger.cpp
+		DoubleThreeCheck.cpp
+		utils.cpp
 		)
 
 target_sources(gomoku_test PRIVATE
@@ -10,4 +12,6 @@ target_sources(gomoku_test PRIVATE
 		Graphics.cpp
 		Validator.cpp
 		logger.cpp
+		DoubleThreeCheck.cpp
+		utils.cpp
 		)
