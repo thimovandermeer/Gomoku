@@ -7,7 +7,7 @@
 #include <memory>
 #include "../inc/Validator.hpp"
 
-struct DoubleThree {
+struct Doubles {
 	Coordinates left_boundary_coordinates;
 	Coordinates right_boundary_coordinates;
 };
@@ -30,16 +30,15 @@ public:
 
 	void DoubleThreeChecker(const std::vector<std::vector<Tile>> &board, const Coordinates& coord, const Player& player) override;
 	bool find_double_three(std::vector<std::vector<Tile>> &board);
-	void two_in_a_row();
+
+	Doubles boundary_check(Coordinates coordinates_on_board, Coordinates new_coordinates);
+	void two_in_a_row(const std::vector<std::vector<Tile>> &board, const Coordinates &coord, const Player& play);
 	Coordinates check_two_in_a_row(const std::vector<std::vector<Tile>> &board, const Coordinates &coord, const Player& player);
 private:
-	std::vector<DoubleThree>	doubleThreeList;
-
+	std::vector<Doubles>	_doubleThreeList;
+	std::vector<Doubles>	_doubleTwoList;
 
 	void set_state(State newState, std::string &errorReason);
-//	std::vector<std::vector<Tile>>  	_board;
-//	Coordinates                     	_coord;
-//	Player                          	_player;
 	errorState                          _state;
 
 };
