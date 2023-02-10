@@ -61,6 +61,16 @@ Coordinates		DoubleThreeCheck::check_two_in_a_row(const std::vector<std::vector<
 	}
 }
 
+Direction       DoubleThreeCheck::determine_direction(Doubles doubles) {
+    if(doubles.left_boundary_coordinates.x == doubles.right_boundary_coordinates.x) {
+        return VERTICAL;
+    } else if (doubles.left_boundary_coordinates.y == doubles.right_boundary_coordinates.y)
+        return HORIZONTAL;
+    else {
+        return CROSS;
+    }
+}
+
 Doubles 		DoubleThreeCheck::boundary_check(Coordinates coordinates_on_board, Coordinates new_coordinates) {
 	auto doubles = Doubles();
 	if(coordinates_on_board.y < new_coordinates.y || coordinates_on_board.x < new_coordinates.x) {
@@ -70,6 +80,7 @@ Doubles 		DoubleThreeCheck::boundary_check(Coordinates coordinates_on_board, Coo
 		doubles.left_boundary_coordinates = new_coordinates;
 		doubles.right_boundary_coordinates = coordinates_on_board;
 	}
+    doubles.direction = determine_direction(doubles);
 	return doubles;
 }
 
@@ -86,7 +97,24 @@ void 		DoubleThreeCheck::two_in_a_row(const std::vector<std::vector<Tile>> &boar
 	}
 }
 
-bool 		DoubleThreeCheck::find_double_three(Coordinates newCoords)
+bool 		DoubleThreeCheck::find_double_three(Coordinates newCoords, std::vector<Doubles> double_two)
 {
-	checkLeft
+    LOG("newcoords are %i %i", newCoords.y, newCoords.x);
+    for (auto elem : double_two) {
+        check_right_boundary(elem.right_boundary_coordinates, newCoords);
+        check_left_boundary(elem.left_boundary_coordinates, newCoords);
+    }
+    // check if these new coordinates are close to the double two's we already have
+
+}
+
+bool DoubleThreeCheck::check_right_boundary(Coordinates boundary_coords, Coordinates new_coords) {
+    LOG("boundary_coords in right boundary checking %i %i", boundary_coords.y, boundary_coords.x);
+
+    return false;
+}
+
+bool DoubleThreeCheck::check_left_boundary(Coordinates boundary_coords, Coordinates new_coords) {
+    LOG("boundary_coords in left boundary checking %i %i", boundary_coords.y, boundary_coords.x);
+    return false;
 }

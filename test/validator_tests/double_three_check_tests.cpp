@@ -8,14 +8,6 @@
 #include "utils.hpp"
 
 
-std::vector<std::vector<Tile>> create_double_three_board_horizontally() {
-	std::vector<std::vector<Tile>> board = create_empty_board();
-	board[10][11] = Tile::PLAYERONE;
-	board[10][12] = Tile::PLAYERONE;
-	board[10][13] = Tile::PLAYERONE;
-	return board;
-}
-
 std::vector<std::vector<Tile>> create_double_three_board_vertically() {
 	std::vector<std::vector<Tile>> board = create_empty_board();
 	board[11][10] = Tile::PLAYERONE;
@@ -112,6 +104,68 @@ TEST(double_two_boundary_checks, check_on_board_smaller_than_new) {
 	ASSERT_EQ(result.left_boundary_coordinates.x, coord_one.x);
 }
 
+TEST(double_two_boundary_checks, determine_direction_horizontal) {
+    DoubleThreeCheck threeCheck = DoubleThreeCheck();
+    Coordinates right_boundary;
+    right_boundary.y = 3;
+    right_boundary.x = 3;
+
+    Coordinates left_boundary;
+    left_boundary.y = 3;
+    left_boundary.x = 2;
+    Doubles doubles;
+    doubles.left_boundary_coordinates = left_boundary;
+    doubles.right_boundary_coordinates = right_boundary;
+    ASSERT_EQ(threeCheck.determine_direction(doubles), HORIZONTAL);
+}
+
+TEST(double_two_boundary_checks, determine_direction_vertical) {
+    DoubleThreeCheck threeCheck = DoubleThreeCheck();
+    Coordinates right_boundary;
+    right_boundary.y = 3;
+    right_boundary.x = 3;
+
+    Coordinates left_boundary;
+    left_boundary.y = 4;
+    left_boundary.x = 3;
+    Doubles doubles;
+    doubles.left_boundary_coordinates = left_boundary;
+    doubles.right_boundary_coordinates = right_boundary;
+    ASSERT_EQ(threeCheck.determine_direction(doubles), VERTICAL);
+}
+
+TEST(double_two_boundary_checks, determine_direction_cross_up) {
+    DoubleThreeCheck threeCheck = DoubleThreeCheck();
+    Coordinates right_boundary;
+    right_boundary.y = 3;
+    right_boundary.x = 3;
+
+    Coordinates left_boundary;
+    left_boundary.y = 4;
+    left_boundary.x = 4;
+    Doubles doubles;
+    doubles.left_boundary_coordinates = left_boundary;
+    doubles.right_boundary_coordinates = right_boundary;
+    ASSERT_EQ(threeCheck.determine_direction(doubles), CROSS);
+}
+
+TEST(double_two_boundary_checks, determine_direction_cross_down) {
+    DoubleThreeCheck threeCheck = DoubleThreeCheck();
+    Coordinates right_boundary;
+    right_boundary.y = 3;
+    right_boundary.x = 3;
+
+    Coordinates left_boundary;
+    left_boundary.y = 2;
+    left_boundary.x = 2;
+    Doubles doubles;
+    doubles.left_boundary_coordinates = left_boundary;
+    doubles.right_boundary_coordinates = right_boundary;
+    ASSERT_EQ(threeCheck.determine_direction(doubles), CROSS);
+}
+
+
+
 TEST(double_two_boundary_checks, check_on_board_bigger_than_new) {
 	DoubleThreeCheck threeCheck = DoubleThreeCheck();
 	Coordinates coord_one;
@@ -153,18 +207,58 @@ TEST(double_two_two_in_a_row, check_size_double_two_vector) {
 	ASSERT_EQ(1, threeCheck.double_two_size());
 }
 
+std::vector<std::vector<Tile>> create_double_three_board_horizontally() {
+    std::vector<std::vector<Tile>> board = create_empty_board();
+    board[10][11] = Tile::PLAYERONE;
+    board[10][12] = Tile::PLAYERONE;
+//    board[10][13] = Tile::PLAYERONE;
+    return board;
+}
 
+TEST(double_three_check_tests, check_right_boundary) {
+    // create board with double three on it
+    DoubleThreeCheck threeCheck = DoubleThreeCheck();
+    Coordinates boundary_coords;
+    boundary_coords.y = 10;
+    boundary_coords.x = 10;
 
+    Coordinates new_coords;
+    new_coords.y = 11;
+    new_coords.x = 11;
 
+    ASSERT_TRUE(threeCheck.check_right_boundary(boundary_coords, new_coords));
+}
 
+TEST(double_three_check_tests, check_left_boundary) {
+    // create board with double three on it
+    DoubleThreeCheck threeCheck = DoubleThreeCheck();
+    Coordinates boundary_coords;
+    boundary_coords.y = 10;
+    boundary_coords.x = 10;
 
+    Coordinates new_coords;
+    new_coords.y = 11;
+    new_coords.x = 11;
 
-//TEST(double_three_check_tests, find_double_three_horizontally) {
-//	// create board with double three on it
-//	std::vector<std::vector<Tile>> board = create_double_three_board_horizontally();
-//	DoubleThreeCheck threeCheck = DoubleThreeCheck();
-//	ASSERT_TRUE(threeCheck.find_double_three(board));
-//}
+    ASSERT_TRUE(threeCheck.check_right_boundary(boundary_coords, new_coords));
+}
+
+TEST(double_three_check_tests, find_double_three_horizontally) {
+	// create board with double three on it
+    DoubleThreeCheck threeCheck = DoubleThreeCheck();
+    auto doubles = Doubles();
+    doubles.left_boundary_coordinates.y = 10;
+    doubles.left_boundary_coordinates.x = 10;
+    doubles.right_boundary_coordinates.y = 11;
+    doubles.right_boundary_coordinates.x = 11;
+	std::vector<Doubles> double_two;
+    double_two.push_back(doubles);
+
+    Coordinates coords;
+    coords.y = 12;
+    coords.x = 12;
+	ASSERT_TRUE(threeCheck.find_double_three(coords, double_two));
+}
 //
 //TEST(double_three_check_tests, find_double_three_vertically) {
 //	// create board with double three on it
