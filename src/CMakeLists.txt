@@ -5,6 +5,7 @@ target_sources(gomoku PRIVATE
 		logger.cpp
 		DoubleThreeCheck.cpp
 		utils.cpp
+		two.cpp
 		)
 
 target_sources(gomoku_test PRIVATE
@@ -14,4 +15,5 @@ target_sources(gomoku_test PRIVATE
 		logger.cpp
 		DoubleThreeCheck.cpp
 		utils.cpp
+		two.cpp
 		)

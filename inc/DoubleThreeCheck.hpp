@@ -7,28 +7,7 @@
 #include <memory>
 #include <string>
 #include <vector>
-//#include "Validator.hpp"
-
-enum Direction {HORIZONTAL, VERTICAL, CROSS};
-enum class Tile{PLAYERONE, PLAYERTWO, FREE};
-struct Coordinates {
-    int x;
-    int y;
-};
-enum Player {PLAYERONE, PLAYERTWO};
-
-enum State {ACCEPTED, ERROR};
-
-struct errorState {
-    State       state;
-    std::string error_reason;
-};
-
-struct Doubles {
-	Coordinates left_boundary_coordinates;
-	Coordinates right_boundary_coordinates;
-    Direction   direction;
-};
+#include "Two.hpp"
 
 class IDoubleThreeCheck {
 public:
@@ -40,7 +19,8 @@ public:
 class DoubleThreeCheck: public IDoubleThreeCheck
 {
 public:
-	DoubleThreeCheck() = default;
+	DoubleThreeCheck(ITwo &Two) : _Two(Two.clone()) {}
+    DoubleThreeCheck(const DoubleThreeCheck&) {}
 	~DoubleThreeCheck() = default;
 	std::unique_ptr<IDoubleThreeCheck> clone() const override {
 		return std::make_unique<DoubleThreeCheck>(*this);
@@ -63,6 +43,8 @@ private:
 
 	void set_state(State newState, std::string &errorReason);
 	errorState                          _state;
+
+    std::unique_ptr<ITwo>               _Two;
 
 };
 

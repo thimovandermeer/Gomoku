@@ -4,10 +4,11 @@
 
 int main() {
 
-    Graphics graphics{};
-    DoubleThreeCheck doubleThreeCheck{};
-    Validator validator{doubleThreeCheck};
-    Gomoku gomoku(validator, graphics);
+    Graphics                    graphics{};
+    Two                         two{};
+    DoubleThreeCheck            doubleThreeCheck{two};
+    Validator                   validator{doubleThreeCheck};
+    Gomoku                      gomoku(validator, graphics);
 
     return 0;
 }
