@@ -34,8 +34,8 @@ public:
 	size_t	double_two_size();
 	void DoubleThreeChecker(const std::vector<std::vector<Tile>> &board, const Coordinates& coord, const Player& player) override;
 	bool find_double_three(Coordinates newCoords, std::vector<Doubles> double_two);
-    bool check_right_boundary(Coordinates boundary_coords, Coordinates new_coords);
-    bool check_left_boundary(Coordinates boundary_coords, Coordinates new_coords);
+    bool check_right_boundary(Coordinates boundary_coords, Coordinates new_coords, Direction direction);
+    bool check_left_boundary(Coordinates boundary_coords, Coordinates new_coords, Direction direction);
     Direction determine_direction(Doubles doubles);
 	Doubles boundary_check(Coordinates coordinates_on_board, Coordinates new_coordinates);
 	void two_in_a_row(const std::vector<std::vector<Tile>> &board, const Coordinates &coord, const Player& play);
