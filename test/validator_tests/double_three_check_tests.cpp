@@ -311,7 +311,6 @@ TEST(double_three_check_tests, check_right_boundary_cross_false_test_x_different
     ASSERT_FALSE(threeCheck.check_right_boundary(boundary_coords, new_coords, CROSS));
 }
 
-
 TEST(double_three_check_tests, check_left_boundary_horizontal) {
     // create board with double three on it
     DoubleThreeCheck threeCheck = DoubleThreeCheck();
@@ -320,10 +319,24 @@ TEST(double_three_check_tests, check_left_boundary_horizontal) {
     boundary_coords.x = 10;
 
     Coordinates new_coords;
-    new_coords.y = 11;
-    new_coords.x = 11;
+    new_coords.y = 10;
+    new_coords.x = 9;
 
-    ASSERT_TRUE(threeCheck.check_right_boundary(boundary_coords, new_coords, HORIZONTAL));
+    ASSERT_TRUE(threeCheck.check_left_boundary(boundary_coords, new_coords, HORIZONTAL));
+}
+
+TEST(double_three_check_tests, check_left_boundary_horizontal_false_test) {
+    // create board with double three on it
+    DoubleThreeCheck threeCheck = DoubleThreeCheck();
+    Coordinates boundary_coords;
+    boundary_coords.y = 10;
+    boundary_coords.x = 10;
+
+    Coordinates new_coords;
+    new_coords.y = 10;
+    new_coords.x = 5;
+
+    ASSERT_FALSE(threeCheck.check_left_boundary(boundary_coords, new_coords, HORIZONTAL));
 }
 
 TEST(double_three_check_tests, check_left_boundary_vertical) {
@@ -334,10 +347,24 @@ TEST(double_three_check_tests, check_left_boundary_vertical) {
     boundary_coords.x = 10;
 
     Coordinates new_coords;
-    new_coords.y = 11;
-    new_coords.x = 11;
+    new_coords.y = 9;
+    new_coords.x = 10;
 
-    ASSERT_TRUE(threeCheck.check_right_boundary(boundary_coords, new_coords, VERTICAL));
+    ASSERT_TRUE(threeCheck.check_left_boundary(boundary_coords, new_coords, VERTICAL));
+}
+
+TEST(double_three_check_tests, check_left_boundary_vertical_false_test) {
+    // create board with double three on it
+    DoubleThreeCheck threeCheck = DoubleThreeCheck();
+    Coordinates boundary_coords;
+    boundary_coords.y = 10;
+    boundary_coords.x = 10;
+
+    Coordinates new_coords;
+    new_coords.y = 5;
+    new_coords.x = 10;
+
+    ASSERT_FALSE(threeCheck.check_left_boundary(boundary_coords, new_coords, VERTICAL));
 }
 
 TEST(double_three_check_tests, check_left_boundary_cross) {
@@ -348,11 +375,40 @@ TEST(double_three_check_tests, check_left_boundary_cross) {
     boundary_coords.x = 10;
 
     Coordinates new_coords;
-    new_coords.y = 11;
-    new_coords.x = 11;
+    new_coords.y = 9;
+    new_coords.x = 9;
 
-    ASSERT_TRUE(threeCheck.check_right_boundary(boundary_coords, new_coords, CROSS));
+    ASSERT_TRUE(threeCheck.check_left_boundary(boundary_coords, new_coords, CROSS));
 }
+
+TEST(double_three_check_tests, check_left_boundary_cross_false_test_y_different) {
+    // create board with double three on it
+    DoubleThreeCheck threeCheck = DoubleThreeCheck();
+    Coordinates boundary_coords;
+    boundary_coords.y = 10;
+    boundary_coords.x = 10;
+
+    Coordinates new_coords;
+    new_coords.y = 8;
+    new_coords.x = 9;
+
+    ASSERT_FALSE(threeCheck.check_left_boundary(boundary_coords, new_coords, CROSS));
+}
+
+TEST(double_three_check_tests, check_left_boundary_cross_false_test_x_different) {
+    // create board with double three on it
+    DoubleThreeCheck threeCheck = DoubleThreeCheck();
+    Coordinates boundary_coords;
+    boundary_coords.y = 10;
+    boundary_coords.x = 10;
+
+    Coordinates new_coords;
+    new_coords.y = 9;
+    new_coords.x = 8;
+
+    ASSERT_FALSE(threeCheck.check_left_boundary(boundary_coords, new_coords, CROSS));
+}
+
 
 TEST(double_three_check_tests, find_double_three_horizontally) {
 	// create board with double three on it

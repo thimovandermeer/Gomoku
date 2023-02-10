@@ -108,7 +108,6 @@ bool 		DoubleThreeCheck::find_double_three(Coordinates newCoords, std::vector<Do
             // add element to list of double three with direction
         }
     }
-    // check if these new coordinates are close to the double two's we already have
 
 }
 
@@ -153,5 +152,39 @@ bool DoubleThreeCheck::check_right_boundary(Coordinates boundary_coords, Coordin
 
 bool DoubleThreeCheck::check_left_boundary(Coordinates boundary_coords, Coordinates new_coords, Direction direction) {
     LOG("boundary_coords in left boundary checking %i %i", boundary_coords.y, boundary_coords.x);
+    if(direction == HORIZONTAL) {
+        if(new_coords.y == boundary_coords.y) {
+            LOG("We are on the same horizontal axis");
+            if(new_coords.x - boundary_coords.x == -1) {
+                LOG("Matching new[%i] boundary[%i]", new_coords.x, boundary_coords.x);
+                return true;
+            }
+            LOG("We are on the same horizontal axis but not in line new[%i] boundary[%i]", new_coords.x, boundary_coords.x);
+            return false;
+        }
+    } else if(direction == VERTICAL) {
+        if(new_coords.x == boundary_coords.x){
+            LOG("We are on the same vertical axis");
+            if(new_coords.y - boundary_coords.y == -1) {
+                LOG("Matching new[%i] boundary[%i]", new_coords.y, boundary_coords.y);
+                return true;
+            }
+            LOG("We are on the same vertical axis but not in line new[%i] boundary[%i]", new_coords.y, boundary_coords.y);
+            return false;
+        }
+    } else if(direction == CROSS) {
+        if((new_coords.y - boundary_coords.y) == -1) {
+            LOG("The new y coords are one layer above boundary coords new[%i] boundary[%i]", new_coords.y, boundary_coords.y);
+            if(new_coords.x - boundary_coords.x == -1) {
+                LOG("the new x coords are one layer to the right from boundary coords new[%i] boundary[%i]", new_coords.x, boundary_coords.x);
+                LOG("We are a match");
+                return true;
+            }
+            LOG("The new x coords are not in line with the boundary coords  coords new[%i] boundary[%i]", new_coords.x, boundary_coords.x);
+            return false;
+        }
+        LOG("The new coords are not in line with the boundary coords new[%i] boundary[%i]", new_coords.y, boundary_coords.y);
+        return false;
+    }
     return false;
 }
