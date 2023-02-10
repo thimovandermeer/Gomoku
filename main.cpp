@@ -5,7 +5,8 @@
 int main() {
 
     Graphics graphics{};
-    Validator validator{};
+    DoubleThreeCheck doubleThreeCheck{};
+    Validator validator{doubleThreeCheck};
     Gomoku gomoku(validator, graphics);
 
     return 0;

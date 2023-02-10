@@ -6,22 +6,10 @@
 #define GOMOKU_VALIDATOR_HPP
 #include <vector>
 #include <string>
+#include "DoubleThreeCheck.hpp"
+
 #define MAX_BOARD_SIZE 19
 
-enum class Tile;
-
-struct Coordinates {
-    int x;
-    int y;
-};
-enum Player {PLAYERONE, PLAYERTWO};
-
-enum State {ACCEPTED, ERROR};
-
-struct errorState {
-    State       state;
-    std::string error_reason;
-};
 
 class IValidator {
 public:
@@ -32,7 +20,8 @@ public:
 
 class Validator : public IValidator {
 public:
-    Validator() = default;
+    Validator(IDoubleThreeCheck &DoubleThreeCheck) : _doubleThreeCheck(DoubleThreeCheck.clone()) {}
+    Validator(const Validator&) {}
     ~Validator() override = default;
     std::unique_ptr<IValidator> clone() const override {
         return std::make_unique<Validator>(*this);
@@ -51,11 +40,14 @@ private:
     void boundary_checking();
     void taken_check();
     void player_validation();
+    void double_three_validation();
 
     std::vector<std::vector<Tile>>  	_board;
     Coordinates                     	_coord;
     Player                          	_player;
     errorState                           _state;
+
+    std::unique_ptr<IDoubleThreeCheck>  _doubleThreeCheck;
 };
 
 

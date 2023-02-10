@@ -8,7 +8,6 @@
 #include "Validator.hpp"
 #include "Graphics.hpp"
 
-enum class Tile{PLAYERONE, PLAYERTWO, FREE};
 
 class Gomoku {
 public:

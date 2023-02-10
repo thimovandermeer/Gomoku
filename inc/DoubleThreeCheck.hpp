@@ -5,9 +5,24 @@
 #ifndef GOMOKU_DOUBLETHREECHECK_HPP
 #define GOMOKU_DOUBLETHREECHECK_HPP
 #include <memory>
-#include "../inc/Validator.hpp"
+#include <string>
+#include <vector>
+//#include "Validator.hpp"
 
 enum Direction {HORIZONTAL, VERTICAL, CROSS};
+enum class Tile{PLAYERONE, PLAYERTWO, FREE};
+struct Coordinates {
+    int x;
+    int y;
+};
+enum Player {PLAYERONE, PLAYERTWO};
+
+enum State {ACCEPTED, ERROR};
+
+struct errorState {
+    State       state;
+    std::string error_reason;
+};
 
 struct Doubles {
 	Coordinates left_boundary_coordinates;
@@ -17,9 +32,9 @@ struct Doubles {
 
 class IDoubleThreeCheck {
 public:
+    virtual std::unique_ptr<IDoubleThreeCheck> clone() const = 0;
 	virtual ~IDoubleThreeCheck() = default;
-	virtual std::unique_ptr<IDoubleThreeCheck> clone() const = 0;
-	virtual void DoubleThreeChecker(const std::vector<std::vector<Tile>> &board, const Coordinates& coord, const Player& player) = 0;
+	virtual errorState DoubleThreeChecker(const std::vector<std::vector<Tile>> &board, const Coordinates& coord, const Player& player) = 0;
 };
 
 class DoubleThreeCheck: public IDoubleThreeCheck
@@ -32,9 +47,9 @@ public:
 	}
 
 	size_t	double_two_size();
-	void DoubleThreeChecker(const std::vector<std::vector<Tile>> &board, const Coordinates& coord, const Player& player) override;
+	errorState DoubleThreeChecker(const std::vector<std::vector<Tile>> &board, const Coordinates& coord, const Player& player) override;
     bool find_three(Coordinates newCoords, std::vector<Doubles> &double_two);
-    bool find_double_three();
+    errorState find_double_three();
     bool check_right_boundary(Coordinates boundary_coords, Coordinates new_coords, Direction direction);
     bool check_left_boundary(Coordinates boundary_coords, Coordinates new_coords, Direction direction);
     Direction determine_direction(Doubles doubles);

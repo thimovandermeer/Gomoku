@@ -5,11 +5,13 @@
 #include "DoubleThreeCheck.hpp"
 #include "logger.hpp"
 
-void DoubleThreeCheck::DoubleThreeChecker(const std::vector<std::vector<Tile>> &board, const Coordinates &coord,
+errorState DoubleThreeCheck::DoubleThreeChecker(const std::vector<std::vector<Tile>> &board, const Coordinates &coord,
 										  const Player &player)
 {
-	std::string reason;
-	this->set_state(ACCEPTED, reason);
+    this->check_two_in_a_row(board, coord, player);
+    this->find_three(coord, _doubleTwoList);
+    return (this->find_double_three());
+
 }
 
 void DoubleThreeCheck::set_state(State newState, std::string &errorReason) {
@@ -204,6 +206,6 @@ Doubles DoubleThreeCheck::get_last_three() {
     return  _doubleThreeList.back();
 }
 
-bool DoubleThreeCheck::find_double_three() {
-    return false;
+errorState DoubleThreeCheck::find_double_three() {
+    return errorState{};
 }
