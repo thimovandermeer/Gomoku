@@ -97,22 +97,31 @@ void 		DoubleThreeCheck::two_in_a_row(const std::vector<std::vector<Tile>> &boar
 	}
 }
 
-bool 		DoubleThreeCheck::find_double_three(Coordinates newCoords, std::vector<Doubles> double_two)
+bool 		DoubleThreeCheck::find_three(Coordinates newCoords, std::vector<Doubles> &double_two)
 {
     LOG("newcoords are %i %i", newCoords.y, newCoords.x);
     for (auto elem : double_two) {
         if(check_right_boundary(elem.right_boundary_coordinates, newCoords, elem.direction)) {
-            // add element to list of double three with direction
+            Doubles three_in_a_row;
+            three_in_a_row.left_boundary_coordinates = elem.left_boundary_coordinates;
+            three_in_a_row.right_boundary_coordinates = newCoords;
+            _doubleThreeList.push_back(three_in_a_row);
+            return true;
         }
         if(check_left_boundary(elem.left_boundary_coordinates, newCoords, elem.direction)) {
-            // add element to list of double three with direction
+            Doubles three_in_a_row;
+            three_in_a_row.left_boundary_coordinates = newCoords;
+            three_in_a_row.right_boundary_coordinates = elem.right_boundary_coordinates;
+            _doubleThreeList.push_back(three_in_a_row);
+            return true;
         }
     }
-
+    return false;
 }
 
 bool DoubleThreeCheck::check_right_boundary(Coordinates boundary_coords, Coordinates new_coords, Direction direction) {
     LOG("boundary_coords in right boundary checking %i %i", boundary_coords.y, boundary_coords.x);
+    LOG("Direction = %i", direction);
     if(direction == HORIZONTAL) {
         if(new_coords.y == boundary_coords.y) {
             LOG("We are on the same horizontal axis");
@@ -147,11 +156,13 @@ bool DoubleThreeCheck::check_right_boundary(Coordinates boundary_coords, Coordin
         LOG("The new coords are not in line with the boundary coords new[%i] boundary[%i]", new_coords.y, boundary_coords.y);
         return false;
     }
+    LOG("Did not access any right boundary direction checks");
     return false;
 }
 
 bool DoubleThreeCheck::check_left_boundary(Coordinates boundary_coords, Coordinates new_coords, Direction direction) {
     LOG("boundary_coords in left boundary checking %i %i", boundary_coords.y, boundary_coords.x);
+    LOG("Direction = %i", direction);
     if(direction == HORIZONTAL) {
         if(new_coords.y == boundary_coords.y) {
             LOG("We are on the same horizontal axis");
@@ -186,5 +197,13 @@ bool DoubleThreeCheck::check_left_boundary(Coordinates boundary_coords, Coordina
         LOG("The new coords are not in line with the boundary coords new[%i] boundary[%i]", new_coords.y, boundary_coords.y);
         return false;
     }
+    return false;
+}
+
+Doubles DoubleThreeCheck::get_last_three() {
+    return  _doubleThreeList.back();
+}
+
+bool DoubleThreeCheck::find_double_three() {
     return false;
 }
