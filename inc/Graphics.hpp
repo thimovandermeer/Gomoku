@@ -20,6 +20,15 @@ public:
     virtual bool updateBoardNegative() = 0;
 };
 
+class EmptyGraphics : public IGraphics {
+public:
+    std::unique_ptr<IGraphics> clone() const override {
+        return std::make_unique<EmptyGraphics>(*this);
+    }
+    bool updateBoardPositive() override { return false; }
+    bool updateBoardNegative() override { return false; }
+};
+
 class Graphics : public IGraphics {
 public:
     Graphics();
