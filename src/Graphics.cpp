@@ -4,57 +4,113 @@
 
 #include "Graphics.hpp"
 #include "logger.hpp"
+#include "Gomoku.hpp"
 #include <SFML/Graphics.hpp>
 #include <cmath>
+#include <list>
 
-Graphics::Graphics() {
-    sf::RenderWindow window(sf::VideoMode(1000, 1100), "Gomoku:)", sf::Style::Default);
-    window.setVerticalSyncEnabled(true);
-    window.clear(sf::Color::White);
+using namespace sf;
 
-    sf::Font arial;
-    if (not arial.loadFromFile("../resources/Arial.ttf")) {
+Vector2<int> Graphics::nearestIntersection(int x, int y) const {
+    auto lowerX = std::lower_bound(_xCoordinates.begin(), _xCoordinates.end(), x);
+    // if end or not first and closer to left than to right
+    if (lowerX == _xCoordinates.end() || (lowerX != _xCoordinates.begin() && std::abs(x - *(lowerX - 1)) <= std::abs(x - *lowerX))) {
+        --lowerX;
+    }
+    auto lowerY = std::lower_bound(_yCoordinates.begin(), _yCoordinates.end(), y);
+    // same
+    if (lowerY == _yCoordinates.end() || (lowerY != _yCoordinates.begin() && std::abs(y - *(lowerY - 1)) <= std::abs(y - *lowerY))) {
+        --lowerY;
+    }return {*lowerX, *lowerY};
+}
+
+Text Graphics::tempTitle(const RenderWindow& window) {
+    if (not _font.loadFromFile("../resources/Arial.ttf")) {
         LOG("font not loaded from file");
     }
-    sf::Text topTitle;
-    topTitle.setFont(arial);
-    topTitle.setString("this is a first test with a bunch of nonsense\n\t  close with escape or clicking the x");
-    topTitle.setFillColor(sf::Color::Black);
-    topTitle.setStyle(sf::Text::Bold);
-    window.draw(topTitle);
+
+    Text topTitle;
+    topTitle.setFont(_font);
+    topTitle.setString("extra information goes at the top here");
+    topTitle.setFillColor(Color::Black);
+    topTitle.setStyle(Text::Bold);
+    // next steps are to center the text from left to right and in the top 10%
     auto center = topTitle.getGlobalBounds().getSize() / 2.f;
-    auto localbounds = center + topTitle.getLocalBounds().getPosition();
-    sf::Vector2f rounded = {std::round(localbounds.x), std::round(localbounds.y)};
+    auto localBounds = center + topTitle.getLocalBounds().getPosition();
+    Vector2f rounded = {std::round(localBounds.x), std::round(localBounds.y)};
     topTitle.setOrigin(rounded);
-    topTitle.setPosition(sf::Vector2f{window.getSize().x / 2.f, window.getSize().y / 20.f});
+    topTitle.setPosition(Vector2f{static_cast<float>(window.getSize().x) / 2.f, static_cast<float>(window.getSize().y) / 20.f});
+    return topTitle;
+}
+
+void Graphics::createLines() {
+    const auto spacesBetweenLines = BOARD_SIZE + 1;
+    _pixelsPerSpace = WINDOW_WIDTH / spacesBetweenLines;
+    auto rem = WINDOW_WIDTH % spacesBetweenLines;
+    const auto topPixelOffset = WINDOW_WIDTH * 0.1f;
+    for (auto i = _pixelsPerSpace; i < WINDOW_WIDTH; i += _pixelsPerSpace) {
+        if (rem-- > 0) {
+            // spread extra pixels remainder over the first squares, 1 each
+            ++i;
+        }
+        _xCoordinates.push_back(i);
+        _yCoordinates.push_back(static_cast<int>(topPixelOffset) + i + 1);
+
+        RectangleShape horizontalLine({WINDOW_WIDTH, 3});
+        horizontalLine.setFillColor(Color::Black);
+        horizontalLine.setPosition(0, topPixelOffset + static_cast<float>(i));
+        _lines.push_back(horizontalLine);
+
+        RectangleShape verticalLine({3, WINDOW_WIDTH});
+        verticalLine.setFillColor(Color::Black);
+        verticalLine.setPosition(static_cast<float>(i), topPixelOffset);
+        _lines.push_back(verticalLine);
+    }
+}
+
+Graphics::Graphics() : _pixelsPerSpace(0) {
+    // TODO: check for WINDOW_WIDTH vs actual screen size and scale down if needed
+    RenderWindow window(VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Gomoku:)", Style::Default);
+    window.setVerticalSyncEnabled(true);
+    window.clear(Color::White);
+
+    auto tmpTitle = tempTitle(window);
+    createLines();
 
     while (window.isOpen()) {
-        sf::Event ev{};
+        Event ev{};
         while (window.pollEvent(ev)) {
             switch (ev.type) {
-                case sf::Event::Closed: {
+                case Event::Closed: {
                     window.close();
                     break;
                 }
-                case sf::Event::KeyPressed: {
-                    if (ev.key.code == sf::Keyboard::Key::Escape) {
+                case Event::KeyPressed: {
+                    if (ev.key.code == Keyboard::Key::Escape) {
                         window.close();
                     }
                     break;
                 }
-                case sf::Event::MouseButtonPressed: {
-                    LOG("clicked on x,y: (%d, %d)", ev.mouseButton.x, ev.mouseButton.y);
+                case Event::MouseButtonPressed: {
+                    auto loc = nearestIntersection(ev.mouseButton.x, ev.mouseButton.y);
+                    float radius = static_cast<float>(_pixelsPerSpace) / 2 * CIRCLE_SCALE;
+                    CircleShape newStone(radius);
+                    // TODO: now it just alternates color based on this x
+                    static int x = 0;
+                    newStone.setFillColor(++x % 2 == 0 ? Color::Red : Color::Blue);
+                    newStone.setPosition(static_cast<float>(loc.x) - radius, static_cast<float>(loc.y) - radius);
+                    _stones.push_back(newStone);
                     break;
                 }
-                case sf::Event::KeyReleased:
-                case sf::Event::MouseButtonReleased:
-                case sf::Event::MouseMoved:
-                case sf::Event::MouseEntered:
-                case sf::Event::MouseLeft:
-                case sf::Event::MouseWheelScrolled:
-                case sf::Event::MouseWheelMoved:
-                case sf::Event::GainedFocus:
-                case sf::Event::LostFocus:
+                case Event::KeyReleased:
+                case Event::MouseButtonReleased:
+                case Event::MouseMoved:
+                case Event::MouseEntered:
+                case Event::MouseLeft:
+                case Event::MouseWheelScrolled:
+                case Event::MouseWheelMoved:
+                case Event::GainedFocus:
+                case Event::LostFocus:
                     break;
                 default:
                     LOG("uncaught event %d", ev.type);
@@ -62,8 +118,14 @@ Graphics::Graphics() {
 
             }
 
-            window.clear(sf::Color::White);
-            window.draw(topTitle);
+            window.clear(Color::White);
+            for (const auto& shape : _lines) {
+                window.draw(shape);
+            }
+            for (const auto& circle : _stones) {
+                window.draw(circle);
+            }
+            window.draw(tmpTitle);
             window.display();
         }
     }

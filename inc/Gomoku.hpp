@@ -8,6 +8,7 @@
 #include "Validator.hpp"
 #include "Graphics.hpp"
 
+#define BOARD_SIZE 19
 
 class Gomoku {
 public:

@@ -5,6 +5,12 @@
 #ifndef GOMOKU_GRAPHICS_HPP
 #define GOMOKU_GRAPHICS_HPP
 #include <memory>
+#include <SFML/Graphics.hpp>
+
+// game becomes near unplayable if BOARD_SIZE * 10 >= WINDOW_WIDTH
+#define WINDOW_WIDTH 750
+#define WINDOW_HEIGHT (WINDOW_WIDTH * 1.1f)
+#define CIRCLE_SCALE 0.75f
 
 class IGraphics {
 public:
@@ -27,6 +33,19 @@ public:
     bool updateBoardPositive() override;
     bool updateBoardNegative() override;
 
+private:
+    std::vector<sf::CircleShape> _stones;
+
+// these are (likely) set only once
+    sf::Font _font;
+    std::vector<int> _xCoordinates;
+    std::vector<int> _yCoordinates;
+    std::vector<sf::RectangleShape> _lines;
+    int _pixelsPerSpace;
+
+    sf::Text tempTitle(const sf::RenderWindow& window);
+    sf::Vector2<int> nearestIntersection(int x, int y) const;
+    void createLines();
 };
 
 
