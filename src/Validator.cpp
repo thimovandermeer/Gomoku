@@ -9,11 +9,13 @@
 #include "Gomoku.hpp"
 
 errorState Validator::validate(const std::vector<std::vector<Tile>> &board, const Coordinates& coord, const Player& player) {
-    this->set_data(board, coord, player);
-    this->board_validation();
-    if(_state.state == ERROR)
-        return _state;
+	this->set_data(board, coord, player);
+	this->board_validation();
+	if(_state.state == ERROR)
+		return _state;
     this->coordinates_validation();
+	if(_state.state == ERROR)
+		return _state;
     this->double_three_validation();
     return _state;
 }
@@ -39,6 +41,7 @@ void Validator::set_player(const Player &player) {
 }
 
 void Validator::board_validation() {
+	LOG("Board size = %i", _board.size());
     if(_board.size() > MAX_BOARD_SIZE){
         LOG("Board is bigger than max size");
 		std::string reason = "Board is bigger than max size";

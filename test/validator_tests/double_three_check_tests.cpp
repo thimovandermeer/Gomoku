@@ -8,6 +8,10 @@
 #include "utils.hpp"
 
 
+std::unique_ptr<ITwo>					twoCheck = std::make_unique<Two>();
+DoubleThreeCheck 	threeCheck = DoubleThreeCheck(twoCheck);
+
+
 std::vector<std::vector<Tile>> create_double_three_board_vertically() {
 	std::vector<std::vector<Tile>> board = create_empty_board();
 	board[11][10] = Tile::PLAYERONE;
@@ -31,66 +35,65 @@ std::vector<std::vector<Tile>> create_double_two_board_horizontally() {
 }
 
 TEST(double_two_check_tests, find_double_two_horizontally) {
-	DoubleThreeCheck threeCheck = DoubleThreeCheck();
 	auto board = create_double_two_board_horizontally();
 	Coordinates coord;
 	coord.y = 10;
 	coord.x = 12;
-
-	auto result = threeCheck.check_two_in_a_row(board, coord, PLAYERONE);
+	auto two = *dynamic_cast<Two*>(twoCheck.get());
+	auto result = two.check_two_in_a_row(board, coord, PLAYERONE);
 	ASSERT_EQ(result.y, 10);
 	ASSERT_EQ(result.x, 11);
 }
 
 TEST(double_two_check_tests, find_double_two_vertically) {
-	DoubleThreeCheck threeCheck = DoubleThreeCheck();
 	auto board = create_double_two_board_horizontally();
 	Coordinates coord;
 	coord.y = 11;
 	coord.x = 11;
 
-	auto result = threeCheck.check_two_in_a_row(board, coord, PLAYERONE);
+	auto two = *dynamic_cast<Two*>(twoCheck.get());
+	auto result = two.check_two_in_a_row(board, coord, PLAYERONE);
 	ASSERT_EQ(result.y, 10);
 	ASSERT_EQ(result.x, 11);
 }
 
 TEST(double_two_check_tests, find_double_two_cross_up) {
-	DoubleThreeCheck threeCheck = DoubleThreeCheck();
 	auto board = create_double_two_board_horizontally();
 	Coordinates coord;
 	coord.y = 11;
 	coord.x = 12;
 
-	auto result = threeCheck.check_two_in_a_row(board, coord, PLAYERONE);
+	auto two = *dynamic_cast<Two*>(twoCheck.get());
+	auto result = two.check_two_in_a_row(board, coord, PLAYERONE);
 	ASSERT_EQ(result.y, 10);
 	ASSERT_EQ(result.x, 11);
 }
 
 TEST(double_two_check_tests, find_double_two_cross_down) {
-	DoubleThreeCheck threeCheck = DoubleThreeCheck();
 	auto board = create_double_two_board_horizontally();
 	Coordinates coord;
 	coord.y = 9;
 	coord.x = 11;
 
-	auto result = threeCheck.check_two_in_a_row(board, coord, PLAYERONE);
+	auto two = *dynamic_cast<Two*>(twoCheck.get());
+	auto result = two.check_two_in_a_row(board, coord, PLAYERONE);
 	ASSERT_EQ(result.y, 10);
 	ASSERT_EQ(result.x, 11);
 }
 
-TEST(double_two_check_tests, no_double_two_possible) {		DoubleThreeCheck threeCheck = DoubleThreeCheck();
+TEST(double_two_check_tests, no_double_two_possible) {
 	auto board = create_double_two_board_horizontally();
 	Coordinates coord;
 	coord.y = 17;
 	coord.x = 17;
 
-	auto result = threeCheck.check_two_in_a_row(board, coord, PLAYERONE);
+	auto two = *dynamic_cast<Two*>(twoCheck.get());
+	auto result = two.check_two_in_a_row(board, coord, PLAYERONE);
 	ASSERT_EQ(result.y, -1);
 	ASSERT_EQ(result.x, -1);
 }
 
 TEST(double_two_boundary_checks, check_on_board_smaller_than_new) {
-	DoubleThreeCheck threeCheck = DoubleThreeCheck();
 	Coordinates coord_one;
 	coord_one.y = 9;
 	coord_one.x = 11;
@@ -99,13 +102,13 @@ TEST(double_two_boundary_checks, check_on_board_smaller_than_new) {
 	coord_two.y = 10;
 	coord_two.x = 11;
 
-	auto result = threeCheck.boundary_check(coord_one, coord_two);
+	auto two = *dynamic_cast<Two*>(twoCheck.get());
+	auto result = two.boundary_check(coord_one, coord_two);
 	ASSERT_EQ(result.left_boundary_coordinates.y, coord_one.y);
 	ASSERT_EQ(result.left_boundary_coordinates.x, coord_one.x);
 }
 
 TEST(double_two_boundary_checks, determine_direction_horizontal) {
-    DoubleThreeCheck threeCheck = DoubleThreeCheck();
     Coordinates right_boundary;
     right_boundary.y = 3;
     right_boundary.x = 3;
@@ -116,11 +119,11 @@ TEST(double_two_boundary_checks, determine_direction_horizontal) {
     Doubles doubles;
     doubles.left_boundary_coordinates = left_boundary;
     doubles.right_boundary_coordinates = right_boundary;
-    ASSERT_EQ(threeCheck.determine_direction(doubles), HORIZONTAL);
+	auto two = *dynamic_cast<Two*>(twoCheck.get());
+	ASSERT_EQ(two.determine_direction(doubles), HORIZONTAL);
 }
 
 TEST(double_two_boundary_checks, determine_direction_vertical) {
-    DoubleThreeCheck threeCheck = DoubleThreeCheck();
     Coordinates right_boundary;
     right_boundary.y = 3;
     right_boundary.x = 3;
@@ -131,11 +134,11 @@ TEST(double_two_boundary_checks, determine_direction_vertical) {
     Doubles doubles;
     doubles.left_boundary_coordinates = left_boundary;
     doubles.right_boundary_coordinates = right_boundary;
-    ASSERT_EQ(threeCheck.determine_direction(doubles), VERTICAL);
+	auto two = *dynamic_cast<Two*>(twoCheck.get());
+	ASSERT_EQ(two.determine_direction(doubles), VERTICAL);
 }
 
 TEST(double_two_boundary_checks, determine_direction_cross_up) {
-    DoubleThreeCheck threeCheck = DoubleThreeCheck();
     Coordinates right_boundary;
     right_boundary.y = 3;
     right_boundary.x = 3;
@@ -146,11 +149,11 @@ TEST(double_two_boundary_checks, determine_direction_cross_up) {
     Doubles doubles;
     doubles.left_boundary_coordinates = left_boundary;
     doubles.right_boundary_coordinates = right_boundary;
-    ASSERT_EQ(threeCheck.determine_direction(doubles), CROSS);
+	auto two = *dynamic_cast<Two*>(twoCheck.get());
+	ASSERT_EQ(two.determine_direction(doubles), CROSS);
 }
 
 TEST(double_two_boundary_checks, determine_direction_cross_down) {
-    DoubleThreeCheck threeCheck = DoubleThreeCheck();
     Coordinates right_boundary;
     right_boundary.y = 3;
     right_boundary.x = 3;
@@ -161,11 +164,11 @@ TEST(double_two_boundary_checks, determine_direction_cross_down) {
     Doubles doubles;
     doubles.left_boundary_coordinates = left_boundary;
     doubles.right_boundary_coordinates = right_boundary;
-    ASSERT_EQ(threeCheck.determine_direction(doubles), CROSS);
+	auto two = *dynamic_cast<Two*>(twoCheck.get());
+	ASSERT_EQ(two.determine_direction(doubles), CROSS);
 }
 
 TEST(double_two_boundary_checks, check_on_board_bigger_than_new) {
-	DoubleThreeCheck threeCheck = DoubleThreeCheck();
 	Coordinates coord_one;
 	coord_one.y = 9;
 	coord_one.x = 11;
@@ -174,13 +177,13 @@ TEST(double_two_boundary_checks, check_on_board_bigger_than_new) {
 	coord_two.y = 8;
 	coord_two.x = 11;
 
-	auto result = threeCheck.boundary_check(coord_one, coord_two);
+	auto two = *dynamic_cast<Two*>(twoCheck.get());
+	auto result = two.boundary_check(coord_one, coord_two);
 	ASSERT_EQ(result.left_boundary_coordinates.y, coord_two.y);
 	ASSERT_EQ(result.left_boundary_coordinates.x, coord_two.x);
 }
 
 TEST(double_two_two_in_a_row, check_on_board_bigger_than_new) {
-	DoubleThreeCheck threeCheck = DoubleThreeCheck();
 	Coordinates coord_one;
 	coord_one.y = 9;
 	coord_one.x = 11;
@@ -189,13 +192,13 @@ TEST(double_two_two_in_a_row, check_on_board_bigger_than_new) {
 	coord_two.y = 8;
 	coord_two.x = 11;
 
-	auto result = threeCheck.boundary_check(coord_one, coord_two);
+	auto two = *dynamic_cast<Two*>(twoCheck.get());
+	auto result = two.boundary_check(coord_one, coord_two);
 	ASSERT_EQ(result.left_boundary_coordinates.y, coord_two.y);
 	ASSERT_EQ(result.left_boundary_coordinates.x, coord_two.x);
 }
 
 TEST(double_two_two_in_a_row, check_size_double_two_vector) {
-	DoubleThreeCheck threeCheck = DoubleThreeCheck();
 	auto board = create_double_two_board_horizontally();
 	Coordinates coord;
 	coord.y = 11;
@@ -215,7 +218,6 @@ std::vector<std::vector<Tile>> create_double_three_board_horizontally() {
 
 TEST(double_three_check_tests, check_right_boundary_horizontal) {
     // create board with double three on it
-    DoubleThreeCheck threeCheck = DoubleThreeCheck();
     Coordinates boundary_coords;
     boundary_coords.y = 10;
     boundary_coords.x = 10;
@@ -229,7 +231,6 @@ TEST(double_three_check_tests, check_right_boundary_horizontal) {
 
 TEST(double_three_check_tests, check_right_boundary_horizontal_false_test) {
     // create board with double three on it
-    DoubleThreeCheck threeCheck = DoubleThreeCheck();
     Coordinates boundary_coords;
     boundary_coords.y = 10;
     boundary_coords.x = 10;
@@ -243,7 +244,6 @@ TEST(double_three_check_tests, check_right_boundary_horizontal_false_test) {
 
 TEST(double_three_check_tests, check_right_boundary_vertical) {
     // create board with double three on it
-    DoubleThreeCheck threeCheck = DoubleThreeCheck();
     Coordinates boundary_coords;
     boundary_coords.y = 10;
     boundary_coords.x = 10;
@@ -257,7 +257,6 @@ TEST(double_three_check_tests, check_right_boundary_vertical) {
 
 TEST(double_three_check_tests, check_right_boundary_vertical_false_test) {
     // create board with double three on it
-    DoubleThreeCheck threeCheck = DoubleThreeCheck();
     Coordinates boundary_coords;
     boundary_coords.y = 10;
     boundary_coords.x = 10;
@@ -271,7 +270,6 @@ TEST(double_three_check_tests, check_right_boundary_vertical_false_test) {
 
 TEST(double_three_check_tests, check_right_boundary_cross) {
     // create board with double three on it
-    DoubleThreeCheck threeCheck = DoubleThreeCheck();
     Coordinates boundary_coords;
     boundary_coords.y = 10;
     boundary_coords.x = 10;
@@ -285,7 +283,6 @@ TEST(double_three_check_tests, check_right_boundary_cross) {
 
 TEST(double_three_check_tests, check_right_boundary_cross_false_test_y_different) {
     // create board with double three on it
-    DoubleThreeCheck threeCheck = DoubleThreeCheck();
     Coordinates boundary_coords;
     boundary_coords.y = 10;
     boundary_coords.x = 10;
@@ -299,7 +296,6 @@ TEST(double_three_check_tests, check_right_boundary_cross_false_test_y_different
 
 TEST(double_three_check_tests, check_right_boundary_cross_false_test_x_different) {
     // create board with double three on it
-    DoubleThreeCheck threeCheck = DoubleThreeCheck();
     Coordinates boundary_coords;
     boundary_coords.y = 10;
     boundary_coords.x = 10;
@@ -313,7 +309,6 @@ TEST(double_three_check_tests, check_right_boundary_cross_false_test_x_different
 
 TEST(double_three_check_tests, check_left_boundary_horizontal) {
     // create board with double three on it
-    DoubleThreeCheck threeCheck = DoubleThreeCheck();
     Coordinates boundary_coords;
     boundary_coords.y = 10;
     boundary_coords.x = 10;
@@ -327,7 +322,6 @@ TEST(double_three_check_tests, check_left_boundary_horizontal) {
 
 TEST(double_three_check_tests, check_left_boundary_horizontal_false_test) {
     // create board with double three on it
-    DoubleThreeCheck threeCheck = DoubleThreeCheck();
     Coordinates boundary_coords;
     boundary_coords.y = 10;
     boundary_coords.x = 10;
@@ -341,7 +335,6 @@ TEST(double_three_check_tests, check_left_boundary_horizontal_false_test) {
 
 TEST(double_three_check_tests, check_left_boundary_vertical) {
     // create board with double three on it
-    DoubleThreeCheck threeCheck = DoubleThreeCheck();
     Coordinates boundary_coords;
     boundary_coords.y = 10;
     boundary_coords.x = 10;
@@ -355,7 +348,6 @@ TEST(double_three_check_tests, check_left_boundary_vertical) {
 
 TEST(double_three_check_tests, check_left_boundary_vertical_false_test) {
     // create board with double three on it
-    DoubleThreeCheck threeCheck = DoubleThreeCheck();
     Coordinates boundary_coords;
     boundary_coords.y = 10;
     boundary_coords.x = 10;
@@ -369,7 +361,6 @@ TEST(double_three_check_tests, check_left_boundary_vertical_false_test) {
 
 TEST(double_three_check_tests, check_left_boundary_cross) {
     // create board with double three on it
-    DoubleThreeCheck threeCheck = DoubleThreeCheck();
     Coordinates boundary_coords;
     boundary_coords.y = 10;
     boundary_coords.x = 10;
@@ -383,7 +374,6 @@ TEST(double_three_check_tests, check_left_boundary_cross) {
 
 TEST(double_three_check_tests, check_left_boundary_cross_false_test_y_different) {
     // create board with double three on it
-    DoubleThreeCheck threeCheck = DoubleThreeCheck();
     Coordinates boundary_coords;
     boundary_coords.y = 10;
     boundary_coords.x = 10;
@@ -397,7 +387,6 @@ TEST(double_three_check_tests, check_left_boundary_cross_false_test_y_different)
 
 TEST(double_three_check_tests, check_left_boundary_cross_false_test_x_different) {
     // create board with double three on it
-    DoubleThreeCheck threeCheck = DoubleThreeCheck();
     Coordinates boundary_coords;
     boundary_coords.y = 10;
     boundary_coords.x = 10;
@@ -413,7 +402,6 @@ TEST(double_three_check_tests, check_left_boundary_cross_false_test_x_different)
 TEST(double_three_check_tests, check_double_three_vector_coordinates_right_side_addition_cross) {
 	// create a double with coordinates
     Doubles doubles;
-    DoubleThreeCheck threeCheck = DoubleThreeCheck();
 
     doubles.left_boundary_coordinates.y = 10;
     doubles.left_boundary_coordinates.x = 10;
@@ -442,7 +430,6 @@ TEST(double_three_check_tests, check_double_three_vector_coordinates_right_side_
 TEST(double_three_check_tests, check_double_three_vector_coordinates_right_side_addition_horizontal) {
     // create a double with coordinates
     Doubles doubles;
-    DoubleThreeCheck threeCheck = DoubleThreeCheck();
 
     doubles.left_boundary_coordinates.y = 10;
     doubles.left_boundary_coordinates.x = 11;
@@ -471,7 +458,6 @@ TEST(double_three_check_tests, check_double_three_vector_coordinates_right_side_
 TEST(double_three_check_tests, check_double_three_vector_coordinates_right_side_addition_vertical) {
     // create a double with coordinates
     Doubles doubles;
-    DoubleThreeCheck threeCheck = DoubleThreeCheck();
 
     doubles.left_boundary_coordinates.y = 9;
     doubles.left_boundary_coordinates.x = 11;
@@ -500,7 +486,6 @@ TEST(double_three_check_tests, check_double_three_vector_coordinates_right_side_
 TEST(double_three_check_tests, check_double_three_vector_coordinates_left_side_addition_cross) {
     // create a double with coordinates
     Doubles doubles;
-    DoubleThreeCheck threeCheck = DoubleThreeCheck();
 
     doubles.left_boundary_coordinates.y = 10;
     doubles.left_boundary_coordinates.x = 10;
@@ -525,7 +510,6 @@ TEST(double_three_check_tests, check_double_three_vector_coordinates_left_side_a
 TEST(double_three_check_tests, check_double_three_vector_coordinates_left_side_addition_horizontal) {
     // create a double with coordinates
     Doubles doubles;
-    DoubleThreeCheck threeCheck = DoubleThreeCheck();
 
     doubles.left_boundary_coordinates.y = 10;
     doubles.left_boundary_coordinates.x = 10;
@@ -550,7 +534,6 @@ TEST(double_three_check_tests, check_double_three_vector_coordinates_left_side_a
 TEST(double_three_check_tests, check_double_three_vector_coordinates_left_side_addition_vertical) {
     // create a double with coordinates
     Doubles doubles;
-    DoubleThreeCheck threeCheck = DoubleThreeCheck();
 
     doubles.left_boundary_coordinates.y = 10;
     doubles.left_boundary_coordinates.x = 10;
@@ -573,7 +556,7 @@ TEST(double_three_check_tests, check_double_three_vector_coordinates_left_side_a
 }
 
 
-//
+
 //TEST(double_three_check_tests, find_double_three_vertically) {
 //	// create board with double three on it
 //	std::vector<std::vector<Tile>> board = create_double_three_board_vertically();

@@ -39,7 +39,7 @@ public:
 
 class Two : public ITwo{
 public:
-    Two() = default;
+    Two();
     Two(const Two&) {}
     ~Two() = default;
     std::unique_ptr<ITwo> clone() const override  {

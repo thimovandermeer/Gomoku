@@ -4,6 +4,10 @@
 
 #include "Two.hpp"
 
+Two::Two()
+{
+	LOG("TWO constructor");
+}
 Doubles Two::create_two(const std::vector<std::vector<Tile>> &board, const Coordinates &coord, const Player &player) {
     auto current_coordinates = check_two_in_a_row(board, coord, player);
     if(current_coordinates.y != -1) {

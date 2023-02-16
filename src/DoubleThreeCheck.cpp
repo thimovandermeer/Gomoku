@@ -136,5 +136,6 @@ Doubles DoubleThreeCheck::get_last_three() {
 }
 
 errorState DoubleThreeCheck::find_double_three() {
+
     return errorState{};
 }

@@ -19,7 +19,7 @@ public:
 class DoubleThreeCheck: public IDoubleThreeCheck
 {
 public:
-	DoubleThreeCheck(ITwo &Two) : _Two(Two.clone()) {}
+	DoubleThreeCheck(std::unique_ptr<ITwo> &Two) : _Two(std::move(Two)) {}
     DoubleThreeCheck(const DoubleThreeCheck&) {}
 	~DoubleThreeCheck() = default;
 	std::unique_ptr<IDoubleThreeCheck> clone() const override {
@@ -32,10 +32,7 @@ public:
     errorState find_double_three();
     bool check_right_boundary(Coordinates boundary_coords, Coordinates new_coords, Direction direction);
     bool check_left_boundary(Coordinates boundary_coords, Coordinates new_coords, Direction direction);
-    Direction determine_direction(Doubles doubles);
-	Doubles boundary_check(Coordinates coordinates_on_board, Coordinates new_coordinates);
 	void two_in_a_row(const std::vector<std::vector<Tile>> &board, const Coordinates &coord, const Player& play);
-	Coordinates check_two_in_a_row(const std::vector<std::vector<Tile>> &board, const Coordinates &coord, const Player& player);
     Doubles get_last_three();
 private:
 	std::vector<Doubles>	_doubleThreeList;
@@ -44,7 +41,7 @@ private:
 	void set_state(State newState, std::string &errorReason);
 	errorState                          _state;
 
-    std::unique_ptr<ITwo>               _Two;
+    std::shared_ptr<ITwo>               _Two;
 
 };
 

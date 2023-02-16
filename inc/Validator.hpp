@@ -20,7 +20,7 @@ public:
 
 class Validator : public IValidator {
 public:
-    Validator(IDoubleThreeCheck &DoubleThreeCheck) : _doubleThreeCheck(DoubleThreeCheck.clone()) {}
+    Validator(std::unique_ptr<IDoubleThreeCheck> &DoubleThreeCheck) : _doubleThreeCheck(std::move(DoubleThreeCheck)) {}
     Validator(const Validator&) {}
     ~Validator() override = default;
     std::unique_ptr<IValidator> clone() const override {

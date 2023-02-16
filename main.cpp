@@ -5,8 +5,8 @@
 int main() {
 
     Graphics                    graphics{};
-    Two                         two{};
-    DoubleThreeCheck            doubleThreeCheck{two};
+    std::unique_ptr<ITwo>                         two = std::make_unique<Two>();
+    std::unique_ptr<IDoubleThreeCheck>            doubleThreeCheck = std::make_unique<DoubleThreeCheck>(two);
     Validator                   validator{doubleThreeCheck};
     Gomoku                      gomoku(validator, graphics);
 
