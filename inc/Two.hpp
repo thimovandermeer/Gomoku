@@ -30,6 +30,7 @@ struct Doubles {
     Direction   direction;
 };
 
+
 class ITwo {
 public:
     virtual std::unique_ptr<ITwo> clone() const = 0;
