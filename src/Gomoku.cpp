@@ -4,6 +4,7 @@
 
 #include "Gomoku.hpp"
 #include <SFML/Graphics.hpp>
+#include <sstream>
 
 void Gomoku::gameLoop() {
     while (true) {
@@ -28,6 +29,9 @@ void Gomoku::gameLoop() {
                 }
                 case sf::Event::MouseButtonPressed: {
                     // TODO: validate if stone can be placed
+                    std::stringstream ss;
+                    ss << "click at (" << event.mouseButton.x << "," << event.mouseButton.y << ")";
+                    _graphics->setHeader(ss.str());
                     _graphics->placeStone(event.mouseButton.x, event.mouseButton.y);
                     break;
                 }

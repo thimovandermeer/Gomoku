@@ -41,6 +41,8 @@ target_link_libraries(gomoku
 		sfml-graphics
 		)
 
+target_compile_definitions(gomoku PUBLIC PROJECT_ROOT_DIR="${CMAKE_SOURCE_DIR}")
+
 add_executable(gomoku_test
 #		test sources in `test` folder
 		)

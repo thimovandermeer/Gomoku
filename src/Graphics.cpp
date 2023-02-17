@@ -7,7 +7,6 @@
 #include "Gomoku.hpp"
 #include <SFML/Graphics.hpp>
 #include <cmath>
-#include <list>
 
 using namespace sf;
 
@@ -70,14 +69,17 @@ void Graphics::createLines() {
 
 Graphics::Graphics() : _pixelsPerSpace(0) {
     // TODO: check for WINDOW_WIDTH vs actual screen size and scale down if needed
-    _window = std::make_unique<RenderWindow>(VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Gomoku:)", Style::Default);
+    _window = std::make_unique<RenderWindow>(VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Gomoku :)", Style::Titlebar | Style::Close);
     _window->setVerticalSyncEnabled(true);
     _window->clear(Color::White);
-    // path might change based on what directory
-    if (not _font.loadFromFile("../resources/Arial.ttf")) {
+
+    std::string pathToFont(PROJECT_ROOT_DIR);
+    if (not _font.loadFromFile(pathToFont + "/resources/Arial.ttf")) {
         LOG("font not loaded from file");
     }
-
+    _header.setFont(_font);
+    _header.setFillColor(Color::Black);
+    _header.setCharacterSize(WINDOW_WIDTH * (0.1 / MAX_HEADER_LINES));
     createLines();
 }
 
@@ -108,8 +110,22 @@ std::optional<sf::Event> Graphics::getEvent() {
     return ev;
 }
 
+void Graphics::setHeader(const std::string& text) {
+    if (std::count(text.begin(), text.end(), '\n') > MAX_HEADER_LINES - 1) {
+        LOG("Attempting to put too many lines in header, leaving header unchanged.");
+        return;
+    }
+    _header.setString(text);
+    auto center = _header.getGlobalBounds().getSize() / 2.f;
+    auto localBounds = center + _header.getLocalBounds().getPosition();
+    Vector2f rounded = {std::round(localBounds.x), std::round(localBounds.y)};
+    _header.setOrigin(rounded);
+    _header.setPosition(Vector2f{static_cast<float>(_window->getSize().x) / 2.f, static_cast<float>(_window->getSize().y) / 20.f});
+}
+
 void Graphics::update() {
     _window->clear(Color::White);
+    _window->draw(_header);
     for (const auto& shape: _lines) {
         _window->draw(shape);
     }
