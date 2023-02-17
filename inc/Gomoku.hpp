@@ -8,6 +8,7 @@
 #include <vector>
 #include "Validator.hpp"
 #include "Graphics.hpp"
+#include <SFML/Graphics.hpp>
 
 #define BOARD_SIZE 19
 
@@ -26,7 +27,7 @@ private:
     std::unique_ptr<IValidator> _validator;
     std::unique_ptr<IGraphics> _graphics;
 
-    void doMove();
+    void doMove(const sf::Event::MouseButtonEvent& event);
     void validateMove();
     std::vector<std::vector<Tile>> board;
 

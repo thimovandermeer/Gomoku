@@ -24,6 +24,7 @@ public:
     virtual void closeWindow() = 0;
     virtual std::optional<sf::Event> getEvent() = 0;
     virtual void placeStone(int x, int y) = 0;
+    virtual void removeStone(int x, int y) = 0;
     virtual void setHeader(const std::string& text) = 0;
     virtual void update() = 0;
 };
@@ -34,6 +35,7 @@ public:
     void closeWindow() override {}
     std::optional<sf::Event> getEvent() override { return std::nullopt; }
     void placeStone(int x, int y) override { (void)(x + y); }
+    void removeStone(int x, int y) override { (void)(x + y); }
     void setHeader(const std::string& text) override { (void)text; };
     void update() override {}
 };
@@ -47,9 +49,12 @@ public:
 
     bool isWindowOpen() const override;
     void closeWindow() override;
+
     std::optional<sf::Event> getEvent() override;
     void placeStone(int x, int y) override;
+    void removeStone(int x, int y) override;
     void setHeader(const std::string& text) override;
+
     void update() override;
 
 private:

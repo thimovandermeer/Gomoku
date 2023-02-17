@@ -28,11 +28,7 @@ void Gomoku::gameLoop() {
                     break;
                 }
                 case sf::Event::MouseButtonPressed: {
-                    // TODO: validate if stone can be placed
-                    std::stringstream ss;
-                    ss << "click at (" << event.mouseButton.x << "," << event.mouseButton.y << ")";
-                    _graphics->setHeader(ss.str());
-                    _graphics->placeStone(event.mouseButton.x, event.mouseButton.y);
+                    doMove(event.mouseButton);
                     break;
                 }
                 default:
@@ -45,8 +41,21 @@ void Gomoku::gameLoop() {
     }
 }
 
-void Gomoku::doMove() {
+void Gomoku::doMove(const sf::Event::MouseButtonEvent& event) {
+    // TODO: validate if stone can be placed
+    validateMove();
 
+    // set header to whatever we want it to be
+    std::stringstream ss;
+    ss << "click at (" << event.x << "," << event.y << ")";
+    _graphics->setHeader(ss.str());
+
+    // pass stone to be placed
+    // probably pass (x,y) on the board instead of pixel clicks, and pass which player stone
+    _graphics->placeStone(event.x, event.y);
+
+    // pass (potential) stone to be removed
+    // _graphics->removeStone(x, y);
 }
 
 void Gomoku::validateMove() {

@@ -67,17 +67,6 @@ Graphics::Graphics() : _pixelsPerSpace(0) {
     createLines();
 }
 
-void Graphics::placeStone(int x, int y) {
-    auto loc = nearestIntersection(x, y);
-    float radius = static_cast<float>(_pixelsPerSpace) / 2 * CIRCLE_SCALE;
-    CircleShape newStone(radius);
-    // TODO: now it just alternates color based on this x
-    static int clr = 0;
-    newStone.setFillColor(++clr % 2 == 0 ? Color::Red : Color::Blue);
-    newStone.setPosition(static_cast<float>(loc.x) - radius, static_cast<float>(loc.y) - radius);
-    _stones.push_back(newStone);
-}
-
 bool Graphics::isWindowOpen() const {
     return _window->isOpen();
 }
@@ -92,6 +81,21 @@ std::optional<sf::Event> Graphics::getEvent() {
         return std::nullopt;
     }
     return ev;
+}
+
+void Graphics::placeStone(int x, int y) {
+    auto loc = nearestIntersection(x, y);
+    float radius = static_cast<float>(_pixelsPerSpace) / 2 * CIRCLE_SCALE;
+    CircleShape newStone(radius);
+    // TODO: now it just alternates color based on this x
+    static int clr = 0;
+    newStone.setFillColor(++clr % 2 == 0 ? Color::Red : Color::Blue);
+    newStone.setPosition(static_cast<float>(loc.x) - radius, static_cast<float>(loc.y) - radius);
+    _stones.push_back(newStone);
+}
+
+void Graphics::removeStone(int x, int y) {
+    LOG("Called remove on (%d,%d), but not removing stones yet, need to decide on how to keep track of board", x, y);
 }
 
 void Graphics::setHeader(const std::string& text) {
