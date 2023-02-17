@@ -3,14 +3,42 @@
 //
 
 #include "Gomoku.hpp"
+#include <SFML/Graphics.hpp>
 
+void Gomoku::gameLoop() {
+    while (true) {
+        if (not _graphics->isWindowOpen()) {
+            // potential cleanup, but essentially the window is closed, so we exit
+            return;
+        }
 
-void Gomoku::updateBoardNegative() {
-//    _graphics->updateBoardNegative();
-}
+        std::optional<sf::Event> eventWrapper = _graphics->getEvent();
+        while (eventWrapper != std::nullopt) {
+            sf::Event event = eventWrapper.value();
+            switch (event.type) {
+                case sf::Event::Closed: {
+                    _graphics->closeWindow();
+                    break;
+                }
+                case sf::Event::KeyPressed: {
+                    if (event.key.code == sf::Keyboard::Key::Escape) {
+                        _graphics->closeWindow();
+                    }
+                    break;
+                }
+                case sf::Event::MouseButtonPressed: {
+                    // TODO: validate if stone can be placed
+                    _graphics->placeStone(event.mouseButton.x, event.mouseButton.y);
+                    break;
+                }
+                default:
+                    break;
+            }
 
-void Gomoku::updateBoardPositive() {
-//    _graphics->updateBoardPositive();
+            _graphics->update();
+            eventWrapper = _graphics->getEvent();
+        }
+    }
 }
 
 void Gomoku::doMove() {

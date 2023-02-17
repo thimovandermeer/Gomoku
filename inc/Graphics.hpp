@@ -16,14 +16,20 @@
 class IGraphics {
 public:
     virtual ~IGraphics() = default;
-    virtual bool updateBoardPositive() = 0;
-    virtual bool updateBoardNegative() = 0;
+    virtual bool isWindowOpen() const = 0;
+    virtual void closeWindow() = 0;
+    virtual std::optional<sf::Event> getEvent() = 0;
+    virtual void placeStone(int x, int y) = 0;
+    virtual void update() = 0;
 };
 
 class EmptyGraphics : public IGraphics {
 public:
-    bool updateBoardPositive() override { return false; }
-    bool updateBoardNegative() override { return false; }
+    bool isWindowOpen() const override { return false; }
+    void closeWindow() override {}
+    std::optional<sf::Event> getEvent() override { return std::nullopt; }
+    void placeStone(int x, int y) override { (void)(x + y); }
+    void update() override {}
 };
 
 class Graphics : public IGraphics {
@@ -33,8 +39,11 @@ public:
     Graphics& operator=(const Graphics&) = delete;
     ~Graphics() override = default;
 
-    bool updateBoardPositive() override;
-    bool updateBoardNegative() override;
+    bool isWindowOpen() const override;
+    void closeWindow() override;
+    std::optional<sf::Event> getEvent() override;
+    void placeStone(int x, int y) override;
+    void update() override;
 
 private:
     std::vector<sf::CircleShape> _stones;
@@ -47,7 +56,6 @@ private:
     std::vector<sf::RectangleShape> _lines;
     int _pixelsPerSpace;
 
-    sf::Text tempTitle(const std::unique_ptr<sf::RenderWindow>& window);
     sf::Vector2<int> nearestIntersection(int x, int y) const;
     void createLines();
 };

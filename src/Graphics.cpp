@@ -27,24 +27,21 @@ Vector2<int> Graphics::nearestIntersection(int x, int y) const {
     return {*lowerX, *lowerY};
 }
 
-Text Graphics::tempTitle(const std::unique_ptr<RenderWindow>& window) {
-    if (not _font.loadFromFile("../resources/Arial.ttf")) {
-        LOG("font not loaded from file");
-    }
-
-    Text topTitle;
-    topTitle.setFont(_font);
-    topTitle.setString("extra information goes at the top here");
-    topTitle.setFillColor(Color::Black);
-    topTitle.setStyle(Text::Bold);
-    // next steps are to center the text from left to right and in the top 10%
-    auto center = topTitle.getGlobalBounds().getSize() / 2.f;
-    auto localBounds = center + topTitle.getLocalBounds().getPosition();
-    Vector2f rounded = {std::round(localBounds.x), std::round(localBounds.y)};
-    topTitle.setOrigin(rounded);
-    topTitle.setPosition(Vector2f{static_cast<float>(window->getSize().x) / 2.f, static_cast<float>(window->getSize().y) / 20.f});
-    return topTitle;
-}
+// leave this here to check how to make text later :)
+//Text Graphics::tempTitle(const std::unique_ptr<RenderWindow>& window) {
+//    Text topTitle;
+//    topTitle.setFont(_font);
+//    topTitle.setString("extra information goes at the top here");
+//    topTitle.setFillColor(Color::Black);
+//    topTitle.setStyle(Text::Bold);
+//    // next steps are to center the text from left to right and in the top 10%
+//    auto center = topTitle.getGlobalBounds().getSize() / 2.f;
+//    auto localBounds = center + topTitle.getLocalBounds().getPosition();
+//    Vector2f rounded = {std::round(localBounds.x), std::round(localBounds.y)};
+//    topTitle.setOrigin(rounded);
+//    topTitle.setPosition(Vector2f{static_cast<float>(window->getSize().x) / 2.f, static_cast<float>(window->getSize().y) / 20.f});
+//    return topTitle;
+//}
 
 void Graphics::createLines() {
     const auto spacesBetweenLines = BOARD_SIZE + 1;
@@ -76,67 +73,48 @@ Graphics::Graphics() : _pixelsPerSpace(0) {
     _window = std::make_unique<RenderWindow>(VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Gomoku:)", Style::Default);
     _window->setVerticalSyncEnabled(true);
     _window->clear(Color::White);
-
-    auto tmpTitle = tempTitle(_window);
-    createLines();
-
-    while (_window->isOpen()) {
-        Event ev{};
-        while (_window->pollEvent(ev)) {
-            switch (ev.type) {
-                case Event::Closed: {
-                    _window->close();
-                    break;
-                }
-                case Event::KeyPressed: {
-                    if (ev.key.code == Keyboard::Key::Escape) {
-                        _window->close();
-                    }
-                    break;
-                }
-                case Event::MouseButtonPressed: {
-                    auto loc = nearestIntersection(ev.mouseButton.x, ev.mouseButton.y);
-                    float radius = static_cast<float>(_pixelsPerSpace) / 2 * CIRCLE_SCALE;
-                    CircleShape newStone(radius);
-                    // TODO: now it just alternates color based on this x
-                    static int x = 0;
-                    newStone.setFillColor(++x % 2 == 0 ? Color::Red : Color::Blue);
-                    newStone.setPosition(static_cast<float>(loc.x) - radius, static_cast<float>(loc.y) - radius);
-                    _stones.push_back(newStone);
-                    break;
-                }
-                case Event::KeyReleased:
-                case Event::MouseButtonReleased:
-                case Event::MouseMoved:
-                case Event::MouseEntered:
-                case Event::MouseLeft:
-                case Event::MouseWheelScrolled:
-                case Event::MouseWheelMoved:
-                case Event::GainedFocus:
-                case Event::LostFocus:
-                    break;
-                default:
-                    LOG("uncaught event %d", ev.type);
-                    break;
-
-            }
-
-            _window->clear(Color::White);
-            for (const auto& shape: _lines) {
-                _window->draw(shape);
-            }
-            for (const auto& circle: _stones) {
-                _window->draw(circle);
-            }
-            _window->draw(tmpTitle);
-            _window->display();
-        }
+    // path might change based on what directory
+    if (not _font.loadFromFile("../resources/Arial.ttf")) {
+        LOG("font not loaded from file");
     }
+
+    createLines();
 }
 
-bool Graphics::updateBoardPositive() {
-    return false;
+void Graphics::placeStone(int x, int y) {
+    auto loc = nearestIntersection(x, y);
+    float radius = static_cast<float>(_pixelsPerSpace) / 2 * CIRCLE_SCALE;
+    CircleShape newStone(radius);
+    // TODO: now it just alternates color based on this x
+    static int clr = 0;
+    newStone.setFillColor(++clr % 2 == 0 ? Color::Red : Color::Blue);
+    newStone.setPosition(static_cast<float>(loc.x) - radius, static_cast<float>(loc.y) - radius);
+    _stones.push_back(newStone);
 }
-bool Graphics::updateBoardNegative() {
-    return false;
+
+bool Graphics::isWindowOpen() const {
+    return _window->isOpen();
+}
+
+void Graphics::closeWindow() {
+    _window->close();
+}
+
+std::optional<sf::Event> Graphics::getEvent() {
+    std::optional<Event> ev{};
+    if (not _window->pollEvent(ev.emplace())) {
+        return std::nullopt;
+    }
+    return ev;
+}
+
+void Graphics::update() {
+    _window->clear(Color::White);
+    for (const auto& shape: _lines) {
+        _window->draw(shape);
+    }
+    for (const auto& circle: _stones) {
+        _window->draw(circle);
+    }
+    _window->display();
 }

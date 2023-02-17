@@ -20,12 +20,12 @@ public:
     Gomoku(std::unique_ptr<IValidator>& validator, std::unique_ptr<IGraphics>& graphics) :
             _validator(std::move(validator)), _graphics(std::move(graphics)) {}
 
+    void gameLoop();
+
 private:
     std::unique_ptr<IValidator> _validator;
     std::unique_ptr<IGraphics> _graphics;
 
-    void updateBoardNegative();
-    void updateBoardPositive();
     void doMove();
     void validateMove();
     std::vector<std::vector<Tile>> board;
