@@ -4,6 +4,7 @@
 
 #ifndef GOMOKU_GRAPHICS_HPP
 #define GOMOKU_GRAPHICS_HPP
+
 #include <memory>
 #include <SFML/Graphics.hpp>
 
@@ -15,16 +16,12 @@
 class IGraphics {
 public:
     virtual ~IGraphics() = default;
-    virtual std::unique_ptr<IGraphics> clone() const = 0;
     virtual bool updateBoardPositive() = 0;
     virtual bool updateBoardNegative() = 0;
 };
 
 class EmptyGraphics : public IGraphics {
 public:
-    std::unique_ptr<IGraphics> clone() const override {
-        return std::make_unique<EmptyGraphics>(*this);
-    }
     bool updateBoardPositive() override { return false; }
     bool updateBoardNegative() override { return false; }
 };
@@ -32,12 +29,9 @@ public:
 class Graphics : public IGraphics {
 public:
     Graphics();
-    Graphics(const Graphics&) = default;
+    Graphics(const Graphics&) = delete;
     Graphics& operator=(const Graphics&) = delete;
     ~Graphics() override = default;
-    std::unique_ptr<IGraphics> clone() const override {
-        return std::make_unique<Graphics>(*this);
-    }
 
     bool updateBoardPositive() override;
     bool updateBoardNegative() override;
@@ -46,13 +40,14 @@ private:
     std::vector<sf::CircleShape> _stones;
 
 // these are (likely) set only once
+    std::unique_ptr<sf::RenderWindow> _window;
     sf::Font _font;
     std::vector<int> _xCoordinates;
     std::vector<int> _yCoordinates;
     std::vector<sf::RectangleShape> _lines;
     int _pixelsPerSpace;
 
-    sf::Text tempTitle(const sf::RenderWindow& window);
+    sf::Text tempTitle(const std::unique_ptr<sf::RenderWindow>& window);
     sf::Vector2<int> nearestIntersection(int x, int y) const;
     void createLines();
 };

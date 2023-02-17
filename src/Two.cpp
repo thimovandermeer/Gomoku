@@ -4,53 +4,54 @@
 
 #include "Two.hpp"
 
-Two::Two()
-{
-	LOG("TWO constructor");
+Two::Two() {
+    LOG("TWO constructor");
 }
-Doubles Two::create_two(const std::vector<std::vector<Tile>> &board, const Coordinates &coord, const Player &player) {
+Doubles Two::create_two(const std::vector<std::vector<Tile>>& board, const Coordinates& coord, const Player& player) {
     auto current_coordinates = check_two_in_a_row(board, coord, player);
-    if(current_coordinates.y != -1) {
+    if (current_coordinates.y != -1) {
         return (boundary_check(current_coordinates, coord));
     }
+    // TODO: warning: control may reach end of non-void function
+    return {};
 }
 
 
-Coordinates		Two::check_two_in_a_row(const std::vector<std::vector<Tile>> &board, const Coordinates &coord, const Player& player) {
+Coordinates Two::check_two_in_a_row(const std::vector<std::vector<Tile>>& board, const Coordinates& coord, const Player& player) {
     Coordinates already_on_board_coords{};
     LOG("incoming coords %i, %i", coord.y, coord.x);
-    LOG("wat is deze %i", board[coord.y - 1][coord.x -1]);
+    LOG("wat is deze %i", board[coord.y - 1][coord.x - 1]);
     LOG("wat is player %i", player);
-    if(static_cast<Player>(board[coord.y - 1][coord.x -1]) == player) {
-        already_on_board_coords.y = coord.y -1;
-        already_on_board_coords.x = coord.x -1;
+    if (static_cast<Player>(board[coord.y - 1][coord.x - 1]) == player) {
+        already_on_board_coords.y = coord.y - 1;
+        already_on_board_coords.x = coord.x - 1;
         return already_on_board_coords;
     } else if (static_cast<Player>(board[coord.y][coord.x - 1]) == player) {
         already_on_board_coords.y = coord.y;
-        already_on_board_coords.x = coord.x -1;
+        already_on_board_coords.x = coord.x - 1;
         return already_on_board_coords;
-    } else if (static_cast<Player>(board[coord.y + 1][coord.x -1]) == player) {
+    } else if (static_cast<Player>(board[coord.y + 1][coord.x - 1]) == player) {
         already_on_board_coords.y = coord.y + 1;
         already_on_board_coords.x = coord.x - 1;
         return already_on_board_coords;
-    } else if (static_cast<Player>(board[coord.y][coord.x + 1]) == player ) {
+    } else if (static_cast<Player>(board[coord.y][coord.x + 1]) == player) {
         already_on_board_coords.y = coord.y;
-        already_on_board_coords.x = coord.x +1;
+        already_on_board_coords.x = coord.x + 1;
         return already_on_board_coords;
-    } else if (static_cast<Player>(board[coord.y + 1][coord.x + 1]) == player)  {
-        already_on_board_coords.y = coord.y +1;
-        already_on_board_coords.x = coord.x +1;
+    } else if (static_cast<Player>(board[coord.y + 1][coord.x + 1]) == player) {
+        already_on_board_coords.y = coord.y + 1;
+        already_on_board_coords.x = coord.x + 1;
         return already_on_board_coords;
     } else if (static_cast<Player>(board[coord.y - 1][coord.x + 1]) == player) {
-        already_on_board_coords.y = coord.y -1;
-        already_on_board_coords.x = coord.x +1;
+        already_on_board_coords.y = coord.y - 1;
+        already_on_board_coords.x = coord.x + 1;
         return already_on_board_coords;
     } else if (static_cast<Player>(board[coord.y + 1][coord.x]) == player) {
-        already_on_board_coords.y = coord.y +1;
+        already_on_board_coords.y = coord.y + 1;
         already_on_board_coords.x = coord.x;
         return already_on_board_coords;
     } else if (static_cast<Player>(board[coord.y - 1][coord.x]) == player) {
-        already_on_board_coords.y = coord.y -1;
+        already_on_board_coords.y = coord.y - 1;
         already_on_board_coords.x = coord.x;
         return already_on_board_coords;
     } else {
@@ -60,9 +61,9 @@ Coordinates		Two::check_two_in_a_row(const std::vector<std::vector<Tile>> &board
     }
 }
 
-Doubles 		Two::boundary_check(Coordinates coordinates_on_board, Coordinates new_coordinates) {
+Doubles Two::boundary_check(Coordinates coordinates_on_board, Coordinates new_coordinates) {
     auto doubles = Doubles();
-    if(coordinates_on_board.y < new_coordinates.y || coordinates_on_board.x < new_coordinates.x) {
+    if (coordinates_on_board.y < new_coordinates.y || coordinates_on_board.x < new_coordinates.x) {
         doubles.left_boundary_coordinates = coordinates_on_board;
         doubles.right_boundary_coordinates = new_coordinates;
     } else {
@@ -73,8 +74,8 @@ Doubles 		Two::boundary_check(Coordinates coordinates_on_board, Coordinates new_
     return doubles;
 }
 
-Direction       Two::determine_direction(Doubles doubles) {
-    if(doubles.left_boundary_coordinates.x == doubles.right_boundary_coordinates.x) {
+Direction Two::determine_direction(Doubles doubles) {
+    if (doubles.left_boundary_coordinates.x == doubles.right_boundary_coordinates.x) {
         return VERTICAL;
     } else if (doubles.left_boundary_coordinates.y == doubles.right_boundary_coordinates.y)
         return HORIZONTAL;

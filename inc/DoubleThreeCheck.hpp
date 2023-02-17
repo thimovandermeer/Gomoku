@@ -4,57 +4,57 @@
 
 #ifndef GOMOKU_DOUBLETHREECHECK_HPP
 #define GOMOKU_DOUBLETHREECHECK_HPP
+
 #include <memory>
 #include <string>
 #include <vector>
 #include "Two.hpp"
 
 struct Threes {
-	Coordinates left_boundary_coordinates;
-	Coordinates right_boundary_coordinates;
-	Coordinates open_space_coordinates;
-	bool		open_space;
-	Direction   direction;
+    Coordinates left_boundary_coordinates;
+    Coordinates right_boundary_coordinates;
+    Coordinates open_space_coordinates;
+    bool open_space;
+    Direction direction;
 };
 
-enum double_type {NORMAL, EMPTYSPACE, NONE};
+enum double_type {
+    NORMAL, EMPTYSPACE, NONE
+};
 
 class IDoubleThreeCheck {
 public:
-    virtual std::unique_ptr<IDoubleThreeCheck> clone() const = 0;
-	virtual ~IDoubleThreeCheck() = default;
-	virtual errorState DoubleThreeChecker(const std::vector<std::vector<Tile>> &board, const Coordinates& coord, const Player& player) = 0;
+    virtual ~IDoubleThreeCheck() = default;
+    virtual errorState
+    DoubleThreeChecker(const std::vector<std::vector<Tile>>& board, const Coordinates& coord, const Player& player) = 0;
 };
 
-class DoubleThreeCheck: public IDoubleThreeCheck
-{
+class DoubleThreeCheck : public IDoubleThreeCheck {
 public:
-	DoubleThreeCheck(std::unique_ptr<ITwo> &Two) : _Two(std::move(Two)) {}
+    explicit DoubleThreeCheck(std::unique_ptr<ITwo>& Two) : _two(std::move(Two)) {}
     DoubleThreeCheck(const DoubleThreeCheck&) {}
-	~DoubleThreeCheck() = default;
-	std::unique_ptr<IDoubleThreeCheck> clone() const override {
-		return std::make_unique<DoubleThreeCheck>(*this);
-	}
+    ~DoubleThreeCheck() override = default;
 
-	void 			set_board(const std::vector<std::vector<Tile>> &board);
-	size_t			double_two_size();
-	errorState 		DoubleThreeChecker(const std::vector<std::vector<Tile>> &board, const Coordinates& coord, const Player& player) override;
-    bool 			find_three(Coordinates newCoords, std::vector<Doubles> &double_two);
-    errorState 		find_double_three();
-	double_type 	check_right_boundary(Coordinates boundary_coords, Coordinates new_coords, Direction direction);
-    double_type 	check_left_boundary(Coordinates boundary_coords, Coordinates new_coords, Direction direction);
-	void 			two_in_a_row(const std::vector<std::vector<Tile>> &board, const Coordinates &coord, const Player& play);
-    Threes			get_last_three();
-	bool 			open_space_is_empty(Coordinates empty_space);
+    void set_board(const std::vector<std::vector<Tile>>& board);
+    size_t double_two_size();
+    errorState DoubleThreeChecker(const std::vector<std::vector<Tile>>& board, const Coordinates& coord,
+                                  const Player& player) override;
+    bool find_three(Coordinates newCoords, std::vector<Doubles>& double_two);
+    errorState find_double_three();
+    double_type check_right_boundary(Coordinates boundary_coords, Coordinates new_coords, Direction direction);
+    double_type check_left_boundary(Coordinates boundary_coords, Coordinates new_coords, Direction direction);
+    void two_in_a_row(const std::vector<std::vector<Tile>>& board, const Coordinates& coord, const Player& play);
+    Threes get_last_three();
+    bool open_space_is_empty(Coordinates empty_space);
 private:
-	std::vector<Threes>		_doubleThreeList;
-	std::vector<Doubles>	_doubleTwoList;
+    std::vector<Threes> _doubleThreeList;
+    std::vector<Doubles> _doubleTwoList;
 
-	void set_state(State newState, std::string &errorReason);
-	errorState                          _state;
+    void set_state(State newState, std::string& errorReason);
+    errorState _state;
 
-    std::shared_ptr<ITwo>               _Two;
-	std::vector<std::vector<Tile>> 		_board;
+    std::shared_ptr<ITwo> _two;
+    std::vector<std::vector<Tile>> _board;
 
 
 };

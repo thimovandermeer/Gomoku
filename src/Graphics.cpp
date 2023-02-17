@@ -14,17 +14,20 @@ using namespace sf;
 Vector2<int> Graphics::nearestIntersection(int x, int y) const {
     auto lowerX = std::lower_bound(_xCoordinates.begin(), _xCoordinates.end(), x);
     // if end or not first and closer to left than to right
-    if (lowerX == _xCoordinates.end() || (lowerX != _xCoordinates.begin() && std::abs(x - *(lowerX - 1)) <= std::abs(x - *lowerX))) {
+    if (lowerX == _xCoordinates.end() ||
+        (lowerX != _xCoordinates.begin() && std::abs(x - *(lowerX - 1)) <= std::abs(x - *lowerX))) {
         --lowerX;
     }
     auto lowerY = std::lower_bound(_yCoordinates.begin(), _yCoordinates.end(), y);
     // same
-    if (lowerY == _yCoordinates.end() || (lowerY != _yCoordinates.begin() && std::abs(y - *(lowerY - 1)) <= std::abs(y - *lowerY))) {
+    if (lowerY == _yCoordinates.end() ||
+        (lowerY != _yCoordinates.begin() && std::abs(y - *(lowerY - 1)) <= std::abs(y - *lowerY))) {
         --lowerY;
-    }return {*lowerX, *lowerY};
+    }
+    return {*lowerX, *lowerY};
 }
 
-Text Graphics::tempTitle(const RenderWindow& window) {
+Text Graphics::tempTitle(const std::unique_ptr<RenderWindow>& window) {
     if (not _font.loadFromFile("../resources/Arial.ttf")) {
         LOG("font not loaded from file");
     }
@@ -39,7 +42,7 @@ Text Graphics::tempTitle(const RenderWindow& window) {
     auto localBounds = center + topTitle.getLocalBounds().getPosition();
     Vector2f rounded = {std::round(localBounds.x), std::round(localBounds.y)};
     topTitle.setOrigin(rounded);
-    topTitle.setPosition(Vector2f{static_cast<float>(window.getSize().x) / 2.f, static_cast<float>(window.getSize().y) / 20.f});
+    topTitle.setPosition(Vector2f{static_cast<float>(window->getSize().x) / 2.f, static_cast<float>(window->getSize().y) / 20.f});
     return topTitle;
 }
 
@@ -70,24 +73,24 @@ void Graphics::createLines() {
 
 Graphics::Graphics() : _pixelsPerSpace(0) {
     // TODO: check for WINDOW_WIDTH vs actual screen size and scale down if needed
-    RenderWindow window(VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Gomoku:)", Style::Default);
-    window.setVerticalSyncEnabled(true);
-    window.clear(Color::White);
+    _window = std::make_unique<RenderWindow>(VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Gomoku:)", Style::Default);
+    _window->setVerticalSyncEnabled(true);
+    _window->clear(Color::White);
 
-    auto tmpTitle = tempTitle(window);
+    auto tmpTitle = tempTitle(_window);
     createLines();
 
-    while (window.isOpen()) {
+    while (_window->isOpen()) {
         Event ev{};
-        while (window.pollEvent(ev)) {
+        while (_window->pollEvent(ev)) {
             switch (ev.type) {
                 case Event::Closed: {
-                    window.close();
+                    _window->close();
                     break;
                 }
                 case Event::KeyPressed: {
                     if (ev.key.code == Keyboard::Key::Escape) {
-                        window.close();
+                        _window->close();
                     }
                     break;
                 }
@@ -118,15 +121,15 @@ Graphics::Graphics() : _pixelsPerSpace(0) {
 
             }
 
-            window.clear(Color::White);
-            for (const auto& shape : _lines) {
-                window.draw(shape);
+            _window->clear(Color::White);
+            for (const auto& shape: _lines) {
+                _window->draw(shape);
             }
-            for (const auto& circle : _stones) {
-                window.draw(circle);
+            for (const auto& circle: _stones) {
+                _window->draw(circle);
             }
-            window.draw(tmpTitle);
-            window.display();
+            _window->draw(tmpTitle);
+            _window->display();
         }
     }
 }
