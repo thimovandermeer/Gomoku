@@ -22,6 +22,12 @@ enum double_type {
     NORMAL, EMPTYSPACE, NONE
 };
 
+struct boundary_check_return {
+	double_type doubleType;
+	Coordinates	openSpace;
+};
+
+
 class IDoubleThreeCheck {
 public:
     virtual ~IDoubleThreeCheck() = default;
@@ -35,17 +41,20 @@ public:
     DoubleThreeCheck(const DoubleThreeCheck&) {}
     ~DoubleThreeCheck() override = default;
 
-    void set_board(const std::vector<std::vector<Tile>>& board);
-    size_t double_two_size();
-    errorState DoubleThreeChecker(const std::vector<std::vector<Tile>>& board, const Coordinates& coord,
-                                  const Player& player) override;
-    bool find_three(Coordinates newCoords, std::vector<Doubles>& double_two);
-    errorState find_double_three();
-    double_type check_right_boundary(Coordinates boundary_coords, Coordinates new_coords, Direction direction);
-    double_type check_left_boundary(Coordinates boundary_coords, Coordinates new_coords, Direction direction);
-    void two_in_a_row(const std::vector<std::vector<Tile>>& board, const Coordinates& coord, const Player& play);
-    Threes get_last_three();
-    bool open_space_is_empty(Coordinates empty_space);
+	Threes			fill_double_three_stack_right(Coordinates left_bound, Coordinates newCoords, boundary_check_return type);
+	void 			set_board(const std::vector<std::vector<Tile>> &board);
+	size_t			double_two_size();
+	errorState 		DoubleThreeChecker(const std::vector<std::vector<Tile>> &board, const Coordinates& coord, const Player& player) override;
+    bool 			find_three(Coordinates newCoords, std::vector<Doubles> &double_two);
+    errorState 		find_double_three();
+	boundary_check_return check_right_boundary(Coordinates boundary_coords, Coordinates new_coords, Direction direction);
+	double_type		check_right_boundary_horizontal(Coordinates boundary_coords, Coordinates new_coords);
+	double_type		check_right_boundary_vertical(Coordinates boundary_coords, Coordinates new_coords);
+	double_type		check_right_boundary_cross(Coordinates boundary_coords, Coordinates new_coords);
+	double_type 	check_left_boundary(Coordinates boundary_coords, Coordinates new_coords, Direction direction);
+	void 			two_in_a_row(const std::vector<std::vector<Tile>> &board, const Coordinates &coord, const Player& play);
+    Threes			get_last_three();
+	bool 			open_space_is_empty(Coordinates empty_space);
 private:
     std::vector<Threes> _doubleThreeList;
     std::vector<Doubles> _doubleTwoList;

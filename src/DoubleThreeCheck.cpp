@@ -34,6 +34,29 @@ void DoubleThreeCheck::two_in_a_row(const std::vector<std::vector<Tile>>& board,
     _doubleTwoList.push_back(_two->create_two(board, coord, play));
 }
 
+Threes		DoubleThreeCheck::fill_double_three_stack_right(Coordinates left_bound, Coordinates newCoords,
+															  boundary_check_return type)
+{
+	Threes result;
+	if(type.doubleType == NORMAL) {
+		LOG("Normal type");
+		result.open_space = false;
+		result.open_space_coordinates = type.openSpace;
+		result.left_boundary_coordinates = left_bound;
+		result.right_boundary_coordinates = newCoords;
+	}
+	if (type.doubleType == EMPTYSPACE) {
+		LOG("SPACE TYPE");
+		result.open_space = true;
+		result.open_space_coordinates = type.openSpace;
+		result.left_boundary_coordinates = left_bound;
+		result.right_boundary_coordinates = newCoords;
+	}
+	return result;
+}
+
+bool 		DoubleThreeCheck::find_three(Coordinates newCoords, std::vector<Doubles> &double_two)
+{
 bool DoubleThreeCheck::find_three(Coordinates newCoords, std::vector<Doubles>& double_two) {
     LOG("newcoords are %i %i", newCoords.y, newCoords.x);
     for (auto elem: double_two) {
@@ -137,8 +160,10 @@ double_type DoubleThreeCheck::check_right_boundary(Coordinates boundary_coords, 
             boundary_coords.y);
         return NONE;
     }
+	result.doubleType = NONE;
+	result.openSpace = Coordinates{-1,-1};
     LOG("Did not access any right boundary direction checks");
-    return NONE;
+    return result;
 }
 
 double_type DoubleThreeCheck::check_left_boundary(Coordinates boundary_coords, Coordinates new_coords, Direction direction) {
