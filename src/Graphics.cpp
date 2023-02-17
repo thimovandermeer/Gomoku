@@ -26,22 +26,6 @@ Vector2<int> Graphics::nearestIntersection(int x, int y) const {
     return {*lowerX, *lowerY};
 }
 
-// leave this here to check how to make text later :)
-//Text Graphics::tempTitle(const std::unique_ptr<RenderWindow>& window) {
-//    Text topTitle;
-//    topTitle.setFont(_font);
-//    topTitle.setString("extra information goes at the top here");
-//    topTitle.setFillColor(Color::Black);
-//    topTitle.setStyle(Text::Bold);
-//    // next steps are to center the text from left to right and in the top 10%
-//    auto center = topTitle.getGlobalBounds().getSize() / 2.f;
-//    auto localBounds = center + topTitle.getLocalBounds().getPosition();
-//    Vector2f rounded = {std::round(localBounds.x), std::round(localBounds.y)};
-//    topTitle.setOrigin(rounded);
-//    topTitle.setPosition(Vector2f{static_cast<float>(window->getSize().x) / 2.f, static_cast<float>(window->getSize().y) / 20.f});
-//    return topTitle;
-//}
-
 void Graphics::createLines() {
     const auto spacesBetweenLines = BOARD_SIZE + 1;
     _pixelsPerSpace = WINDOW_WIDTH / spacesBetweenLines;
@@ -68,7 +52,7 @@ void Graphics::createLines() {
 }
 
 Graphics::Graphics() : _pixelsPerSpace(0) {
-    // TODO: check for WINDOW_WIDTH vs actual screen size and scale down if needed
+    // checking vs screen size does not seem to work properly since it checks physical pixels, nothing scaled
     _window = std::make_unique<RenderWindow>(VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Gomoku :)", Style::Titlebar | Style::Close);
     _window->setVerticalSyncEnabled(true);
     _window->clear(Color::White);
