@@ -51,7 +51,10 @@ public:
 	double_type		check_right_boundary_horizontal(Coordinates boundary_coords, Coordinates new_coords);
 	double_type		check_right_boundary_vertical(Coordinates boundary_coords, Coordinates new_coords);
 	double_type		check_right_boundary_cross(Coordinates boundary_coords, Coordinates new_coords);
-	double_type 	check_left_boundary(Coordinates boundary_coords, Coordinates new_coords, Direction direction);
+	boundary_check_return 	check_left_boundary(Coordinates boundary_coords, Coordinates new_coords, Direction direction);
+	double_type		check_left_boundary_horizontal(Coordinates boundary_coords, Coordinates new_coords);
+	double_type		check_left_boundary_vertical(Coordinates boundary_coords, Coordinates new_coords);
+	double_type		check_left_boundary_cross(Coordinates boundary_coords, Coordinates new_coords);
 	void 			two_in_a_row(const std::vector<std::vector<Tile>> &board, const Coordinates &coord, const Player& play);
     Threes			get_last_three();
 	bool 			open_space_is_empty(Coordinates empty_space);

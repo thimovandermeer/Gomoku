@@ -119,7 +119,7 @@ TEST(double_three_check_tests, check_left_boundary_horizontal) {
     new_coords.y = 10;
     new_coords.x = 9;
 
-    ASSERT_EQ(threeCheck.check_left_boundary(boundary_coords, new_coords, HORIZONTAL), NORMAL);
+    ASSERT_EQ(threeCheck.check_left_boundary(boundary_coords, new_coords, HORIZONTAL).doubleType, NORMAL);
 }
 
 TEST(double_three_check_tests, check_left_boundary_horizontal_false) {
@@ -132,7 +132,7 @@ TEST(double_three_check_tests, check_left_boundary_horizontal_false) {
     new_coords.y = 10;
     new_coords.x = 5;
 
-    ASSERT_EQ(threeCheck.check_left_boundary(boundary_coords, new_coords, HORIZONTAL), NONE);
+    ASSERT_EQ(threeCheck.check_left_boundary(boundary_coords, new_coords, HORIZONTAL).doubleType, NONE);
 }
 
 TEST(double_three_check_tests, check_left_boundary_vertical) {
@@ -145,7 +145,7 @@ TEST(double_three_check_tests, check_left_boundary_vertical) {
     new_coords.y = 9;
     new_coords.x = 10;
 
-    ASSERT_EQ(threeCheck.check_left_boundary(boundary_coords, new_coords, VERTICAL), NORMAL);
+    ASSERT_EQ(threeCheck.check_left_boundary(boundary_coords, new_coords, VERTICAL).doubleType, NORMAL);
 }
 
 TEST(double_three_check_tests, check_left_boundary_vertical_false) {
@@ -158,7 +158,7 @@ TEST(double_three_check_tests, check_left_boundary_vertical_false) {
     new_coords.y = 5;
     new_coords.x = 10;
 
-    ASSERT_EQ(threeCheck.check_left_boundary(boundary_coords, new_coords, VERTICAL), NONE);
+    ASSERT_EQ(threeCheck.check_left_boundary(boundary_coords, new_coords, VERTICAL).doubleType, NONE);
 }
 
 TEST(double_three_check_tests, check_left_boundary_cross) {
@@ -171,7 +171,7 @@ TEST(double_three_check_tests, check_left_boundary_cross) {
     new_coords.y = 9;
     new_coords.x = 9;
 
-    ASSERT_EQ(threeCheck.check_left_boundary(boundary_coords, new_coords, CROSS), NORMAL);
+    ASSERT_EQ(threeCheck.check_left_boundary(boundary_coords, new_coords, CROSS).doubleType, NORMAL);
 }
 
 TEST(double_three_check_tests, check_left_boundary_cross_false_y_different) {
@@ -181,10 +181,10 @@ TEST(double_three_check_tests, check_left_boundary_cross_false_y_different) {
     boundary_coords.x = 10;
 
     Coordinates new_coords;
-    new_coords.y = 8;
+    new_coords.y = 7;
     new_coords.x = 9;
 
-    ASSERT_EQ(threeCheck.check_left_boundary(boundary_coords, new_coords, CROSS), NONE);
+    ASSERT_EQ(threeCheck.check_left_boundary(boundary_coords, new_coords, CROSS).doubleType, NONE);
 }
 
 TEST(double_three_check_tests, check_left_boundary_cross_false_x_different) {
@@ -195,9 +195,9 @@ TEST(double_three_check_tests, check_left_boundary_cross_false_x_different) {
 
     Coordinates new_coords;
     new_coords.y = 9;
-    new_coords.x = 8;
+    new_coords.x = 7;
 
-    ASSERT_EQ(threeCheck.check_left_boundary(boundary_coords, new_coords, CROSS), NONE);
+    ASSERT_EQ(threeCheck.check_left_boundary(boundary_coords, new_coords, CROSS).doubleType, NONE);
 }
 
 
@@ -445,6 +445,37 @@ TEST(double_three_check_tests, check_double_three_with_open_space_left_horizonta
 	ASSERT_EQ(result.open_space_coordinates.y, 10);
 	ASSERT_EQ(result.open_space_coordinates.x, 12);
 }
+
+//TEST(double_three_check_tests, check_double_three_with_open_space_right_horizontal) {
+//	Doubles doubles;
+//
+//	doubles.left_boundary_coordinates.y = 10;
+//	doubles.left_boundary_coordinates.x = 10;
+//
+//	doubles.right_boundary_coordinates.y = 10;
+//	doubles.right_boundary_coordinates.x = 11;
+//	// add coordinates right side
+//
+//	Coordinates coords;
+//	coords.y = 10;
+//	coords.x = 13;
+//	doubles.direction = HORIZONTAL;
+//
+//
+//	// check coordinates
+//	std::vector<Doubles> vec;
+//	vec.push_back(doubles);
+//	auto board = create_empty_board();
+//	threeCheck.set_board(board);
+//	threeCheck.find_three(coords, vec);
+//	auto result = threeCheck.get_last_three();
+//
+//	ASSERT_TRUE(result.open_space);
+//	ASSERT_EQ(result.open_space_coordinates.y, 10);
+//	ASSERT_EQ(result.open_space_coordinates.x, 12);
+//}
+
+
 
 TEST(double_three_check_tests, check_double_three_with_open_space_up_vertical) {
 
