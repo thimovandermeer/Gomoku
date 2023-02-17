@@ -5,7 +5,7 @@
 #ifndef GOMOKU_GRAPHICS_HPP
 #define GOMOKU_GRAPHICS_HPP
 #include <memory>
-//#include <SFML/Graphics.hpp>
+#include <SFML/Graphics.hpp>
 
 // game becomes near unplayable if BOARD_SIZE * 10 >= WINDOW_WIDTH
 #define WINDOW_WIDTH 750
@@ -29,33 +29,33 @@ public:
     bool updateBoardNegative() override { return false; }
 };
 
-//class Graphics : public IGraphics {
-//public:
-//    Graphics();
-//    Graphics(const Graphics&) = default;
-//    Graphics& operator=(const Graphics&) = delete;
-//    ~Graphics() override = default;
-//    std::unique_ptr<IGraphics> clone() const override {
-//        return std::make_unique<Graphics>(*this);
-//    }
-//
-//    bool updateBoardPositive() override;
-//    bool updateBoardNegative() override;
-//
-//private:
-//    std::vector<sf::CircleShape> _stones;
-//
-//// these are (likely) set only once
-//    sf::Font _font;
-//    std::vector<int> _xCoordinates;
-//    std::vector<int> _yCoordinates;
-//    std::vector<sf::RectangleShape> _lines;
-//    int _pixelsPerSpace;
-//
-//    sf::Text tempTitle(const sf::RenderWindow& window);
-//    sf::Vector2<int> nearestIntersection(int x, int y) const;
-//    void createLines();
-//};
+class Graphics : public IGraphics {
+public:
+    Graphics();
+    Graphics(const Graphics&) = default;
+    Graphics& operator=(const Graphics&) = delete;
+    ~Graphics() override = default;
+    std::unique_ptr<IGraphics> clone() const override {
+        return std::make_unique<Graphics>(*this);
+    }
+
+    bool updateBoardPositive() override;
+    bool updateBoardNegative() override;
+
+private:
+    std::vector<sf::CircleShape> _stones;
+
+// these are (likely) set only once
+    sf::Font _font;
+    std::vector<int> _xCoordinates;
+    std::vector<int> _yCoordinates;
+    std::vector<sf::RectangleShape> _lines;
+    int _pixelsPerSpace;
+
+    sf::Text tempTitle(const sf::RenderWindow& window);
+    sf::Vector2<int> nearestIntersection(int x, int y) const;
+    void createLines();
+};
 
 
 #endif //GOMOKU_GRAPHICS_HPP
