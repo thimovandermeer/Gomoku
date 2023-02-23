@@ -32,7 +32,10 @@ void Gomoku::gameLoop() {
                 case sf::Event::MouseButtonPressed: {
                     if (event.mouseButton.button == sf::Mouse::Left) {
                         auto moveLocation = _graphics->nearestIntersection(event.mouseButton.x, event.mouseButton.y);
-                        doMove(moveLocation);
+                        if (moveLocation == std::nullopt) {
+                            break;
+                        }
+                        doMove(moveLocation.value());
                         // only redraw the board in this case because we don't change the board for other events
                         _graphics->update(_board);
                     }

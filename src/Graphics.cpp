@@ -10,7 +10,10 @@
 
 using namespace sf;
 
-Vector2<int> Graphics::nearestIntersection(int x, int y) const {
+std::optional<sf::Vector2<int>> Graphics::nearestIntersection(int x, int y) const {
+    if (static_cast<float>(y) < WINDOW_WIDTH * 0.1f) {
+        return std::nullopt;
+    }
     auto lowerX = std::lower_bound(_xCoordinates.begin(), _xCoordinates.end(), x);
     // if end or not first and closer to left than to right
     if (lowerX == _xCoordinates.end() ||
@@ -23,7 +26,7 @@ Vector2<int> Graphics::nearestIntersection(int x, int y) const {
         (lowerY != _yCoordinates.begin() && std::abs(y - *(lowerY - 1)) <= std::abs(y - *lowerY))) {
         --lowerY;
     }
-    return {static_cast<int>(lowerX - _xCoordinates.begin()), static_cast<int>(lowerY - _yCoordinates.begin())};
+    return {{static_cast<int>(lowerX - _xCoordinates.begin()), static_cast<int>(lowerY - _yCoordinates.begin())}};
 }
 
 void Graphics::createLines() {

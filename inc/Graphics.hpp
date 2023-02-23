@@ -26,7 +26,7 @@ public:
     virtual void closeWindow() = 0;
     virtual std::optional<sf::Event> getEvent() = 0;
     virtual void setHeader(const std::string& text) = 0;
-    virtual sf::Vector2<int> nearestIntersection(int x, int y) const = 0;
+    virtual std::optional<sf::Vector2<int>> nearestIntersection(int x, int y) const = 0;
     virtual void update(const std::vector<std::vector<Tile>>& board) = 0;
 };
 
@@ -42,7 +42,7 @@ public:
 
     std::optional<sf::Event> getEvent() override;
     void setHeader(const std::string& text) override;
-    sf::Vector2<int> nearestIntersection(int x, int y) const override;
+    std::optional<sf::Vector2<int>> nearestIntersection(int x, int y) const override;
 
     void update(const std::vector<std::vector<Tile>>& board) override;
 
