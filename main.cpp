@@ -3,7 +3,6 @@
 #include "Gomoku.hpp"
 
 int main() {
-
     std::unique_ptr<IGraphics> graphics = std::make_unique<Graphics>();
     std::unique_ptr<ITwo> two = std::make_unique<Two>();
     std::unique_ptr<IDoubleThreeCheck> doubleThreeCheck = std::make_unique<DoubleThreeCheck>(two);

@@ -63,7 +63,7 @@ Graphics::Graphics() : _pixelsPerSpace(0) {
 
     std::string pathToFont(PROJECT_ROOT_DIR);
     if (not _font.loadFromFile(pathToFont + "/resources/Arial.ttf")) {
-        LOG("font not loaded from file");
+        ERROR("font not loaded from file");
     }
     _header.setFont(_font);
     _header.setFillColor(Color::Black);
@@ -90,7 +90,7 @@ std::optional<sf::Event> Graphics::getEvent() {
 
 void Graphics::setHeader(const std::string& text) {
     if (std::count(text.begin(), text.end(), '\n') > MAX_HEADER_LINES - 1) {
-        LOG("Attempting to put too many lines in header, leaving header unchanged.");
+        WARN("Attempting to put too many lines in header, leaving header unchanged.");
         return;
     }
     _header.setString(text);
