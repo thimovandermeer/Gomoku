@@ -23,7 +23,7 @@ Vector2<int> Graphics::nearestIntersection(int x, int y) const {
         (lowerY != _yCoordinates.begin() && std::abs(y - *(lowerY - 1)) <= std::abs(y - *lowerY))) {
         --lowerY;
     }
-    return {*lowerX, *lowerY};
+    return {static_cast<int>(lowerX - _xCoordinates.begin()), static_cast<int>(lowerY - _yCoordinates.begin())};
 }
 
 void Graphics::createLines() {
@@ -53,7 +53,8 @@ void Graphics::createLines() {
 
 Graphics::Graphics() : _pixelsPerSpace(0) {
     // checking vs screen size does not seem to work properly since it checks physical pixels, nothing scaled
-    _window = std::make_unique<RenderWindow>(VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Gomoku :)", Style::Titlebar | Style::Close);
+    _window = std::make_unique<RenderWindow>(VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Gomoku :)",
+                                             Style::Titlebar | Style::Close);
     _window->setVerticalSyncEnabled(true);
     _window->clear(Color::White);
 
@@ -65,6 +66,7 @@ Graphics::Graphics() : _pixelsPerSpace(0) {
     _header.setFillColor(Color::Black);
     _header.setCharacterSize(WINDOW_WIDTH * (0.1 / MAX_HEADER_LINES));
     createLines();
+    _stoneRadius = static_cast<float>(_pixelsPerSpace) / 2 * CIRCLE_SCALE;
 }
 
 bool Graphics::isWindowOpen() const {
@@ -83,21 +85,6 @@ std::optional<sf::Event> Graphics::getEvent() {
     return ev;
 }
 
-void Graphics::placeStone(int x, int y) {
-    auto loc = nearestIntersection(x, y);
-    float radius = static_cast<float>(_pixelsPerSpace) / 2 * CIRCLE_SCALE;
-    CircleShape newStone(radius);
-    // TODO: now it just alternates color based on this x
-    static int clr = 0;
-    newStone.setFillColor(++clr % 2 == 0 ? Color::Red : Color::Blue);
-    newStone.setPosition(static_cast<float>(loc.x) - radius, static_cast<float>(loc.y) - radius);
-    _stones.push_back(newStone);
-}
-
-void Graphics::removeStone(int x, int y) {
-    LOG("Called remove on (%d,%d), but not removing stones yet, need to decide on how to keep track of board", x, y);
-}
-
 void Graphics::setHeader(const std::string& text) {
     if (std::count(text.begin(), text.end(), '\n') > MAX_HEADER_LINES - 1) {
         LOG("Attempting to put too many lines in header, leaving header unchanged.");
@@ -108,17 +95,37 @@ void Graphics::setHeader(const std::string& text) {
     auto localBounds = center + _header.getLocalBounds().getPosition();
     Vector2f rounded = {std::round(localBounds.x), std::round(localBounds.y)};
     _header.setOrigin(rounded);
-    _header.setPosition(Vector2f{static_cast<float>(_window->getSize().x) / 2.f, static_cast<float>(_window->getSize().y) / 20.f});
+    _header.setPosition(
+            Vector2f{static_cast<float>(_window->getSize().x) / 2.f, static_cast<float>(_window->getSize().y) / 20.f});
 }
 
-void Graphics::update() {
+CircleShape Graphics::newStone(int x, int y, Color clr) {
+    Vector2<int> loc = {_xCoordinates[x], _yCoordinates[y]};
+    CircleShape ret(_stoneRadius);
+    ret.setFillColor(clr);
+    ret.setPosition(static_cast<float>(loc.x) - _stoneRadius, static_cast<float>(loc.y) - _stoneRadius);
+    return ret;
+}
+
+void Graphics::update(const std::vector<std::vector<Tile>>& board) {
+    // create circles to place on the board
+    std::vector<CircleShape> stones;
+    for (int y = 0; y < BOARD_SIZE; ++y) {
+        for (int x = 0; x < BOARD_SIZE; ++x) {
+            if (board[y][x] == Tile::P1) {
+                stones.push_back(newStone(x, y, Color::Blue));
+            } else if (board[y][x] == Tile::P2) {
+                stones.push_back(newStone(x, y, Color::Red));
+            }
+        }
+    }
     _window->clear(Color::White);
     _window->draw(_header);
     for (const auto& shape: _lines) {
         _window->draw(shape);
     }
-    for (const auto& circle: _stones) {
-        _window->draw(circle);
+    for (const auto& stone: stones) {
+        _window->draw(stone);
     }
     _window->display();
 }

@@ -2,6 +2,7 @@
 // Created by Jonas Bennink Bolt on 2/3/23.
 //
 #include "Validator.hpp"
+#include "Gomoku.hpp"
 
 #define MAX_BOARD_SIZE 19
 
@@ -74,7 +75,7 @@ void Validator::boundary_checking() {
 
 void Validator::taken_check() {
     LOG("Coordinates %i %i with ", _coord.y, _coord.x);
-    if (_board[_coord.y][_coord.x] != Tile::FREE) {
+    if (_board[_coord.y][_coord.x] != Tile::EMPTY) {
         LOG("Coordinates %i %i are not free", _coord.y, _coord.x);
         std::string reason = "Coordinates are not free";
         set_state(ERROR, reason);

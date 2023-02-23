@@ -4,16 +4,16 @@
 
 #include <gtest/gtest.h>
 #include "Gomoku.hpp"
-#include "../inc/DoubleThreeCheck.hpp"
+#include "DoubleThreeCheck.hpp"
 #include "utils.hpp"
 
-std::unique_ptr<ITwo>					twoCheck = std::make_unique<Two>();
-DoubleThreeCheck 	threeCheck = DoubleThreeCheck(twoCheck);
+std::unique_ptr<ITwo> twoCheck = std::make_unique<Two>();
+DoubleThreeCheck threeCheck = DoubleThreeCheck(twoCheck);
 
 std::vector<std::vector<Tile>> create_double_three_board_horizontally() {
     std::vector<std::vector<Tile>> board = create_empty_board();
-    board[10][11] = Tile::PLAYERONE;
-    board[10][12] = Tile::PLAYERONE;
+    board[10][11] = Tile::P1;
+    board[10][12] = Tile::P1;
 //    board[10][13] = Tile::PLAYERONE;
     return board;
 }
@@ -202,7 +202,7 @@ TEST(double_three_check_tests, check_left_boundary_cross_false_x_different) {
 
 
 TEST(double_three_check_tests, check_double_three_vector_coordinates_right_side_addition_cross) {
-	// create a double with coordinates
+    // create a double with coordinates
     Doubles doubles;
 
     doubles.left_boundary_coordinates.y = 10;
@@ -358,55 +358,55 @@ TEST(double_three_check_tests, check_double_three_vector_coordinates_left_side_a
 }
 
 TEST(double_three_check_tests, check_double_three_with_open_space_right_horizontal) {
-	Doubles doubles;
+    Doubles doubles;
 
-	doubles.left_boundary_coordinates.y = 10;
-	doubles.left_boundary_coordinates.x = 11;
+    doubles.left_boundary_coordinates.y = 10;
+    doubles.left_boundary_coordinates.x = 11;
 
-	doubles.right_boundary_coordinates.y = 10;
-	doubles.right_boundary_coordinates.x = 12;
-	// add coordinates right side
+    doubles.right_boundary_coordinates.y = 10;
+    doubles.right_boundary_coordinates.x = 12;
+    // add coordinates right side
 
-	Coordinates coords;
-	coords.y = 10;
-	coords.x = 14;
-	doubles.direction = HORIZONTAL;
-	// check coordinates
-	std::vector<Doubles> vec;
-	vec.push_back(doubles);
-	auto board = create_empty_board();
-	threeCheck.set_board(board);
-	threeCheck.find_three(coords, vec);
-	auto result = threeCheck.get_last_three();
-	ASSERT_EQ(result.left_boundary_coordinates.y, 10);
-	ASSERT_EQ(result.right_boundary_coordinates.y, 12);
+    Coordinates coords;
+    coords.y = 10;
+    coords.x = 14;
+    doubles.direction = HORIZONTAL;
+    // check coordinates
+    std::vector<Doubles> vec;
+    vec.push_back(doubles);
+    auto board = create_empty_board();
+    threeCheck.set_board(board);
+    threeCheck.find_three(coords, vec);
+    auto result = threeCheck.get_last_three();
+    ASSERT_EQ(result.left_boundary_coordinates.y, 10);
+    ASSERT_EQ(result.right_boundary_coordinates.y, 12);
 }
 
 TEST(double_three_check_tests, open_space_is_empty_positive) {
-	Coordinates coords;
-	coords.y = 10;
-	coords.x = 10;
+    Coordinates coords;
+    coords.y = 10;
+    coords.x = 10;
 
 
-	auto board = create_filled_board();
-	board[coords.y][coords.x] = Tile::FREE;
-	threeCheck.set_board(board);
+    auto board = create_filled_board();
+    board[coords.y][coords.x] = Tile::EMPTY;
+    threeCheck.set_board(board);
 
-	// function undertest
-	threeCheck.open_space_is_empty(coords);
+    // function undertest
+    threeCheck.open_space_is_empty(coords);
 }
 
 TEST(double_three_check_tests, open_space_is_empty_negative) {
-	Coordinates coords;
-	coords.y = 10;
-	coords.x = 10;
+    Coordinates coords;
+    coords.y = 10;
+    coords.x = 10;
 
 
-	auto board = create_empty_board();
-	board[coords.y][coords.x] = Tile::PLAYERTWO;
-	threeCheck.set_board(board);
-	// function undertest
-	threeCheck.open_space_is_empty(coords);
+    auto board = create_empty_board();
+    board[coords.y][coords.x] = Tile::P2;
+    threeCheck.set_board(board);
+    // function undertest
+    threeCheck.open_space_is_empty(coords);
 }
 
 TEST(double_three_check_tests, check_double_three_with_open_space_left_horizontal) {
@@ -431,6 +431,6 @@ TEST(double_three_check_tests, check_double_three_with_open_space_right_cross) {
 }
 
 TEST(double_three_check_tests, find_double_three_cross) {
-	// create board with double three on it
+    // create board with double three on it
 
 }

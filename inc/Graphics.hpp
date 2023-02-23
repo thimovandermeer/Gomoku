@@ -17,16 +17,17 @@
 #define CIRCLE_SCALE 0.75f
 #define MAX_HEADER_LINES 2
 
+enum class Tile;
+
 class IGraphics {
 public:
     virtual ~IGraphics() = default;
     virtual bool isWindowOpen() const = 0;
     virtual void closeWindow() = 0;
     virtual std::optional<sf::Event> getEvent() = 0;
-    virtual void placeStone(int x, int y) = 0;
-    virtual void removeStone(int x, int y) = 0;
     virtual void setHeader(const std::string& text) = 0;
-    virtual void update() = 0;
+    virtual sf::Vector2<int> nearestIntersection(int x, int y) const = 0;
+    virtual void update(const std::vector<std::vector<Tile>>& board) = 0;
 };
 
 class EmptyGraphics : public IGraphics {
@@ -34,10 +35,9 @@ public:
     bool isWindowOpen() const override { return false; }
     void closeWindow() override {}
     std::optional<sf::Event> getEvent() override { return std::nullopt; }
-    void placeStone(int x, int y) override { (void)(x + y); }
-    void removeStone(int x, int y) override { (void)(x + y); }
     void setHeader(const std::string& text) override { (void)text; };
-    void update() override {}
+    sf::Vector2<int> nearestIntersection(int x, int y) const override { return {x, y}; };
+    void update(const std::vector<std::vector<Tile>>& board) override { (void)board; }
 };
 
 class Graphics : public IGraphics {
@@ -51,14 +51,12 @@ public:
     void closeWindow() override;
 
     std::optional<sf::Event> getEvent() override;
-    void placeStone(int x, int y) override;
-    void removeStone(int x, int y) override;
     void setHeader(const std::string& text) override;
+    sf::Vector2<int> nearestIntersection(int x, int y) const override;
 
-    void update() override;
+    void update(const std::vector<std::vector<Tile>>& board) override;
 
 private:
-    std::vector<sf::CircleShape> _stones;
     sf::Text _header;
 
 // these are (likely) set only once
@@ -68,8 +66,9 @@ private:
     std::vector<int> _yCoordinates;
     std::vector<sf::RectangleShape> _lines;
     int _pixelsPerSpace;
+    float _stoneRadius;
 
-    sf::Vector2<int> nearestIntersection(int x, int y) const;
+    sf::CircleShape newStone(int x, int y, sf::Color clr);
     void createLines();
 };
 

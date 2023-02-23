@@ -12,6 +12,10 @@
 
 #define BOARD_SIZE 19
 
+enum class Tile {
+    P1, P2, EMPTY
+};
+
 class Gomoku {
 public:
     Gomoku() = delete;
@@ -19,7 +23,8 @@ public:
     Gomoku& operator=(const Gomoku&) = delete;
     ~Gomoku() = default;
     Gomoku(std::unique_ptr<IValidator>& validator, std::unique_ptr<IGraphics>& graphics) :
-            _validator(std::move(validator)), _graphics(std::move(graphics)) {}
+            _validator(std::move(validator)), _graphics(std::move(graphics)),
+            _board({BOARD_SIZE, {BOARD_SIZE, Tile::EMPTY}}) {}
 
     void gameLoop();
 
@@ -27,9 +32,9 @@ private:
     std::unique_ptr<IValidator> _validator;
     std::unique_ptr<IGraphics> _graphics;
 
-    void doMove(const sf::Event::MouseButtonEvent& event);
+    void doMove(const sf::Vector2<int>& moveLocation);
     void validateMove();
-    std::vector<std::vector<Tile>> board;
+    std::vector<std::vector<Tile>> _board;
 
 };
 

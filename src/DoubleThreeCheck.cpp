@@ -4,6 +4,7 @@
 
 #include "DoubleThreeCheck.hpp"
 #include "logger.hpp"
+#include "Gomoku.hpp"
 
 errorState DoubleThreeCheck::DoubleThreeChecker(const std::vector<std::vector<Tile>>& board, const Coordinates& coord,
                                                 const Player& player) {
@@ -60,7 +61,7 @@ bool DoubleThreeCheck::find_three(Coordinates newCoords, std::vector<Doubles>& d
 
 bool DoubleThreeCheck::open_space_is_empty(Coordinates empty_space) {
     LOG("OPEN SPACE IS EMPTY");
-    if (_board[empty_space.y][empty_space.x] == Tile::FREE) {
+    if (_board[empty_space.y][empty_space.x] == Tile::EMPTY) {
         return true;
     } else {
         return false;

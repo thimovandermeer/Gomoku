@@ -5,16 +5,16 @@
 #ifndef GOMOKU_DOUBLETWO_H
 #define GOMOKU_DOUBLETWO_H
 
-#include "logger.hpp"
 #include <string>
 #include <vector>
+#include "logger.hpp"
+
+enum class Tile;
 
 enum Direction {
     HORIZONTAL, VERTICAL, CROSS
 };
-enum class Tile {
-    PLAYERONE, PLAYERTWO, FREE
-};
+
 struct Coordinates {
     int x;
     int y;
