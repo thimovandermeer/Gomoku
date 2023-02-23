@@ -30,16 +30,6 @@ public:
     virtual void update(const std::vector<std::vector<Tile>>& board) = 0;
 };
 
-class EmptyGraphics : public IGraphics {
-public:
-    bool isWindowOpen() const override { return false; }
-    void closeWindow() override {}
-    std::optional<sf::Event> getEvent() override { return std::nullopt; }
-    void setHeader(const std::string& text) override { (void)text; };
-    sf::Vector2<int> nearestIntersection(int x, int y) const override { return {x, y}; };
-    void update(const std::vector<std::vector<Tile>>& board) override { (void)board; }
-};
-
 class Graphics : public IGraphics {
 public:
     Graphics();
