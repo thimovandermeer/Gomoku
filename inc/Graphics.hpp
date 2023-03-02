@@ -69,7 +69,7 @@ private:
 
     void createLines();
     void createButton();
-    sf::CircleShape newStone(int x, int y, sf::Color clr);
+    void addStone(int x, int y, sf::Color clr, std::vector<sf::CircleShape>& stones);
     void drawRules();
 };
 

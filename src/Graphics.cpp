@@ -135,12 +135,12 @@ bool Graphics::getRulesActive() const {
     return _rulesActive;
 }
 
-CircleShape Graphics::newStone(int x, int y, Color clr) {
+void Graphics::addStone(int x, int y, Color clr, std::vector<CircleShape>& stones) {
     Vector2<int> loc = {_xCoordinates[x], _yCoordinates[y]};
     CircleShape ret(_stoneRadius);
     ret.setFillColor(clr);
     ret.setPosition(static_cast<float>(loc.x) - _stoneRadius, static_cast<float>(loc.y) - _stoneRadius);
-    return ret;
+    stones.push_back(ret);
 }
 
 void Graphics::drawRules() {
@@ -178,9 +178,9 @@ void Graphics::update(const std::vector<std::vector<Tile>>& board) {
     for (int y = 0; y < BOARD_SIZE; ++y) {
         for (int x = 0; x < BOARD_SIZE; ++x) {
             if (board[y][x] == Tile::P1) {
-                stones.push_back(newStone(x, y, Color::Blue));
+                addStone(x, y, Color::Blue, stones);
             } else if (board[y][x] == Tile::P2) {
-                stones.push_back(newStone(x, y, Color::Red));
+                addStone(x, y, Color::Red, stones);
             }
         }
     }
