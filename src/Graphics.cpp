@@ -54,6 +54,24 @@ void Graphics::createLines() {
     }
 }
 
+void Graphics::createButton() {
+    _rulesButton = RectangleShape({WINDOW_WIDTH * 0.125, WINDOW_HEIGHT * 0.03});
+    _rulesButton.setFillColor(Color::White);
+    _rulesButton.setOutlineColor(Color::Black);
+    _rulesButton.setOutlineThickness(3);
+    _rulesButton.setPosition({WINDOW_WIDTH - (WINDOW_WIDTH * 0.175), WINDOW_HEIGHT * 0.03});
+
+    _rulesString.setFont(_font);
+    _rulesString.setCharacterSize(WINDOW_WIDTH / 50);
+    _rulesString.setFillColor(Color::Black);
+    _rulesString.setString("See rules");
+
+    const FloatRect bounds(_rulesString.getLocalBounds());
+    const Vector2f box(_rulesButton.getSize());
+    _rulesString.setOrigin((bounds.width - box.x) / 2 + bounds.left, (bounds.height - box.y) / 2 + bounds.top);
+    _rulesString.setPosition(_rulesButton.getPosition());
+}
+
 Graphics::Graphics() : _pixelsPerSpace(0) {
     // checking vs screen size does not seem to work properly since it checks physical pixels, nothing scaled
     _window = std::make_unique<RenderWindow>(VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Gomoku :)",
@@ -69,6 +87,7 @@ Graphics::Graphics() : _pixelsPerSpace(0) {
     _header.setFillColor(Color::Black);
     _header.setCharacterSize(WINDOW_WIDTH * (0.1 / MAX_HEADER_LINES));
     createLines();
+    createButton();
     _stoneRadius = static_cast<float>(_pixelsPerSpace) / 2 * CIRCLE_SCALE;
 }
 
@@ -81,8 +100,8 @@ void Graphics::closeWindow() {
 }
 
 std::optional<sf::Event> Graphics::getEvent() {
-    std::optional<Event> ev{};
-    if (not _window->pollEvent(ev.emplace())) {
+    Event ev{};
+    if (not _window->pollEvent(ev)) {
         return std::nullopt;
     }
     return ev;
@@ -124,6 +143,8 @@ void Graphics::update(const std::vector<std::vector<Tile>>& board) {
     }
     _window->clear(Color::White);
     _window->draw(_header);
+    _window->draw(_rulesButton);
+    _window->draw(_rulesString);
     for (const auto& shape: _lines) {
         _window->draw(shape);
     }

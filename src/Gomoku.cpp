@@ -66,7 +66,7 @@ void Gomoku::doMove(const sf::Vector2<int>& moveLocation) {
         }
         ss << "click at pos (" << moveLocation.x << "," << moveLocation.y << ")";
     } else {
-        ss << "pos (" << moveLocation.x << ", " << moveLocation.y << ") is not valid, already has a stone";
+        ss << "pos (" << moveLocation.x << ", " << moveLocation.y << ") is not allowed";
     }
     // set header to whatever we want it to be
     _graphics->setHeader(ss.str());

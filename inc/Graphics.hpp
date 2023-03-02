@@ -55,11 +55,14 @@ private:
     std::vector<int> _xCoordinates;
     std::vector<int> _yCoordinates;
     std::vector<sf::RectangleShape> _lines;
+    sf::RectangleShape _rulesButton;
+    sf::Text _rulesString;
     int _pixelsPerSpace;
     float _stoneRadius;
 
     sf::CircleShape newStone(int x, int y, sf::Color clr);
     void createLines();
+    void createButton();
 };
 
 
