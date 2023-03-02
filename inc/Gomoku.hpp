@@ -31,10 +31,12 @@ public:
 private:
     std::unique_ptr<IValidator> _validator;
     std::unique_ptr<IGraphics> _graphics;
+    std::vector<std::vector<Tile>> _board;
 
     void doMove(const sf::Vector2<int>& moveLocation);
     void validateMove();
-    std::vector<std::vector<Tile>> _board;
+    void handleMouseButtonPressed(const sf::Event& event);
+    void handleKeyPressed(const sf::Event& event);
 
 };
 

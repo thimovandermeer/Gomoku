@@ -6,6 +6,39 @@
 #include <SFML/Graphics.hpp>
 #include <sstream>
 
+void Gomoku::handleKeyPressed(const sf::Event& event) {
+    if (event.key.code == sf::Keyboard::Key::Escape) {
+        if (_graphics->getRulesActive()) {
+            _graphics->setRulesActive(false);
+            _graphics->update(_board);
+        } else {
+            _graphics->closeWindow();
+        }
+    }
+}
+
+void Gomoku::handleMouseButtonPressed(const sf::Event& event) {
+    if (event.mouseButton.button == sf::Mouse::Left) {
+        if (_graphics->isRulesClick({event.mouseButton.x, event.mouseButton.y})) {
+            // toggle rules
+            _graphics->setRulesActive(not _graphics->getRulesActive());
+            _graphics->update(_board);
+            return;
+        }
+        if (_graphics->getRulesActive()) {
+            LOG("rules page up, board not active");
+            return;
+        }
+        auto moveLocation = _graphics->nearestIntersection(event.mouseButton.x, event.mouseButton.y);
+        if (moveLocation == std::nullopt) {
+            return;
+        }
+        doMove(moveLocation.value());
+        // only redraw the board in this case because we don't change the board for other events
+        _graphics->update(_board);
+    }
+}
+
 void Gomoku::gameLoop() {
     // draw board for the first time
     _graphics->update(_board);
@@ -24,21 +57,11 @@ void Gomoku::gameLoop() {
                     break;
                 }
                 case sf::Event::KeyPressed: {
-                    if (event.key.code == sf::Keyboard::Key::Escape) {
-                        _graphics->closeWindow();
-                    }
+                    handleKeyPressed(event);
                     break;
                 }
                 case sf::Event::MouseButtonPressed: {
-                    if (event.mouseButton.button == sf::Mouse::Left) {
-                        auto moveLocation = _graphics->nearestIntersection(event.mouseButton.x, event.mouseButton.y);
-                        if (moveLocation == std::nullopt) {
-                            break;
-                        }
-                        doMove(moveLocation.value());
-                        // only redraw the board in this case because we don't change the board for other events
-                        _graphics->update(_board);
-                    }
+                    handleMouseButtonPressed(event);
                     break;
                 }
                 default:

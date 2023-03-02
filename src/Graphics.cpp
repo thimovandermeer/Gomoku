@@ -10,25 +10,6 @@
 
 using namespace sf;
 
-std::optional<sf::Vector2<int>> Graphics::nearestIntersection(int x, int y) const {
-    if (static_cast<float>(y) < WINDOW_WIDTH * 0.1f) {
-        return std::nullopt;
-    }
-    auto lowerX = std::lower_bound(_xCoordinates.begin(), _xCoordinates.end(), x);
-    // if end or not first and closer to left than to right
-    if (lowerX == _xCoordinates.end() ||
-        (lowerX != _xCoordinates.begin() && std::abs(x - *(lowerX - 1)) <= std::abs(x - *lowerX))) {
-        --lowerX;
-    }
-    auto lowerY = std::lower_bound(_yCoordinates.begin(), _yCoordinates.end(), y);
-    // same
-    if (lowerY == _yCoordinates.end() ||
-        (lowerY != _yCoordinates.begin() && std::abs(y - *(lowerY - 1)) <= std::abs(y - *lowerY))) {
-        --lowerY;
-    }
-    return {{static_cast<int>(lowerX - _xCoordinates.begin()), static_cast<int>(lowerY - _yCoordinates.begin())}};
-}
-
 void Graphics::createLines() {
     const auto spacesBetweenLines = BOARD_SIZE + 1;
     _pixelsPerSpace = WINDOW_WIDTH / spacesBetweenLines;
@@ -64,7 +45,7 @@ void Graphics::createButton() {
     _rulesString.setFont(_font);
     _rulesString.setCharacterSize(WINDOW_WIDTH / 50);
     _rulesString.setFillColor(Color::Black);
-    _rulesString.setString("See rules");
+    _rulesString.setString("Rules");
 
     const FloatRect bounds(_rulesString.getLocalBounds());
     const Vector2f box(_rulesButton.getSize());
@@ -72,7 +53,7 @@ void Graphics::createButton() {
     _rulesString.setPosition(_rulesButton.getPosition());
 }
 
-Graphics::Graphics() : _pixelsPerSpace(0) {
+Graphics::Graphics() : _rulesActive(false), _pixelsPerSpace(0) {
     // checking vs screen size does not seem to work properly since it checks physical pixels, nothing scaled
     _window = std::make_unique<RenderWindow>(VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Gomoku :)",
                                              Style::Titlebar | Style::Close);
@@ -107,6 +88,25 @@ std::optional<sf::Event> Graphics::getEvent() {
     return ev;
 }
 
+std::optional<sf::Vector2<int>> Graphics::nearestIntersection(int x, int y) const {
+    if (static_cast<float>(y) < WINDOW_WIDTH * 0.1f) {
+        return std::nullopt;
+    }
+    auto lowerX = std::lower_bound(_xCoordinates.begin(), _xCoordinates.end(), x);
+    // if end or not first and closer to left than to right
+    if (lowerX == _xCoordinates.end() ||
+        (lowerX != _xCoordinates.begin() && std::abs(x - *(lowerX - 1)) <= std::abs(x - *lowerX))) {
+        --lowerX;
+    }
+    auto lowerY = std::lower_bound(_yCoordinates.begin(), _yCoordinates.end(), y);
+    // same
+    if (lowerY == _yCoordinates.end() ||
+        (lowerY != _yCoordinates.begin() && std::abs(y - *(lowerY - 1)) <= std::abs(y - *lowerY))) {
+        --lowerY;
+    }
+    return {{static_cast<int>(lowerX - _xCoordinates.begin()), static_cast<int>(lowerY - _yCoordinates.begin())}};
+}
+
 void Graphics::setHeader(const std::string& text) {
     if (std::count(text.begin(), text.end(), '\n') > MAX_HEADER_LINES - 1) {
         WARN("Attempting to put too many lines in header, leaving header unchanged.");
@@ -121,6 +121,20 @@ void Graphics::setHeader(const std::string& text) {
             Vector2f{static_cast<float>(_window->getSize().x) / 2.f, static_cast<float>(_window->getSize().y) / 20.f});
 }
 
+bool Graphics::isRulesClick(const Vector2i& loc) const {
+    IntRect bounds(_rulesButton.getGlobalBounds());
+    return bounds.contains(loc);
+}
+
+void Graphics::setRulesActive(bool b) {
+    _rulesString.setString(b ? "Back" : "Rules");
+    _rulesActive = b;
+}
+
+bool Graphics::getRulesActive() const {
+    return _rulesActive;
+}
+
 CircleShape Graphics::newStone(int x, int y, Color clr) {
     Vector2<int> loc = {_xCoordinates[x], _yCoordinates[y]};
     CircleShape ret(_stoneRadius);
@@ -129,7 +143,36 @@ CircleShape Graphics::newStone(int x, int y, Color clr) {
     return ret;
 }
 
+void Graphics::drawRules() {
+    constexpr std::string_view DA_RULES =
+            "\n\t(press Esc to return to the game)\n\n"
+            "\tThe goal of the game is to get five in a row by placing stones alternating\n"
+            "\tbetween both players.\n\n"
+            "\tCapture: you can remove a pair of your opponent's stones from the board\n"
+            "\tby flanking them with your own stones. You also win if you capture ten of\t\n"
+            "\tyour opponent's stones, so a total of five captures.\n\n"
+            "\tYou only win with five in a row if these five cannot be broken by a capture.\n\n"
+            "\tIt is not allowed to play a move that creates two free-three alignments,\n"
+            "\texcept by capturing a pair from your opponent.";
+    Text rules;
+    rules.setFont(_font);
+    rules.setFillColor(Color::Black);
+    rules.setCharacterSize(WINDOW_WIDTH / 40);
+    rules.setString(std::string{DA_RULES});
+    rules.setPosition(WINDOW_WIDTH * 0.05, WINDOW_HEIGHT * 0.05);
+
+    _window->draw(_rulesButton);
+    _window->draw(_rulesString);
+    _window->draw(rules);
+    _window->display();
+}
+
 void Graphics::update(const std::vector<std::vector<Tile>>& board) {
+    _window->clear(Color::White);
+    if (_rulesActive) {
+        drawRules();
+        return;
+    }
     // create circles to place on the board
     std::vector<CircleShape> stones;
     for (int y = 0; y < BOARD_SIZE; ++y) {
@@ -141,7 +184,6 @@ void Graphics::update(const std::vector<std::vector<Tile>>& board) {
             }
         }
     }
-    _window->clear(Color::White);
     _window->draw(_header);
     _window->draw(_rulesButton);
     _window->draw(_rulesString);

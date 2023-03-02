@@ -27,6 +27,9 @@ public:
     virtual std::optional<sf::Event> getEvent() = 0;
     virtual void setHeader(const std::string& text) = 0;
     virtual std::optional<sf::Vector2<int>> nearestIntersection(int x, int y) const = 0;
+    virtual bool isRulesClick(const sf::Vector2i& loc) const = 0;
+    virtual void setRulesActive(bool b) = 0;
+    virtual bool getRulesActive() const = 0;
     virtual void update(const std::vector<std::vector<Tile>>& board) = 0;
 };
 
@@ -41,13 +44,18 @@ public:
     void closeWindow() override;
 
     std::optional<sf::Event> getEvent() override;
-    void setHeader(const std::string& text) override;
     std::optional<sf::Vector2<int>> nearestIntersection(int x, int y) const override;
+    void setHeader(const std::string& text) override;
+    bool isRulesClick(const sf::Vector2i& loc) const override;
+    void setRulesActive(bool b) override;
+    bool getRulesActive() const override;
 
     void update(const std::vector<std::vector<Tile>>& board) override;
 
 private:
     sf::Text _header;
+    bool _rulesActive;
+    sf::Text _rulesString;
 
 // these are (likely) set only once
     std::unique_ptr<sf::RenderWindow> _window;
@@ -56,13 +64,13 @@ private:
     std::vector<int> _yCoordinates;
     std::vector<sf::RectangleShape> _lines;
     sf::RectangleShape _rulesButton;
-    sf::Text _rulesString;
     int _pixelsPerSpace;
     float _stoneRadius;
 
-    sf::CircleShape newStone(int x, int y, sf::Color clr);
     void createLines();
     void createButton();
+    sf::CircleShape newStone(int x, int y, sf::Color clr);
+    void drawRules();
 };
 
 
