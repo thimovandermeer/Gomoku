@@ -6,14 +6,26 @@
 #include "logger.hpp"
 #include "Gomoku.hpp"
 
-errorState DoubleThreeCheck::DoubleThreeChecker(const std::vector<std::vector<Tile>> &board, const Coordinates &coord,
+errorState DoubleThreeCheck::DoubleThreeChecker(const std::vector<std::vector<Tile>> &board, const Coordinates &new_coord,
 										  const Player &player)
 {
-	this->set_board(board);
-	this->two_in_a_row(board, coord, player);
-	this->find_three(coord, _doubleTwoList);
-	return (this->find_double_three());
-
+	errorState result;
+    this->set_board(board);
+	this->two_in_a_row(board, new_coord, player);
+    if(this->find_three(new_coord, _doubleTwoList)) {
+        if(this->full_free_check()) {
+            if(_full_frees == 1) {
+                result.error_reason = "Not allowed move this will be the second fully free for this player";
+                result.state = State::ERROR;
+                return result;
+            } else {
+                _full_frees++;
+                result.error_reason = "";
+                result.state = State::ACCEPTED;
+                return result;
+            }
+        }
+    }
 }
 
 void DoubleThreeCheck::set_board(const std::vector<std::vector<Tile>> &board) {
@@ -367,13 +379,10 @@ bool DoubleThreeCheck::check_free_right(Coordinates right_boundary, Direction di
 bool        DoubleThreeCheck::full_free_check() {
     auto three = get_last_three();
     if (check_free_left(three.left_boundary_coordinates, three.direction) && check_free_right(three.right_boundary_coordinates, three.direction)) {
+        three.full_free = true;
         return true;
+    } else {
+        three.full_free = false;
+        return false;
     }
-    return false;
-}
-
-errorState DoubleThreeCheck::find_double_three() {
-    // check if the edges of the double three list are free
-
-    return errorState{};
 }

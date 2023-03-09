@@ -29,7 +29,7 @@ public:
 	Threes			fill_double_three_stack(Coordinates bound_coordinates, Coordinates newCoords, boundary_check_return type, bool left, Direction dir);
 	void 			set_board(const std::vector<std::vector<Tile>> &board);
 	size_t			double_two_size();
-	errorState 		DoubleThreeChecker(const std::vector<std::vector<Tile>> &board, const Coordinates& coord, const Player& player) override;
+	errorState 		DoubleThreeChecker(const std::vector<std::vector<Tile>> &board, const Coordinates& new_coord, const Player& player) override;
     bool 			find_three(Coordinates newCoords, std::vector<Doubles> &double_two);
     errorState 		find_double_three();
 	boundary_check_return check_right_boundary(Coordinates boundary_coords, Coordinates new_coords, Direction direction);
@@ -47,15 +47,13 @@ public:
     bool            check_free_left(Coordinates left_boundary, Direction dir);
     bool            check_free_right(Coordinates right_boundary, Direction dir);
 private:
-    std::vector<Threes> _doubleThreeList;
-    std::vector<Doubles> _doubleTwoList;
-
     void set_state(State newState, std::string& errorReason);
-    errorState _state;
-
-    std::shared_ptr<ITwo> _two;
+    std::vector<Threes>             _doubleThreeList;
+    std::vector<Doubles>            _doubleTwoList;
+    errorState                      _state;
+    std::shared_ptr<ITwo>          _two;
     std::vector<std::vector<Tile>> _board;
-
+    int                             _full_frees;
 
 };
 
