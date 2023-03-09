@@ -8,8 +8,7 @@
 #include <string>
 #include <vector>
 #include "logger.hpp"
-
-enum class Tile;
+#include "Gomoku.hpp"
 
 enum Direction {
     HORIZONTAL, VERTICAL, CROSS

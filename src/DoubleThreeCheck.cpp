@@ -4,6 +4,7 @@
 
 #include "DoubleThreeCheck.hpp"
 #include "logger.hpp"
+#include "Gomoku.hpp"
 
 errorState DoubleThreeCheck::DoubleThreeChecker(const std::vector<std::vector<Tile>> &board, const Coordinates &coord,
 										  const Player &player)
@@ -34,23 +35,23 @@ void 		DoubleThreeCheck::two_in_a_row(const std::vector<std::vector<Tile>> &boar
     _doubleTwoList.push_back(_two->create_two(board, coord, play));
 }
 
-Threes		DoubleThreeCheck::fill_double_three_stack_right(Coordinates left_bound, Coordinates newCoords,
-															  boundary_check_return type)
+Threes		DoubleThreeCheck::fill_double_three_stack(Coordinates bound_coordinates, Coordinates newCoords,
+														boundary_check_return type, bool left)
 {
 	Threes result;
-	if(type.doubleType == NORMAL) {
-		LOG("Normal type");
-		result.open_space = false;
-		result.open_space_coordinates = type.openSpace;
-		result.left_boundary_coordinates = left_bound;
+	result.open_space_coordinates = type.openSpace;
+	if(left) {
+		result.left_boundary_coordinates = newCoords;
+		result.right_boundary_coordinates = bound_coordinates;
+	} else {
+		result.left_boundary_coordinates = bound_coordinates;
 		result.right_boundary_coordinates = newCoords;
 	}
+	if(type.doubleType == NORMAL) {
+		result.open_space = false;
+	}
 	if (type.doubleType == EMPTYSPACE) {
-		LOG("SPACE TYPE");
-		result.open_space = true;
-		result.open_space_coordinates = type.openSpace;
-		result.left_boundary_coordinates = left_bound;
-		result.right_boundary_coordinates = newCoords;
+		result.open_space = true;;
 	}
 	return result;
 }
@@ -62,16 +63,13 @@ bool 		DoubleThreeCheck::find_three(Coordinates newCoords, std::vector<Doubles> 
 		Threes three_in_a_row;
 		auto result = check_right_boundary(elem.right_boundary_coordinates, newCoords, elem.direction);
 		if(result.doubleType != NONE) {
-			three_in_a_row = fill_double_three_stack_right(elem.left_boundary_coordinates, newCoords, result);
+			three_in_a_row = fill_double_three_stack(elem.left_boundary_coordinates, newCoords, result, false);
 			_doubleThreeList.push_back(three_in_a_row);
             return true;
         }
 		result = check_left_boundary(elem.left_boundary_coordinates, newCoords, elem.direction);
         if(result.doubleType != NONE) {
-			Threes three_in_a_row;
-            three_in_a_row.left_boundary_coordinates = newCoords;
-            three_in_a_row.right_boundary_coordinates = elem.right_boundary_coordinates;
-			LOG("Wordt deze nog gepusht?");
+			three_in_a_row = fill_double_three_stack(elem.right_boundary_coordinates, newCoords, result, true);
             _doubleThreeList.push_back(three_in_a_row);
             return true;
         }
@@ -81,7 +79,7 @@ bool 		DoubleThreeCheck::find_three(Coordinates newCoords, std::vector<Doubles> 
 
 bool		DoubleThreeCheck::open_space_is_empty(Coordinates empty_space) {
 	LOG("OPEN SPACE IS EMPTY Y [%i] X [%i]", empty_space.y, empty_space.x);
-	if(_board[empty_space.y][empty_space.x] == Tile::FREE) {
+	if(_board[empty_space.y][empty_space.x] == Tile::EMPTY) {
 		return true;
 	} else {
 		return false;
@@ -157,7 +155,7 @@ boundary_check_return DoubleThreeCheck::check_right_boundary(Coordinates boundar
 		result.openSpace = Coordinates{-1, -1};
 		if(three_type == EMPTYSPACE) {
 			auto open_space_coords = new_coords;
-			open_space_coords.x = new_coords.x + 1;
+			open_space_coords.x = new_coords.x -1;
 			result.openSpace = open_space_coords;
 			result.doubleType = three_type;
 		}
@@ -168,7 +166,7 @@ boundary_check_return DoubleThreeCheck::check_right_boundary(Coordinates boundar
 		result.openSpace = Coordinates{-1,-1};
 		if(three_type == EMPTYSPACE) {
 			auto open_space_coords = new_coords;
-			open_space_coords.y = new_coords.y + 1;
+			open_space_coords.y = new_coords.y - 1;
 			result.openSpace = open_space_coords;
 			result.doubleType = three_type;
 		}
@@ -202,6 +200,7 @@ double_type			DoubleThreeCheck::check_left_boundary_horizontal(Coordinates bound
 			LOG("Matching new[%i] boundary[%i]", new_coords.x, boundary_coords.x);
 			return NORMAL;
 		} if(new_coords.x - boundary_coords.x == -2) {
+			LOG("EMPTY SPACE?");
 			return EMPTYSPACE;
 		}
 		LOG("We are on the same horizontal axis but not in line new[%i] boundary[%i]", new_coords.x, boundary_coords.x);
@@ -218,7 +217,8 @@ double_type			DoubleThreeCheck::check_left_boundary_vertical(Coordinates boundar
 		if(new_coords.y - boundary_coords.y == -1) {
 			LOG("Matching new[%i] boundary[%i]", new_coords.y, boundary_coords.y);
 			return NORMAL;
-		} if (new_coords.x - boundary_coords.y == -2) {
+		} if (new_coords.y - boundary_coords.y == -2) {
+			LOG("");
 			return EMPTYSPACE;
 		}
 		LOG("We are on the same vertical axis but not in line new[%i] boundary[%i]", new_coords.y, boundary_coords.y);
@@ -255,7 +255,7 @@ boundary_check_return DoubleThreeCheck::check_left_boundary(Coordinates boundary
 		result.openSpace = Coordinates{-1,-1};
 		if(three_type == EMPTYSPACE) {
 			auto open_space_coords = new_coords;
-			open_space_coords.x = new_coords.x - 1;
+			open_space_coords.x = new_coords.x + 1;
 			result.openSpace = open_space_coords;
 			result.doubleType = three_type;
 		}
@@ -266,7 +266,7 @@ boundary_check_return DoubleThreeCheck::check_left_boundary(Coordinates boundary
 		result.openSpace = Coordinates{-1,-1};
 		if (three_type == EMPTYSPACE) {
 			auto open_space_coords = new_coords;
-			open_space_coords.y = new_coords.y - 1;
+			open_space_coords.y = new_coords.y + 1;
 			result.openSpace = open_space_coords;
 			result.doubleType = three_type;
 		}

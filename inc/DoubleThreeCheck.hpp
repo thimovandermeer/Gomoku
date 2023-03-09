@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 #include "Two.hpp"
+#include "Gomoku.hpp"
 
 struct Threes {
     Coordinates left_boundary_coordinates;
@@ -41,7 +42,7 @@ public:
     DoubleThreeCheck(const DoubleThreeCheck&) {}
     ~DoubleThreeCheck() override = default;
 
-	Threes			fill_double_three_stack_right(Coordinates left_bound, Coordinates newCoords, boundary_check_return type);
+	Threes			fill_double_three_stack(Coordinates bound_coordinates, Coordinates newCoords, boundary_check_return type, bool left);
 	void 			set_board(const std::vector<std::vector<Tile>> &board);
 	size_t			double_two_size();
 	errorState 		DoubleThreeChecker(const std::vector<std::vector<Tile>> &board, const Coordinates& coord, const Player& player) override;
