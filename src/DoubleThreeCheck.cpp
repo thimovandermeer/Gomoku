@@ -36,10 +36,11 @@ void 		DoubleThreeCheck::two_in_a_row(const std::vector<std::vector<Tile>> &boar
 }
 
 Threes		DoubleThreeCheck::fill_double_three_stack(Coordinates bound_coordinates, Coordinates newCoords,
-														boundary_check_return type, bool left)
+														boundary_check_return type, bool left, Direction dir)
 {
 	Threes result;
 	result.open_space_coordinates = type.openSpace;
+    result.direction = dir;
 	if(left) {
 		result.left_boundary_coordinates = newCoords;
 		result.right_boundary_coordinates = bound_coordinates;
@@ -63,13 +64,13 @@ bool 		DoubleThreeCheck::find_three(Coordinates newCoords, std::vector<Doubles> 
 		Threes three_in_a_row;
 		auto result = check_right_boundary(elem.right_boundary_coordinates, newCoords, elem.direction);
 		if(result.doubleType != NONE) {
-			three_in_a_row = fill_double_three_stack(elem.left_boundary_coordinates, newCoords, result, false);
+			three_in_a_row = fill_double_three_stack(elem.left_boundary_coordinates, newCoords, result, false, elem.direction);
 			_doubleThreeList.push_back(three_in_a_row);
             return true;
         }
 		result = check_left_boundary(elem.left_boundary_coordinates, newCoords, elem.direction);
         if(result.doubleType != NONE) {
-			three_in_a_row = fill_double_three_stack(elem.right_boundary_coordinates, newCoords, result, true);
+			three_in_a_row = fill_double_three_stack(elem.right_boundary_coordinates, newCoords, result, true, elem.direction);
             _doubleThreeList.push_back(three_in_a_row);
             return true;
         }
@@ -302,11 +303,48 @@ boundary_check_return DoubleThreeCheck::check_left_boundary(Coordinates boundary
 }
 
 Threes DoubleThreeCheck::get_last_three() {
-	LOG("Kom ik hier?");
     return  _doubleThreeList.back();
 }
 
+bool DoubleThreeCheck::check_free_left(Coordinates left_boundary, Direction dir) {
+    LOG("Met wat komen we hier? y: %i X: %i", left_boundary.y, left_boundary.x);
+    LOG("Dir = %i", dir);
+    if(dir == HORIZONTAL) {
+        if(_board[left_boundary.y][left_boundary.x - 1] == Tile::EMPTY) {
+            return true;
+        }else {
+            return false;
+        }
+    }
+    if(dir == VERTICAL) {
+        if(_board[left_boundary.y - 1][left_boundary.x] == Tile::EMPTY) {
+            return true;
+        }else {
+            return false;
+        }
+    }
+    if(dir == CROSS) {
+        if(_board[left_boundary.y - 1][left_boundary.x -1] == Tile::EMPTY) {
+            return true;
+        }else {
+            return false;
+        }
+    }
+}
+
+bool DoubleThreeCheck::check_free_right(Coordinates right_boundary, Direction dir) {
+
+}
+
+bool        DoubleThreeCheck::full_free_check() {
+    auto three = get_last_three();
+    return (check_free_left(three.left_boundary_coordinates, three.direction));
+//    check_free_rigth();
+    return false;
+}
+
 errorState DoubleThreeCheck::find_double_three() {
+    // check if the edges of the double three list are free
 
     return errorState{};
 }

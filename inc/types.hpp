@@ -41,8 +41,9 @@ struct Threes {
     Coordinates left_boundary_coordinates;
     Coordinates right_boundary_coordinates;
     Coordinates open_space_coordinates;
-    bool open_space;
-    Direction direction;
+    bool        full_free;
+    bool        open_space;
+    Direction   direction;
 };
 
 enum double_type {

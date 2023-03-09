@@ -26,7 +26,7 @@ public:
     DoubleThreeCheck(const DoubleThreeCheck&) {}
     ~DoubleThreeCheck() override = default;
 
-	Threes			fill_double_three_stack(Coordinates bound_coordinates, Coordinates newCoords, boundary_check_return type, bool left);
+	Threes			fill_double_three_stack(Coordinates bound_coordinates, Coordinates newCoords, boundary_check_return type, bool left, Direction dir);
 	void 			set_board(const std::vector<std::vector<Tile>> &board);
 	size_t			double_two_size();
 	errorState 		DoubleThreeChecker(const std::vector<std::vector<Tile>> &board, const Coordinates& coord, const Player& player) override;
@@ -43,6 +43,9 @@ public:
 	void 			two_in_a_row(const std::vector<std::vector<Tile>> &board, const Coordinates &coord, const Player& play);
     Threes			get_last_three();
 	bool 			open_space_is_empty(Coordinates empty_space);
+    bool            full_free_check();
+    bool            check_free_left(Coordinates left_boundary, Direction dir);
+    bool            check_free_right(Coordinates right_boundary, Direction dir);
 private:
     std::vector<Threes> _doubleThreeList;
     std::vector<Doubles> _doubleTwoList;
