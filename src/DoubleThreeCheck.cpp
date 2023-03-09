@@ -11,22 +11,31 @@ errorState DoubleThreeCheck::DoubleThreeChecker(const std::vector<std::vector<Ti
 {
 	errorState result;
     this->set_board(board);
+    auto size = _doubleTwoList.size();
+    LOG("WEL ERVOOR");
 	this->two_in_a_row(board, new_coord, player);
-    if(this->find_three(new_coord, _doubleTwoList)) {
-        LOG("DID WE FIND A THREE?");
-        if(this->full_free_check()) {
-            if(_full_frees == 1) {
-                result.error_reason = "Not allowed move this will be the second fully free for this player";
-                result.state = State::ERROR;
-                return result;
-            } else {
-                _full_frees++;
-                result.error_reason = "";
-                result.state = State::ACCEPTED;
-                return result;
+    LOG("MNIET ERNA");
+    if(size > 0) {
+        LOG("IS DE SIZE GROTER DAN NULL");
+        if(this->find_three(new_coord, _doubleTwoList)) {
+            LOG("DID WE FIND A THREE?");
+            if(this->full_free_check()) {
+                if(_full_frees == 1) {
+                    result.error_reason = "Not allowed move this will be the second fully free for this player";
+                    result.state = State::ERROR;
+                    return result;
+                } else {
+                    _full_frees++;
+                    result.error_reason = "";
+                    result.state = State::ACCEPTED;
+                    return result;
+                }
             }
         }
     }
+    result.error_reason = "";
+    result.state = State::ACCEPTED;
+    return result;
 }
 
 void DoubleThreeCheck::set_board(const std::vector<std::vector<Tile>> &board) {
@@ -45,7 +54,12 @@ size_t		DoubleThreeCheck::double_two_size() {
 
 void 		DoubleThreeCheck::two_in_a_row(const std::vector<std::vector<Tile>> &board, const Coordinates &coord, const Player& play)
 {
-    _doubleTwoList.push_back(_two->create_two(board, coord, play));
+    auto result = _two->create_two(board, coord, play);
+    LOG("na Result");
+    if(result.right_boundary_coordinates.y != -1) {
+        LOG("IN DE IF");
+        _doubleTwoList.push_back(result);
+    }
 }
 
 Threes		DoubleThreeCheck::fill_double_three_stack(Coordinates bound_coordinates, Coordinates newCoords,
