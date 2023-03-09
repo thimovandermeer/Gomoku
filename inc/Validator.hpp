@@ -14,8 +14,7 @@
 class IValidator {
 public:
     virtual ~IValidator() = default;
-    virtual errorState
-    validate(const std::vector<std::vector<Tile>>& board, const Coordinates& coord, const Player& player) = 0;
+    virtual errorState validate(const std::vector<std::vector<Tile>>& board, const Coordinates& coord, const Player& player) = 0;
 };
 class IDoubleThreeCheck;
 

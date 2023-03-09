@@ -73,28 +73,45 @@ void Gomoku::gameLoop() {
     }
 }
 
+void Gomoku::whichPlayer() {
+    static int x = 1;
+    if (++x % 2 == 0) {
+        _player = Player::PLAYERONE;
+    } else {
+        _player = Player::PLAYERTWO;
+    }
+}
+
 void Gomoku::doMove(const sf::Vector2<int>& moveLocation) {
     // TODO: validate if stone can be placed
-    validateMove();
+    whichPlayer();
+    Coordinates coords{moveLocation.y, moveLocation.x};
+    LOG("coords y: %i, x: %i");
+    validateMove(coords);
+
+
 
     std::stringstream ss;
     // probably this check will become part of the validator
     if (_board[moveLocation.y][moveLocation.x] == Tile::EMPTY) {
         // change _board to reflect new board state
-        static int x = 1;
-        if (++x % 2 == 0) {
+
+        if (_player == Player::PLAYERONE) {
             _board[moveLocation.y][moveLocation.x] = Tile::P1;
         } else {
             _board[moveLocation.y][moveLocation.x] = Tile::P2;
         }
-        ss << "click at pos (" << moveLocation.x << "," << moveLocation.y << ")";
+//        ss << "click at pos (" << moveLocation.x << "," << moveLocation.y << ")";
     } else {
-        ss << "pos (" << moveLocation.x << ", " << moveLocation.y << ") is not allowed";
+//        ss << "pos (" << moveLocation.x << ", " << moveLocation.y << ") is not allowed";
     }
     // set header to whatever we want it to be
     _graphics->setHeader(ss.str());
+
 }
 
-void Gomoku::validateMove() {
-//    _validator->validate();
+void Gomoku::validateMove(Coordinates coords) {
+    auto result = _validator->validate(_board, coords, _player);
+    std::stringstream ss;
+    ss << "pos (" << coords.x << ", " << coords.y << ") " << result.error_reason;
 }

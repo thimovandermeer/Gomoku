@@ -26,15 +26,15 @@ public:
     void gameLoop();
 
 private:
-    std::unique_ptr<IValidator> _validator;
-    std::unique_ptr<IGraphics> _graphics;
-    std::vector<std::vector<Tile>> _board;
-
+    std::unique_ptr<IValidator>     _validator;
+    std::unique_ptr<IGraphics>      _graphics;
+    std::vector<std::vector<Tile>>  _board;
+    Player                          _player;
     void doMove(const sf::Vector2<int>& moveLocation);
-    void validateMove();
+    void validateMove(Coordinates coords);
     void handleMouseButtonPressed(const sf::Event& event);
     void handleKeyPressed(const sf::Event& event);
-
+    void whichPlayer();
 };
 
 

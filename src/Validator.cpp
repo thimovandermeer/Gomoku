@@ -6,8 +6,7 @@
 
 #define MAX_BOARD_SIZE 19
 
-errorState
-Validator::validate(const std::vector<std::vector<Tile>>& board, const Coordinates& coord, const Player& player) {
+errorState Validator::validate(const std::vector<std::vector<Tile>>& board, const Coordinates& coord, const Player& player) {
     this->set_data(board, coord, player);
     this->board_validation();
     if (_state.state == ERROR)
