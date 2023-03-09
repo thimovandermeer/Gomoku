@@ -18,8 +18,8 @@ enum Direction {
 };
 
 struct Coordinates {
-    int x;
     int y;
+    int x;
 };
 
 enum State {

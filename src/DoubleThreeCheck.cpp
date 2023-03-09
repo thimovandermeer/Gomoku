@@ -13,6 +13,7 @@ errorState DoubleThreeCheck::DoubleThreeChecker(const std::vector<std::vector<Ti
     this->set_board(board);
 	this->two_in_a_row(board, new_coord, player);
     if(this->find_three(new_coord, _doubleTwoList)) {
+        LOG("DID WE FIND A THREE?");
         if(this->full_free_check()) {
             if(_full_frees == 1) {
                 result.error_reason = "Not allowed move this will be the second fully free for this player";
@@ -79,17 +80,20 @@ bool 		DoubleThreeCheck::find_three(Coordinates newCoords, std::vector<Doubles> 
 		Threes three_in_a_row;
 		auto result = check_right_boundary(elem.right_boundary_coordinates, newCoords, elem.direction);
 		if(result.doubleType != NONE) {
+            LOG("DEZE1?");
 			three_in_a_row = fill_double_three_stack(elem.left_boundary_coordinates, newCoords, result, false, elem.direction);
 			_doubleThreeList.push_back(three_in_a_row);
             return true;
         }
 		result = check_left_boundary(elem.left_boundary_coordinates, newCoords, elem.direction);
         if(result.doubleType != NONE) {
+            LOG("DEZE2?");
 			three_in_a_row = fill_double_three_stack(elem.right_boundary_coordinates, newCoords, result, true, elem.direction);
             _doubleThreeList.push_back(three_in_a_row);
             return true;
         }
     }
+    LOG("DUS DEZE WORDT NIET GETOUCHED?");
     return false;
 }
 
@@ -325,6 +329,7 @@ bool DoubleThreeCheck::check_free_left(Coordinates left_boundary, Direction dir)
     LOG("Met wat komen we hier? y: %i X: %i", left_boundary.y, left_boundary.x);
     LOG("Dir = %i", dir);
     if(dir == HORIZONTAL) {
+        LOG("Hier kom ik wel");
         if(_board[left_boundary.y][left_boundary.x - 1] == Tile::EMPTY) {
             return true;
         }else {
@@ -379,6 +384,7 @@ bool DoubleThreeCheck::check_free_right(Coordinates right_boundary, Direction di
 bool        DoubleThreeCheck::full_free_check() {
     auto three = get_last_three();
     if (check_free_left(three.left_boundary_coordinates, three.direction) && check_free_right(three.right_boundary_coordinates, three.direction)) {
+        LOG("Kom ik erin?");
         three.full_free = true;
         return true;
     } else {
