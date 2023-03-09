@@ -739,3 +739,165 @@ TEST(double_three_check_tests, double_three_is_fully_free_false_left_cross) {
     ASSERT_FALSE(threeCheck.full_free_check());
 
 }
+
+TEST(double_three_check_tests, double_three_is_fully_free_true_right_horizontal) {
+    // create a double with coordinates
+    Doubles doubles;
+
+    doubles.left_boundary_coordinates.y = 10;
+    doubles.left_boundary_coordinates.x = 10;
+
+    doubles.right_boundary_coordinates.y = 10;
+    doubles.right_boundary_coordinates.x = 11;
+    // add coordinates right side
+
+    Coordinates coords;
+    coords.y = 10;
+    coords.x = 9;
+    doubles.direction = HORIZONTAL;
+    // check coordinates
+    std::vector<Doubles> vec;
+    vec.push_back(doubles);
+    threeCheck.find_three(coords, vec);
+    auto board = create_empty_board();
+    board[10][12] = Tile::EMPTY;
+    threeCheck.set_board(board);
+    auto result = threeCheck.get_last_three();
+    ASSERT_TRUE(threeCheck.full_free_check());
+
+}
+
+TEST(double_three_check_tests, double_three_is_fully_free_false_right_horizontal) {
+    // create a double with coordinates
+    Doubles doubles;
+
+    doubles.left_boundary_coordinates.y = 10;
+    doubles.left_boundary_coordinates.x = 10;
+
+    doubles.right_boundary_coordinates.y = 10;
+    doubles.right_boundary_coordinates.x = 11;
+    // add coordinates right side
+
+    Coordinates coords;
+    coords.y = 10;
+    coords.x = 9;
+    doubles.direction = HORIZONTAL;
+    // check coordinates
+    std::vector<Doubles> vec;
+    vec.push_back(doubles);
+    threeCheck.find_three(coords, vec);
+    auto board = create_empty_board();
+    board[10][12] = Tile::P2;
+    threeCheck.set_board(board);
+    auto result = threeCheck.get_last_three();
+    ASSERT_FALSE(threeCheck.full_free_check());
+
+}
+
+TEST(double_three_check_tests, double_three_is_fully_free_true_right_vertical) {
+    // create a double with coordinates
+    Doubles doubles;
+
+    doubles.left_boundary_coordinates.y = 10;
+    doubles.left_boundary_coordinates.x = 10;
+
+    doubles.right_boundary_coordinates.y = 11;
+    doubles.right_boundary_coordinates.x = 10;
+    // add coordinates right side
+
+    Coordinates coords;
+    coords.y = 12;
+    coords.x = 10;
+    doubles.direction = VERTICAL;
+    // check coordinates
+    std::vector<Doubles> vec;
+    vec.push_back(doubles);
+    threeCheck.find_three(coords, vec);
+    auto board = create_empty_board();
+    board[13][10] = Tile::EMPTY;
+    threeCheck.set_board(board);
+    auto result = threeCheck.get_last_three();
+    ASSERT_TRUE(threeCheck.full_free_check());
+
+}
+
+TEST(double_three_check_tests, double_three_is_fully_free_false_right_vertical) {
+    // create a double with coordinates
+    Doubles doubles;
+
+    doubles.left_boundary_coordinates.y = 10;
+    doubles.left_boundary_coordinates.x = 10;
+
+    doubles.right_boundary_coordinates.y = 11;
+    doubles.right_boundary_coordinates.x = 10;
+    // add coordinates right side
+
+    Coordinates coords;
+    coords.y = 12;
+    coords.x = 10;
+    doubles.direction = VERTICAL;
+    // check coordinates
+    std::vector<Doubles> vec;
+    vec.push_back(doubles);
+    threeCheck.find_three(coords, vec);
+    auto board = create_empty_board();
+    board[13][10] = Tile::P2;
+    threeCheck.set_board(board);
+    auto result = threeCheck.get_last_three();
+    ASSERT_FALSE(threeCheck.full_free_check());
+
+}
+
+TEST(double_three_check_tests, double_three_is_fully_free_true_right_cross) {
+    // create a double with coordinates
+    Doubles doubles;
+
+    doubles.left_boundary_coordinates.y = 10;
+    doubles.left_boundary_coordinates.x = 10;
+
+    doubles.right_boundary_coordinates.y = 11;
+    doubles.right_boundary_coordinates.x = 11;
+    // add coordinates right side
+
+    Coordinates coords;
+    coords.y = 12;
+    coords.x = 12;
+    doubles.direction = CROSS;
+    // check coordinates
+    std::vector<Doubles> vec;
+    vec.push_back(doubles);
+    threeCheck.find_three(coords, vec);
+    auto board = create_empty_board();
+    board[13][13] = Tile::EMPTY;
+    threeCheck.set_board(board);
+    auto result = threeCheck.get_last_three();
+    ASSERT_TRUE(threeCheck.full_free_check());
+
+}
+
+TEST(double_three_check_tests, double_three_is_fully_free_false_right_cross) {
+    // create a double with coordinates
+    Doubles doubles;
+
+    doubles.left_boundary_coordinates.y = 10;
+    doubles.left_boundary_coordinates.x = 10;
+
+    doubles.right_boundary_coordinates.y = 11;
+    doubles.right_boundary_coordinates.x = 11;
+    // add coordinates right side
+
+    Coordinates coords;
+    coords.y = 12;
+    coords.x = 12;
+    doubles.direction = CROSS;
+    // check coordinates
+    std::vector<Doubles> vec;
+    vec.push_back(doubles);
+    threeCheck.find_three(coords, vec);
+    auto board = create_empty_board();
+    board[13][13] = Tile::P2;
+    threeCheck.set_board(board);
+    auto result = threeCheck.get_last_three();
+    ASSERT_FALSE(threeCheck.full_free_check());
+
+}

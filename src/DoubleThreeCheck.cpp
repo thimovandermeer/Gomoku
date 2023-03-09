@@ -41,7 +41,10 @@ Threes		DoubleThreeCheck::fill_double_three_stack(Coordinates bound_coordinates,
 	Threes result;
 	result.open_space_coordinates = type.openSpace;
     result.direction = dir;
+    LOG("Bound coordinates y = %i x = %i", bound_coordinates.y, bound_coordinates.x);
+    LOG("LEFT = %i", left);
 	if(left) {
+        LOG("Ik kom toch hier ouleh?");
 		result.left_boundary_coordinates = newCoords;
 		result.right_boundary_coordinates = bound_coordinates;
 	} else {
@@ -333,13 +336,39 @@ bool DoubleThreeCheck::check_free_left(Coordinates left_boundary, Direction dir)
 }
 
 bool DoubleThreeCheck::check_free_right(Coordinates right_boundary, Direction dir) {
-
+    LOG("KOM IK HIER??????????");
+    LOG("Met wat komen we hier? y: %i X: %i", right_boundary.y, right_boundary.x);
+    LOG("Dir = %i", dir);
+    if(dir == HORIZONTAL) {
+        LOG("board position y = %i x = %i", right_boundary.y, right_boundary.x + 1);
+        LOG("What is on this position = %i", _board[right_boundary.y][right_boundary.x + 1]);
+        if(_board[right_boundary.y][right_boundary.x + 1] == Tile::EMPTY) {
+            return true;
+        }else {
+            return false;
+        }
+    }
+    if(dir == VERTICAL) {
+        if(_board[right_boundary.y + 1][right_boundary.x] == Tile::EMPTY) {
+            return true;
+        }else {
+            return false;
+        }
+    }
+    if(dir == CROSS) {
+        if(_board[right_boundary.y + 1][right_boundary.x + 1] == Tile::EMPTY) {
+            return true;
+        }else {
+            return false;
+        }
+    }
 }
 
 bool        DoubleThreeCheck::full_free_check() {
     auto three = get_last_three();
-    return (check_free_left(three.left_boundary_coordinates, three.direction));
-//    check_free_rigth();
+    if (check_free_left(three.left_boundary_coordinates, three.direction) && check_free_right(three.right_boundary_coordinates, three.direction)) {
+        return true;
+    }
     return false;
 }
 
