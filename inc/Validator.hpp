@@ -5,12 +5,11 @@
 #ifndef GOMOKU_VALIDATOR_HPP
 #define GOMOKU_VALIDATOR_HPP
 
+#include "DoubleThreeCheck.hpp"
 #include <vector>
 #include <string>
-#include "DoubleThreeCheck.hpp"
-
+#include "types.hpp"
 #define MAX_BOARD_SIZE 19
-
 
 class IValidator {
 public:
@@ -18,6 +17,7 @@ public:
     virtual errorState
     validate(const std::vector<std::vector<Tile>>& board, const Coordinates& coord, const Player& player) = 0;
 };
+class IDoubleThreeCheck;
 
 class Validator : public IValidator {
 public:
@@ -48,6 +48,5 @@ private:
 
     std::unique_ptr<IDoubleThreeCheck> _doubleThreeCheck;
 };
-
 
 #endif //GOMOKU_VALIDATOR_HPP

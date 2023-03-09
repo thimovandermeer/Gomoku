@@ -6,6 +6,7 @@
 #include "Gomoku.hpp"
 #include "DoubleThreeCheck.hpp"
 #include "utils.hpp"
+#include "types.hpp"
 
 std::unique_ptr<ITwo> twoCheck = std::make_unique<Two>();
 DoubleThreeCheck threeCheck = DoubleThreeCheck(twoCheck);

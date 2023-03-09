@@ -1,5 +1,3 @@
-#include "Graphics.hpp"
-#include "Validator.hpp"
 #include "Gomoku.hpp"
 
 int main() {

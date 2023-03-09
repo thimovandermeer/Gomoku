@@ -9,34 +9,7 @@
 #include <vector>
 #include "logger.hpp"
 #include "Gomoku.hpp"
-
-enum Direction {
-    HORIZONTAL, VERTICAL, CROSS
-};
-
-struct Coordinates {
-    int x;
-    int y;
-};
-enum Player {
-    PLAYERONE, PLAYERTWO
-};
-
-enum State {
-    ACCEPTED, ERROR
-};
-
-struct errorState {
-    State state;
-    std::string error_reason;
-};
-
-struct Doubles {
-    Coordinates left_boundary_coordinates;
-    Coordinates right_boundary_coordinates;
-    Direction direction;
-};
-
+#include "types.hpp"
 
 class ITwo {
 public:

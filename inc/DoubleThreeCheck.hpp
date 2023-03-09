@@ -9,26 +9,10 @@
 #include <string>
 #include <vector>
 #include "Two.hpp"
-#include "Gomoku.hpp"
-
-struct Threes {
-    Coordinates left_boundary_coordinates;
-    Coordinates right_boundary_coordinates;
-    Coordinates open_space_coordinates;
-    bool open_space;
-    Direction direction;
-};
-
-enum double_type {
-    NORMAL, EMPTYSPACE, NONE
-};
-
-struct boundary_check_return {
-	double_type doubleType;
-	Coordinates	openSpace;
-};
+#include "types.hpp"
 
 
+class ITwo;
 class IDoubleThreeCheck {
 public:
     virtual ~IDoubleThreeCheck() = default;

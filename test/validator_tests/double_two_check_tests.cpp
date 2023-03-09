@@ -6,6 +6,7 @@
 #include "Gomoku.hpp"
 #include "../inc/DoubleThreeCheck.hpp"
 #include "utils.hpp"
+#include "types.hpp"
 
 std::unique_ptr<ITwo> two_check_two = std::make_unique<Two>();
 DoubleThreeCheck three_check_three = DoubleThreeCheck(two_check_two);
@@ -39,7 +40,7 @@ TEST(double_two_check_tests, find_double_two_horizontally) {
     coord.y = 10;
     coord.x = 12;
     auto two = *dynamic_cast<Two*>(two_check_two.get());
-    auto result = two.check_two_in_a_row(board, coord, PLAYERONE);
+    auto result = two.check_two_in_a_row(board, coord, Player::PLAYERONE);
     ASSERT_EQ(result.y, 10);
     ASSERT_EQ(result.x, 11);
 }
@@ -51,7 +52,7 @@ TEST(double_two_check_tests, find_double_two_vertically) {
     coord.x = 11;
 
     auto two = *dynamic_cast<Two*>(two_check_two.get());
-    auto result = two.check_two_in_a_row(board, coord, PLAYERONE);
+    auto result = two.check_two_in_a_row(board, coord, Player::PLAYERONE);
     ASSERT_EQ(result.y, 10);
     ASSERT_EQ(result.x, 11);
 }
@@ -63,7 +64,7 @@ TEST(double_two_check_tests, find_double_two_cross_up) {
     coord.x = 12;
 
     auto two = *dynamic_cast<Two*>(two_check_two.get());
-    auto result = two.check_two_in_a_row(board, coord, PLAYERONE);
+    auto result = two.check_two_in_a_row(board, coord, Player::PLAYERONE);
     ASSERT_EQ(result.y, 10);
     ASSERT_EQ(result.x, 11);
 }
@@ -75,7 +76,7 @@ TEST(double_two_check_tests, find_double_two_cross_down) {
     coord.x = 11;
 
     auto two = *dynamic_cast<Two*>(two_check_two.get());
-    auto result = two.check_two_in_a_row(board, coord, PLAYERONE);
+    auto result = two.check_two_in_a_row(board, coord, Player::PLAYERONE);
     ASSERT_EQ(result.y, 10);
     ASSERT_EQ(result.x, 11);
 }
@@ -87,7 +88,7 @@ TEST(double_two_check_tests, no_double_two_possible) {
     coord.x = 17;
 
     auto two = *dynamic_cast<Two*>(two_check_two.get());
-    auto result = two.check_two_in_a_row(board, coord, PLAYERONE);
+    auto result = two.check_two_in_a_row(board, coord, Player::PLAYERONE);
     ASSERT_EQ(result.y, -1);
     ASSERT_EQ(result.x, -1);
 }
@@ -203,6 +204,6 @@ TEST(double_two_two_in_a_row, check_size_double_two_vector) {
     coord.y = 11;
     coord.x = 12;
 
-    three_check_three.two_in_a_row(board, coord, PLAYERONE);
+    three_check_three.two_in_a_row(board, coord, Player::PLAYERONE);
     ASSERT_EQ(1, three_check_three.double_two_size());
 }

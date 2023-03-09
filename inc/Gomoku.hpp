@@ -9,13 +9,10 @@
 #include "Validator.hpp"
 #include "Graphics.hpp"
 #include <SFML/Graphics.hpp>
-
+#include "types.hpp"
 #define BOARD_SIZE 19
 
-enum class Tile {
-    P1, P2, EMPTY
-};
-
+class IValidator;
 class Gomoku {
 public:
     Gomoku() = delete;
