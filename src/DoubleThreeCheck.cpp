@@ -12,13 +12,9 @@ errorState DoubleThreeCheck::DoubleThreeChecker(const std::vector<std::vector<Ti
 	errorState result;
     this->set_board(board);
     auto size = _doubleTwoList.size();
-    LOG("WEL ERVOOR");
 	this->two_in_a_row(board, new_coord, player);
-    LOG("MNIET ERNA");
     if(size > 0) {
-        LOG("IS DE SIZE GROTER DAN NULL");
         if(this->find_three(new_coord, _doubleTwoList)) {
-            LOG("DID WE FIND A THREE?");
             if(this->full_free_check()) {
                 if(_full_frees == 1) {
                     result.error_reason = "Not allowed move this will be the second fully free for this player";
@@ -68,10 +64,7 @@ Threes		DoubleThreeCheck::fill_double_three_stack(Coordinates bound_coordinates,
 	Threes result;
 	result.open_space_coordinates = type.openSpace;
     result.direction = dir;
-    LOG("Bound coordinates y = %i x = %i", bound_coordinates.y, bound_coordinates.x);
-    LOG("LEFT = %i", left);
 	if(left) {
-        LOG("Ik kom toch hier ouleh?");
 		result.left_boundary_coordinates = newCoords;
 		result.right_boundary_coordinates = bound_coordinates;
 	} else {
