@@ -49,7 +49,9 @@ add_executable(gomoku_test
 target_include_directories(gomoku_test PUBLIC inc)
 target_link_libraries( gomoku_test
 		GTest::gtest_main
-)
+		sfml-graphics
+
+		)
 
 add_subdirectory(src)
 add_subdirectory(test)
