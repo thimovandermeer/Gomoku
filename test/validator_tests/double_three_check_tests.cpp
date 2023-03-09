@@ -536,16 +536,74 @@ TEST(double_three_check_tests, check_double_three_with_open_space_down_vertical)
 	ASSERT_TRUE(result.open_space);
 	ASSERT_EQ(result.open_space_coordinates.y, 9);
 	ASSERT_EQ(result.open_space_coordinates.x, 10);
-	ASSERT_EQ(result.left_boundary_coordinates.y, 10);
+	ASSERT_EQ(result.left_boundary_coordinates.y, 8);
 	ASSERT_EQ(result.right_boundary_coordinates.y, 11);
 }
 
 TEST(double_three_check_tests, check_double_three_with_open_space_left_cross) {
+    Doubles doubles;
 
+    doubles.left_boundary_coordinates.y = 3;
+    doubles.left_boundary_coordinates.x = 2;
+
+    doubles.right_boundary_coordinates.y = 4;
+    doubles.right_boundary_coordinates.x = 3;
+    // add coordinates right side
+
+    Coordinates coords;
+    coords.y = 1;
+    coords.x = 0;
+    doubles.direction = CROSS;
+
+
+    // check coordinates
+    std::vector<Doubles> vec;
+    vec.push_back(doubles);
+    auto board = create_empty_board();
+    threeCheck.set_board(board);
+    threeCheck.find_three(coords, vec);
+    auto result = threeCheck.get_last_three();
+
+    ASSERT_TRUE(result.open_space);
+    ASSERT_EQ(result.open_space_coordinates.y, 2);
+    ASSERT_EQ(result.open_space_coordinates.x, 1);
+    ASSERT_EQ(result.left_boundary_coordinates.x, 0);
+    ASSERT_EQ(result.right_boundary_coordinates.x, 3);
+    ASSERT_EQ(result.left_boundary_coordinates.y, 1);
+    ASSERT_EQ(result.right_boundary_coordinates.y, 4);
 }
 
 TEST(double_three_check_tests, check_double_three_with_open_space_right_cross) {
+    Doubles doubles;
 
+    doubles.left_boundary_coordinates.y = 3;
+    doubles.left_boundary_coordinates.x = 2;
+
+    doubles.right_boundary_coordinates.y = 4;
+    doubles.right_boundary_coordinates.x = 3;
+    // add coordinates right side
+
+    Coordinates coords;
+    coords.y = 6;
+    coords.x = 5;
+    doubles.direction = CROSS;
+
+
+    // check coordinates
+    std::vector<Doubles> vec;
+    vec.push_back(doubles);
+    auto board = create_empty_board();
+    threeCheck.set_board(board);
+    threeCheck.find_three(coords, vec);
+    auto result = threeCheck.get_last_three();
+
+    ASSERT_TRUE(result.open_space);
+    ASSERT_EQ(result.open_space_coordinates.y, 5);
+    ASSERT_EQ(result.open_space_coordinates.x, 4);
+    ASSERT_EQ(result.left_boundary_coordinates.x, 2);
+    ASSERT_EQ(result.right_boundary_coordinates.x, 5);
+    ASSERT_EQ(result.left_boundary_coordinates.y, 3);
+    ASSERT_EQ(result.right_boundary_coordinates.y, 6);
 }
 
 TEST(double_three_check_tests, find_double_three_cross) {

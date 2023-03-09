@@ -128,19 +128,25 @@ double_type		DoubleThreeCheck::check_right_boundary_vertical(Coordinates boundar
 }
 
 double_type		DoubleThreeCheck::check_right_boundary_cross(Coordinates boundary_coords, Coordinates new_coords) {
+    LOG("New coords y = %i", new_coords.y);
+    LOG("boundary coords y = %i", boundary_coords.y);
 	if((new_coords.y - boundary_coords.y) == 1) {
 		LOG("The new y coords are one layer above boundary coords new[%i] boundary[%i]", new_coords.y, boundary_coords.y);
 		if(new_coords.x - boundary_coords.x == 1) {
 			LOG("the new x coords are one layer to the right from boundary coords new[%i] boundary[%i]", new_coords.x, boundary_coords.x);
 			LOG("We are a match");
 			return NORMAL;
-		} if (new_coords.x -boundary_coords.x == 2) {
-			LOG("Match Cross we create double three with empty space in the middle new[%i] boundary[%i]", new_coords.x, new_coords.y);
-			return EMPTYSPACE;
 		}
 		LOG("The new x coords are not in line with the boundary coords  coords new[%i] boundary[%i]", new_coords.x, boundary_coords.x);
 		return NONE;
-	}
+	} else if ((new_coords.y - boundary_coords.y) == 2) {
+        LOG("Potentially a match");
+        if (new_coords.x - boundary_coords.x == 2) {
+            LOG("Match Cross we create double three with empty space in the middle new[%i] boundary[%i]", new_coords.x,
+                new_coords.y);
+            return EMPTYSPACE;
+        }
+    }
 	LOG("The new coords are not in line with the boundary coords new[%i] boundary[%i]", new_coords.y, boundary_coords.y);
 	return NONE;
 }
@@ -172,13 +178,14 @@ boundary_check_return DoubleThreeCheck::check_right_boundary(Coordinates boundar
 		}
 		return result;
     } else if(direction == CROSS) {
+        LOG("hier moet ik in");
 		auto three_type = check_right_boundary_cross(boundary_coords, new_coords);
 		result.doubleType = three_type;
 		result.openSpace = Coordinates{-1,-1};
 		if(three_type == EMPTYSPACE) {
 			auto open_space_coords = new_coords;
-			open_space_coords.y = new_coords.y + 1;
-			open_space_coords.x = new_coords.x + 1;
+			open_space_coords.y = new_coords.y - 1;
+			open_space_coords.x = new_coords.x - 1;
 			result.openSpace = open_space_coords;
 			result.doubleType = three_type;
 			return result;
@@ -229,18 +236,22 @@ double_type			DoubleThreeCheck::check_left_boundary_vertical(Coordinates boundar
 
 double_type			DoubleThreeCheck::check_left_boundary_cross(Coordinates boundary_coords, Coordinates new_coords)
 {
+    LOG("new coords y %i boundary_coors y %i ", new_coords.y, boundary_coords.y);
 	if((new_coords.y - boundary_coords.y) == -1) {
 		LOG("The new y coords are one layer above boundary coords new[%i] boundary[%i]", new_coords.y, boundary_coords.y);
 		if(new_coords.x - boundary_coords.x == -1) {
 			LOG("the new x coords are one layer to the right from boundary coords new[%i] boundary[%i]", new_coords.x, boundary_coords.x);
 			LOG("We are a match");
 			return NORMAL;
-		} if(new_coords.x - boundary_coords.x == -2) {
-			return EMPTYSPACE;
 		}
 		LOG("The new x coords are not in line with the boundary coords  coords new[%i] boundary[%i]", new_coords.x, boundary_coords.x);
 		return NONE;
-	}
+	}else if ((new_coords.y - boundary_coords.y) == -2) {
+        LOG("Potential with open space");
+        if(new_coords.x - boundary_coords.x == -2) {
+            return EMPTYSPACE;
+        }
+    }
 	return NONE;
 }
 
@@ -277,8 +288,8 @@ boundary_check_return DoubleThreeCheck::check_left_boundary(Coordinates boundary
 		result.openSpace = Coordinates{-1,-1};
 		if(three_type == EMPTYSPACE) {
 			auto open_space_coords = new_coords;
-			open_space_coords.y = new_coords.y - 1;
-			open_space_coords.x = new_coords.x - 1;
+			open_space_coords.y = new_coords.y + 1;
+			open_space_coords.x = new_coords.x + 1;
 			result.openSpace = open_space_coords;
 			result.doubleType = three_type;
 		}
