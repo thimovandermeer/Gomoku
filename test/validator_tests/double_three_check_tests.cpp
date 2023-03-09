@@ -388,32 +388,6 @@ TEST(double_three_check_tests, check_double_three_vector_coordinates_left_side_a
 //    ASSERT_EQ(result.right_boundary_coordinates.y, 12);
 //}
 
-TEST(double_three_check_tests, open_space_is_empty_positive) {
-    Coordinates coords;
-    coords.y = 10;
-    coords.x = 10;
-
-
-    auto board = create_filled_board();
-    board[coords.y][coords.x] = Tile::EMPTY;
-    threeCheck.set_board(board);
-
-    // function undertest
-    threeCheck.open_space_is_empty(coords);
-}
-
-TEST(double_three_check_tests, open_space_is_empty_negative) {
-    Coordinates coords;
-    coords.y = 10;
-    coords.x = 10;
-
-
-    auto board = create_empty_board();
-    board[coords.y][coords.x] = Tile::P2;
-    threeCheck.set_board(board);
-    // function undertest
-    threeCheck.open_space_is_empty(coords);
-}
 
 TEST(double_three_check_tests, check_double_three_with_open_space_right_horizontal) {
 	Doubles doubles;
@@ -606,7 +580,33 @@ TEST(double_three_check_tests, check_double_three_with_open_space_right_cross) {
     ASSERT_EQ(result.right_boundary_coordinates.y, 6);
 }
 
-TEST(double_three_check_tests, find_double_three_cross) {
-    // create board with double three on it
+TEST(double_three_check_tests, open_space_is_empty_positive) {
+    Coordinates coords;
+    coords.y = 10;
+    coords.x = 10;
+
+
+    auto board = create_filled_board();
+    board[coords.y][coords.x] = Tile::EMPTY;
+    threeCheck.set_board(board);
+
+    // function undertest
+    ASSERT_TRUE(threeCheck.open_space_is_empty(coords));
+}
+
+TEST(double_three_check_tests, open_space_is_empty_negative) {
+    Coordinates coords;
+    coords.y = 10;
+    coords.x = 10;
+
+
+    auto board = create_empty_board();
+    board[coords.y][coords.x] = Tile::P2;
+    threeCheck.set_board(board);
+    // function undertest
+    ASSERT_FALSE(threeCheck.open_space_is_empty(coords));
+}
+
+TEST(double_three_check_tests, check_two_double_threes) {
 
 }
