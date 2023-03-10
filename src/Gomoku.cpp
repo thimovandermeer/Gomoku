@@ -86,12 +86,13 @@ void Gomoku::doMove(const sf::Vector2<int>& moveLocation) {
     // TODO: validate if stone can be placed
     whichPlayer();
     Coordinates coords{moveLocation.y, moveLocation.x};
-    LOG("coords y: %i, x: %i");
-    validateMove(coords);
-
-
-
     std::stringstream ss;
+    LOG("coords y: %i, x: %i");
+    validateMove(coords, ss);
+
+
+
+
     // probably this check will become part of the validator
     if (_board[moveLocation.y][moveLocation.x] == Tile::EMPTY) {
         // change _board to reflect new board state
@@ -109,15 +110,15 @@ void Gomoku::doMove(const sf::Vector2<int>& moveLocation) {
 
 }
 
-void Gomoku::validateMove(Coordinates coords) {
+void Gomoku::validateMove(Coordinates coords, std::stringstream &ss) {
+    LOG("Coords zijn y:%i x: %i", coords.y, coords.x);
     errorState result;
     if(_player == Player::PLAYERONE) {
         result = _validator_P1->validate(_board, coords, _player);
     } else {
-        LOG("VOLGENS MIJ CRASH DIT");
         result = _validator_P2->validate(_board, coords, _player);
-        LOG("JAAA");
     }
     LOG("Result = %s", result.error_reason.c_str());
     LOG("Result = %i", result.state);
+    ss << result.error_reason.c_str();
 }

@@ -20,7 +20,7 @@ errorState DoubleThreeCheck::DoubleThreeChecker(const std::vector<std::vector<Ti
                 LOG("OOk hier meoten we in komen bij de first occ");
                 LOG("Full free size = %i", _full_frees);
                 if (_full_frees == 1) {
-                    result.error_reason = "Not allowed move this will be the second fully free for this player";
+                    result.error_reason = "second fully free for this player";
                     result.state = State::ERROR;
                     return result;
                 } else {
@@ -36,12 +36,12 @@ errorState DoubleThreeCheck::DoubleThreeChecker(const std::vector<std::vector<Ti
     LOG("Checking two in a row");
 	if(this->two_in_a_row(board, new_coord, player)) {
         LOG("Created two in a row so no need to check three in a row");
-        result.error_reason = "This is a valid move creating two in a row";
+        result.error_reason = "creating two in a row";
         result.state = ACCEPTED;
         return result;
     }
     LOG("NOT two in a roww and not three in a row so fine regular move");
-    result.error_reason = "This is a valid move in open field";
+    result.error_reason = "valid move openfield";
     result.state = ACCEPTED;
     return result;
 }
@@ -146,6 +146,7 @@ double_type			DoubleThreeCheck::check_right_boundary_horizontal(Coordinates boun
 		LOG("We are on the same horizontal axis but not in line new[%i] boundary[%i]", new_coords.x, boundary_coords.x);
 		return NONE;
 	}
+    return NONE;
 }
 
 double_type		DoubleThreeCheck::check_right_boundary_vertical(Coordinates boundary_coords, Coordinates new_coords) {
@@ -161,6 +162,8 @@ double_type		DoubleThreeCheck::check_right_boundary_vertical(Coordinates boundar
 		LOG("We are on the same vertical axis but not in line new[%i] boundary[%i]", new_coords.y, boundary_coords.y);
 		return NONE;
 	}
+    LOG("ERROR FOUND");
+    return NONE;
 }
 
 double_type		DoubleThreeCheck::check_right_boundary_cross(Coordinates boundary_coords, Coordinates new_coords) {
@@ -188,6 +191,7 @@ double_type		DoubleThreeCheck::check_right_boundary_cross(Coordinates boundary_c
 
 boundary_check_return DoubleThreeCheck::check_right_boundary(Coordinates boundary_coords, Coordinates new_coords, Direction direction) {
     LOG("boundary_coords in right boundary checking %i %i", boundary_coords.y, boundary_coords.x);
+    LOG("Wat is de DIR %i", direction);
 	boundary_check_return result{};
 	if(direction == HORIZONTAL) {
         auto  three_type = check_right_boundary_horizontal(boundary_coords, new_coords);
@@ -199,10 +203,12 @@ boundary_check_return DoubleThreeCheck::check_right_boundary(Coordinates boundar
 			result.openSpace = open_space_coords;
 			result.doubleType = three_type;
 		}
+        LOG("IK RETURN HORIZONTAL");
 		return result;
     } else if(direction == VERTICAL) {
 		auto three_type = check_right_boundary_vertical(boundary_coords, new_coords);
-		result.doubleType = three_type;
+        LOG("THREE TYPE = %I", three_type);
+        result.doubleType = three_type;
 		result.openSpace = Coordinates{-1,-1};
 		if(three_type == EMPTYSPACE) {
 			auto open_space_coords = new_coords;
@@ -210,6 +216,8 @@ boundary_check_return DoubleThreeCheck::check_right_boundary(Coordinates boundar
 			result.openSpace = open_space_coords;
 			result.doubleType = three_type;
 		}
+        LOG("WAT RETURN IK UBERHAUPT %i", result);
+        LOG("IK RETURN VERTICAL");
 		return result;
     } else if(direction == CROSS) {
 		auto three_type = check_right_boundary_cross(boundary_coords, new_coords);
@@ -223,6 +231,7 @@ boundary_check_return DoubleThreeCheck::check_right_boundary(Coordinates boundar
 			result.doubleType = three_type;
 			return result;
 		}
+        LOG("IK RETURN CROSS");
 		return result;
     }
 	result.doubleType = NONE;

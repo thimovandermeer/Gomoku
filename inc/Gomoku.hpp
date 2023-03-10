@@ -32,7 +32,7 @@ private:
     std::vector<std::vector<Tile>>  _board;
     Player                          _player;
     void doMove(const sf::Vector2<int>& moveLocation);
-    void validateMove(Coordinates coords);
+    void validateMove(Coordinates coords, std::stringstream &ss);
     void handleMouseButtonPressed(const sf::Event& event);
     void handleKeyPressed(const sf::Event& event);
     void whichPlayer();
