@@ -20,7 +20,7 @@ public:
 class Two : public ITwo {
 public:
     Two();
-    Two(const Two&) {}
+    Two(const Two&) {};
     ~Two() override = default;
 
     Doubles boundary_check(Coordinates coordinates_on_board, Coordinates new_coordinates);

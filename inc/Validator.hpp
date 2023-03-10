@@ -6,6 +6,7 @@
 #define GOMOKU_VALIDATOR_HPP
 
 #include "DoubleThreeCheck.hpp"
+#include "Capture.hpp"
 #include <vector>
 #include <string>
 #include "types.hpp"
@@ -20,8 +21,12 @@ class IDoubleThreeCheck;
 
 class Validator : public IValidator {
 public:
-    explicit Validator(std::unique_ptr<IDoubleThreeCheck>& DoubleThreeCheck)
-            : _coord{}, _player{}, _doubleThreeCheck(std::move(DoubleThreeCheck)) {}
+    explicit Validator(std::unique_ptr<IDoubleThreeCheck>& DoubleThreeCheck, std::unique_ptr<ICapture>& Capture)
+            :
+            _coord{},
+            _player{},
+            _doubleThreeCheck(std::move(DoubleThreeCheck)),
+            _capture(std::move(Capture)) {}
     ~Validator() override = default;
 
     errorState
@@ -39,13 +44,16 @@ private:
     void taken_check();
     void player_validation();
     void double_three_validation();
-
+    void update_double_list();
+    void capture_validation();
     std::vector<std::vector<Tile>> _board;
     Coordinates _coord;
     Player _player;
     errorState _state;
 
-    std::unique_ptr<IDoubleThreeCheck> _doubleThreeCheck;
+    std::vector<Doubles>                _double_list;
+    std::unique_ptr<IDoubleThreeCheck>  _doubleThreeCheck;
+    std::unique_ptr<ICapture>           _capture;
 };
 
 #endif //GOMOKU_VALIDATOR_HPP

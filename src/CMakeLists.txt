@@ -4,8 +4,9 @@ target_sources(gomoku PRIVATE
 		Validator.cpp
 		logger.cpp
 		DoubleThreeCheck.cpp
-		utils.cpp
-		two.cpp
+        Utils.cpp
+		Two.cpp
+		Capture.cpp
 		)
 
 target_sources(gomoku_test PRIVATE
@@ -14,6 +15,7 @@ target_sources(gomoku_test PRIVATE
 		Validator.cpp
 		logger.cpp
 		DoubleThreeCheck.cpp
-		utils.cpp
-		two.cpp
+        Utils.cpp
+		Two.cpp
+		Capture.cpp
 		)

@@ -405,3 +405,7 @@ bool        DoubleThreeCheck::full_free_check() {
         return false;
     }
 }
+
+std::vector<Doubles> DoubleThreeCheck::get_double_two() {
+    return _doubleTwoList;
+}

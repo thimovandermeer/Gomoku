@@ -16,8 +16,8 @@ class ITwo;
 class IDoubleThreeCheck {
 public:
     virtual ~IDoubleThreeCheck() = default;
-    virtual errorState
-    DoubleThreeChecker(const std::vector<std::vector<Tile>>& board, const Coordinates& coord, const Player& player) = 0;
+    virtual errorState DoubleThreeChecker(const std::vector<std::vector<Tile>>& board, const Coordinates& coord, const Player& player) = 0;
+    virtual std::vector<Doubles>    get_double_two() = 0;
 };
 
 class DoubleThreeCheck : public IDoubleThreeCheck {
@@ -49,6 +49,7 @@ public:
     bool            full_free_check();
     bool            check_free_left(Coordinates left_boundary, Direction dir);
     bool            check_free_right(Coordinates right_boundary, Direction dir);
+    std::vector<Doubles>    get_double_two() override;
 private:
     void set_state(State newState, std::string& errorReason);
     std::vector<Threes>             _doubleThreeList;

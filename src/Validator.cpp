@@ -15,6 +15,11 @@ errorState Validator::validate(const std::vector<std::vector<Tile>>& board, cons
     if (_state.state == ERROR)
         return _state;
     this->double_three_validation();
+    if(_state.state == ERROR)
+        return _state;
+    this->capture_validation();
+
+
     LOG("STATE = %s", _state.error_reason.c_str());
     LOG("STATE error = %i", _state.state);
     return _state;
@@ -90,6 +95,15 @@ void Validator::set_state(State newState, std::string& errorReason) {
 
 void Validator::double_three_validation() {
     _state = _doubleThreeCheck->DoubleThreeChecker(_board, _coord, _player);
+}
+
+void Validator::capture_validation() {
+    update_double_list();
+    _capture->CaptureCheck();
+};
+
+void Validator::update_double_list() {
+    _double_list = _doubleThreeCheck->get_double_two();
 }
 
 
