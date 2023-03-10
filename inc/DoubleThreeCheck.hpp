@@ -22,7 +22,10 @@ public:
 
 class DoubleThreeCheck : public IDoubleThreeCheck {
 public:
-    explicit DoubleThreeCheck(std::unique_ptr<ITwo>& Two) : _two(std::move(Two)) {}
+    explicit DoubleThreeCheck(std::unique_ptr<ITwo>& Two) : _two(std::move(Two)) {
+        _doubleTwoList = std::vector<Doubles>();
+        _full_frees = 0;
+    }
     DoubleThreeCheck(const DoubleThreeCheck&) {}
     ~DoubleThreeCheck() override = default;
 
@@ -40,7 +43,7 @@ public:
 	double_type		check_left_boundary_horizontal(Coordinates boundary_coords, Coordinates new_coords);
 	double_type		check_left_boundary_vertical(Coordinates boundary_coords, Coordinates new_coords);
 	double_type		check_left_boundary_cross(Coordinates boundary_coords, Coordinates new_coords);
-	void 			two_in_a_row(const std::vector<std::vector<Tile>> &board, const Coordinates &coord, const Player& play);
+	bool 			two_in_a_row(const std::vector<std::vector<Tile>> &board, const Coordinates &coord, const Player& play);
     Threes			get_last_three();
 	bool 			open_space_is_empty(Coordinates empty_space);
     bool            full_free_check();

@@ -15,6 +15,8 @@ errorState Validator::validate(const std::vector<std::vector<Tile>>& board, cons
     if (_state.state == ERROR)
         return _state;
     this->double_three_validation();
+    LOG("STATE = %s", _state.error_reason.c_str());
+    LOG("STATE error = %i", _state.state);
     return _state;
 }
 

@@ -9,26 +9,19 @@ Two::Two() {
 }
 Doubles Two::create_two(const std::vector<std::vector<Tile>>& board, const Coordinates& coord, const Player& player) {
     auto current_coordinates = check_two_in_a_row(board, coord, player);
-    LOG("Current coords");
     if (current_coordinates.y != -1) {
-        LOG("Coords moeten niet null zijn");
         return (boundary_check(current_coordinates, coord));
     } else {
-        LOG("We should enter the fake stuff");
         auto fake = Coordinates{-1,-1};
         auto FakeDoubles = Doubles{fake, fake};
         return FakeDoubles;
     }
-    // TODO: warning: control may reach end of non-void function
-    return {};
 }
 
 
 Coordinates Two::check_two_in_a_row(const std::vector<std::vector<Tile>>& board, const Coordinates& coord, const Player& player) {
     Coordinates already_on_board_coords{};
     LOG("incoming coords %i, %i", coord.y, coord.x);
-    LOG("wat is deze %i", board[coord.y - 1][coord.x - 1]);
-    LOG("wat is player %i", player);
     if (static_cast<Player>(board[coord.y - 1][coord.x - 1]) == player) {
         already_on_board_coords.y = coord.y - 1;
         already_on_board_coords.x = coord.x - 1;
@@ -62,7 +55,6 @@ Coordinates Two::check_two_in_a_row(const std::vector<std::vector<Tile>>& board,
         already_on_board_coords.x = coord.x;
         return already_on_board_coords;
     } else {
-        LOG("DIT MOET GEPRINT WORDEN OULEH");
         already_on_board_coords.y = -1;
         already_on_board_coords.x = -1;
         return already_on_board_coords;

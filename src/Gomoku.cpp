@@ -95,15 +95,14 @@ void Gomoku::doMove(const sf::Vector2<int>& moveLocation) {
     // probably this check will become part of the validator
     if (_board[moveLocation.y][moveLocation.x] == Tile::EMPTY) {
         // change _board to reflect new board state
-
         if (_player == Player::PLAYERONE) {
             _board[moveLocation.y][moveLocation.x] = Tile::P1;
         } else {
             _board[moveLocation.y][moveLocation.x] = Tile::P2;
         }
-//        ss << "click at pos (" << moveLocation.x << "," << moveLocation.y << ")";
+        ss << "click at pos (" << moveLocation.x << "," << moveLocation.y << ")";
     } else {
-//        ss << "pos (" << moveLocation.x << ", " << moveLocation.y << ") is not allowed";
+        ss << "pos (" << moveLocation.x << ", " << moveLocation.y << ") is not allowed";
     }
     // set header to whatever we want it to be
     _graphics->setHeader(ss.str());
@@ -111,7 +110,14 @@ void Gomoku::doMove(const sf::Vector2<int>& moveLocation) {
 }
 
 void Gomoku::validateMove(Coordinates coords) {
-    auto result = _validator->validate(_board, coords, _player);
-    std::stringstream ss;
-    ss << "pos (" << coords.x << ", " << coords.y << ") " << result.error_reason;
+    errorState result;
+    if(_player == Player::PLAYERONE) {
+        result = _validator_P1->validate(_board, coords, _player);
+    } else {
+        LOG("VOLGENS MIJ CRASH DIT");
+        result = _validator_P2->validate(_board, coords, _player);
+        LOG("JAAA");
+    }
+    LOG("Result = %s", result.error_reason.c_str());
+    LOG("Result = %i", result.state);
 }

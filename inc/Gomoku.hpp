@@ -19,14 +19,15 @@ public:
     Gomoku(const Gomoku&) = delete;
     Gomoku& operator=(const Gomoku&) = delete;
     ~Gomoku() = default;
-    Gomoku(std::unique_ptr<IValidator>& validator, std::unique_ptr<IGraphics>& graphics) :
-            _validator(std::move(validator)), _graphics(std::move(graphics)),
+    Gomoku(std::unique_ptr<IValidator>& validator_p1, std::unique_ptr<IValidator>& validator_p2, std::unique_ptr<IGraphics>& graphics) :
+            _validator_P1(std::move(validator_p1)), _validator_P2(std::move(validator_p2)),_graphics(std::move(graphics)),
             _board({BOARD_SIZE, {BOARD_SIZE, Tile::EMPTY}}) {}
 
     void gameLoop();
 
 private:
-    std::unique_ptr<IValidator>     _validator;
+    std::unique_ptr<IValidator>     _validator_P1;
+    std::unique_ptr<IValidator>     _validator_P2;
     std::unique_ptr<IGraphics>      _graphics;
     std::vector<std::vector<Tile>>  _board;
     Player                          _player;

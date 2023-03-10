@@ -12,25 +12,37 @@ errorState DoubleThreeCheck::DoubleThreeChecker(const std::vector<std::vector<Ti
 	errorState result;
     this->set_board(board);
     auto size = _doubleTwoList.size();
-	this->two_in_a_row(board, new_coord, player);
     if(size > 0) {
+        LOG("SIZE OF TWO IS BIGGER THEN 0 first check if this one is close to two block");
         if(this->find_three(new_coord, _doubleTwoList)) {
-            if(this->full_free_check()) {
-                if(_full_frees == 1) {
+            LOG("FOUND THREE");
+            if (this->full_free_check()) {
+                LOG("OOk hier meoten we in komen bij de first occ");
+                LOG("Full free size = %i", _full_frees);
+                if (_full_frees == 1) {
                     result.error_reason = "Not allowed move this will be the second fully free for this player";
                     result.state = State::ERROR;
                     return result;
                 } else {
+                    LOG("KOM IK HIER IN VOORDAT IK ERROR");
                     _full_frees++;
-                    result.error_reason = "";
+                    result.error_reason = "This is a valid move";
                     result.state = State::ACCEPTED;
                     return result;
                 }
             }
         }
     }
-    result.error_reason = "";
-    result.state = State::ACCEPTED;
+    LOG("Checking two in a row");
+	if(this->two_in_a_row(board, new_coord, player)) {
+        LOG("Created two in a row so no need to check three in a row");
+        result.error_reason = "This is a valid move creating two in a row";
+        result.state = ACCEPTED;
+        return result;
+    }
+    LOG("NOT two in a roww and not three in a row so fine regular move");
+    result.error_reason = "This is a valid move in open field";
+    result.state = ACCEPTED;
     return result;
 }
 
@@ -43,19 +55,21 @@ void DoubleThreeCheck::set_state(State newState, std::string &errorReason) {
 	_state.state = newState;
 }
 
-// deze moet verplaatst worden naar Two en via een getter verkregen kunnen worden
 size_t		DoubleThreeCheck::double_two_size() {
 	return _doubleTwoList.size();
 }
 
-void 		DoubleThreeCheck::two_in_a_row(const std::vector<std::vector<Tile>> &board, const Coordinates &coord, const Player& play)
+bool 		DoubleThreeCheck::two_in_a_row(const std::vector<std::vector<Tile>> &board, const Coordinates &coord, const Player& play)
 {
     auto result = _two->create_two(board, coord, play);
-    LOG("na Result");
+    LOG("Result = %i", result.right_boundary_coordinates.y);
+    LOG("Double two list size = %i", _doubleTwoList.size());
     if(result.right_boundary_coordinates.y != -1) {
-        LOG("IN DE IF");
+        LOG("Wordt er uberhaupt iets gepusht?");
         _doubleTwoList.push_back(result);
+        return true;
     }
+    return false;
 }
 
 Threes		DoubleThreeCheck::fill_double_three_stack(Coordinates bound_coordinates, Coordinates newCoords,
@@ -87,25 +101,21 @@ bool 		DoubleThreeCheck::find_three(Coordinates newCoords, std::vector<Doubles> 
 		Threes three_in_a_row;
 		auto result = check_right_boundary(elem.right_boundary_coordinates, newCoords, elem.direction);
 		if(result.doubleType != NONE) {
-            LOG("DEZE1?");
 			three_in_a_row = fill_double_three_stack(elem.left_boundary_coordinates, newCoords, result, false, elem.direction);
 			_doubleThreeList.push_back(three_in_a_row);
             return true;
         }
 		result = check_left_boundary(elem.left_boundary_coordinates, newCoords, elem.direction);
         if(result.doubleType != NONE) {
-            LOG("DEZE2?");
 			three_in_a_row = fill_double_three_stack(elem.right_boundary_coordinates, newCoords, result, true, elem.direction);
             _doubleThreeList.push_back(three_in_a_row);
             return true;
         }
     }
-    LOG("DUS DEZE WORDT NIET GETOUCHED?");
     return false;
 }
 
 bool		DoubleThreeCheck::open_space_is_empty(Coordinates empty_space) {
-	LOG("OPEN SPACE IS EMPTY Y [%i] X [%i]", empty_space.y, empty_space.x);
 	if(_board[empty_space.y][empty_space.x] == Tile::EMPTY) {
 		return true;
 	} else {
@@ -145,7 +155,6 @@ double_type		DoubleThreeCheck::check_right_boundary_vertical(Coordinates boundar
 			LOG("Matching new[%i] boundary[%i]", new_coords.y, boundary_coords.y);
 			return NORMAL;
 		} if(new_coords.y - boundary_coords.y == 2) {
-			// check y -1 inbouwen
 			LOG("Match Vertical we create double three with empty space in the middle new[%i] boundary[%i]", new_coords.x, new_coords.y);
 			return EMPTYSPACE;
 		}
@@ -161,7 +170,6 @@ double_type		DoubleThreeCheck::check_right_boundary_cross(Coordinates boundary_c
 		LOG("The new y coords are one layer above boundary coords new[%i] boundary[%i]", new_coords.y, boundary_coords.y);
 		if(new_coords.x - boundary_coords.x == 1) {
 			LOG("the new x coords are one layer to the right from boundary coords new[%i] boundary[%i]", new_coords.x, boundary_coords.x);
-			LOG("We are a match");
 			return NORMAL;
 		}
 		LOG("The new x coords are not in line with the boundary coords  coords new[%i] boundary[%i]", new_coords.x, boundary_coords.x);
@@ -180,7 +188,6 @@ double_type		DoubleThreeCheck::check_right_boundary_cross(Coordinates boundary_c
 
 boundary_check_return DoubleThreeCheck::check_right_boundary(Coordinates boundary_coords, Coordinates new_coords, Direction direction) {
     LOG("boundary_coords in right boundary checking %i %i", boundary_coords.y, boundary_coords.x);
-    LOG("Direction = %i", direction);
 	boundary_check_return result{};
 	if(direction == HORIZONTAL) {
         auto  three_type = check_right_boundary_horizontal(boundary_coords, new_coords);
@@ -205,7 +212,6 @@ boundary_check_return DoubleThreeCheck::check_right_boundary(Coordinates boundar
 		}
 		return result;
     } else if(direction == CROSS) {
-        LOG("hier moet ik in");
 		auto three_type = check_right_boundary_cross(boundary_coords, new_coords);
 		result.doubleType = three_type;
 		result.openSpace = Coordinates{-1,-1};
@@ -333,10 +339,7 @@ Threes DoubleThreeCheck::get_last_three() {
 }
 
 bool DoubleThreeCheck::check_free_left(Coordinates left_boundary, Direction dir) {
-    LOG("Met wat komen we hier? y: %i X: %i", left_boundary.y, left_boundary.x);
-    LOG("Dir = %i", dir);
     if(dir == HORIZONTAL) {
-        LOG("Hier kom ik wel");
         if(_board[left_boundary.y][left_boundary.x - 1] == Tile::EMPTY) {
             return true;
         }else {
@@ -360,12 +363,7 @@ bool DoubleThreeCheck::check_free_left(Coordinates left_boundary, Direction dir)
 }
 
 bool DoubleThreeCheck::check_free_right(Coordinates right_boundary, Direction dir) {
-    LOG("KOM IK HIER??????????");
-    LOG("Met wat komen we hier? y: %i X: %i", right_boundary.y, right_boundary.x);
-    LOG("Dir = %i", dir);
     if(dir == HORIZONTAL) {
-        LOG("board position y = %i x = %i", right_boundary.y, right_boundary.x + 1);
-        LOG("What is on this position = %i", _board[right_boundary.y][right_boundary.x + 1]);
         if(_board[right_boundary.y][right_boundary.x + 1] == Tile::EMPTY) {
             return true;
         }else {
@@ -391,7 +389,6 @@ bool DoubleThreeCheck::check_free_right(Coordinates right_boundary, Direction di
 bool        DoubleThreeCheck::full_free_check() {
     auto three = get_last_three();
     if (check_free_left(three.left_boundary_coordinates, three.direction) && check_free_right(three.right_boundary_coordinates, three.direction)) {
-        LOG("Kom ik erin?");
         three.full_free = true;
         return true;
     } else {
