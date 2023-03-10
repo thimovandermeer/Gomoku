@@ -9,6 +9,7 @@ Capture::Capture() {
     LOG("Capture constructor");
 }
 
-errorState  Capture::CaptureCheck() {
-
+errorState  Capture::CaptureCheck(const std::vector<Doubles> &doubles,const Coordinates &newCoords, const std::vector<std::vector<Tile>> &board) {
+    LOG("ABER JAWOELLL");
+    return {};
 }

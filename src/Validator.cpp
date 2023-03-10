@@ -99,7 +99,7 @@ void Validator::double_three_validation() {
 
 void Validator::capture_validation() {
     update_double_list();
-    _capture->CaptureCheck();
+    _capture->CaptureCheck(_double_list, _coord,_board);
 };
 
 void Validator::update_double_list() {

@@ -9,7 +9,7 @@
 class ICapture {
 public:
     virtual ~ICapture() = default;
-    virtual errorState CaptureCheck() = 0;
+    virtual errorState CaptureCheck(const std::vector<Doubles> &doubles,const Coordinates &newCoords, const std::vector<std::vector<Tile>> &board) = 0;
 };
 class Capture: public ICapture {
 public:
@@ -17,7 +17,7 @@ public:
     Capture(const Capture&) {};
     ~Capture() override = default;
 
-    errorState CaptureCheck() override;
+    errorState CaptureCheck(const std::vector<Doubles> &doubles,const Coordinates &newCoords, const std::vector<std::vector<Tile>> &board) override;
 };
 
 
