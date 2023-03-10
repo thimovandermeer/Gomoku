@@ -23,42 +23,45 @@ Doubles Two::create_two(const std::vector<std::vector<Tile>>& board, const Coord
 Coordinates Two::check_two_in_a_row(const std::vector<std::vector<Tile>>& board, const Coordinates& coord, const Player& player) {
     Coordinates already_on_board_coords{};
     LOG("incoming coords %i, %i", coord.y, coord.x);
-    if (static_cast<Player>(board[coord.y - 1][coord.x - 1]) == player) {
-        already_on_board_coords.y = coord.y - 1;
-        already_on_board_coords.x = coord.x - 1;
-        return already_on_board_coords;
-    } else if (static_cast<Player>(board[coord.y][coord.x - 1]) == player) {
-        already_on_board_coords.y = coord.y;
-        already_on_board_coords.x = coord.x - 1;
-        return already_on_board_coords;
-    } else if (static_cast<Player>(board[coord.y + 1][coord.x - 1]) == player) {
-        already_on_board_coords.y = coord.y + 1;
-        already_on_board_coords.x = coord.x - 1;
-        return already_on_board_coords;
-    } else if (static_cast<Player>(board[coord.y][coord.x + 1]) == player) {
-        already_on_board_coords.y = coord.y;
-        already_on_board_coords.x = coord.x + 1;
-        return already_on_board_coords;
-    } else if (static_cast<Player>(board[coord.y + 1][coord.x + 1]) == player) {
-        already_on_board_coords.y = coord.y + 1;
-        already_on_board_coords.x = coord.x + 1;
-        return already_on_board_coords;
-    } else if (static_cast<Player>(board[coord.y - 1][coord.x + 1]) == player) {
-        already_on_board_coords.y = coord.y - 1;
-        already_on_board_coords.x = coord.x + 1;
-        return already_on_board_coords;
-    } else if (static_cast<Player>(board[coord.y + 1][coord.x]) == player) {
-        already_on_board_coords.y = coord.y + 1;
-        already_on_board_coords.x = coord.x;
-        return already_on_board_coords;
-    } else if (static_cast<Player>(board[coord.y - 1][coord.x]) == player) {
-        already_on_board_coords.y = coord.y - 1;
-        already_on_board_coords.x = coord.x;
-        return already_on_board_coords;
-    } else {
-        already_on_board_coords.y = -1;
-        already_on_board_coords.x = -1;
-        return already_on_board_coords;
+    // TODO: do the boundary checks properly now everything around the boundaries is not done
+    if(coord.x > 0 && coord.y> 0) {
+        if (static_cast<Player>(board[coord.y - 1][coord.x - 1]) == player) {
+            already_on_board_coords.y = coord.y - 1;
+            already_on_board_coords.x = coord.x - 1;
+            return already_on_board_coords;
+        } else if (static_cast<Player>(board[coord.y][coord.x - 1]) == player) {
+            already_on_board_coords.y = coord.y;
+            already_on_board_coords.x = coord.x - 1;
+            return already_on_board_coords;
+        } else if (static_cast<Player>(board[coord.y + 1][coord.x - 1]) == player) {
+            already_on_board_coords.y = coord.y + 1;
+            already_on_board_coords.x = coord.x - 1;
+            return already_on_board_coords;
+        } else if (static_cast<Player>(board[coord.y][coord.x + 1]) == player) {
+            already_on_board_coords.y = coord.y;
+            already_on_board_coords.x = coord.x + 1;
+            return already_on_board_coords;
+        } else if (static_cast<Player>(board[coord.y + 1][coord.x + 1]) == player) {
+            already_on_board_coords.y = coord.y + 1;
+            already_on_board_coords.x = coord.x + 1;
+            return already_on_board_coords;
+        } else if (static_cast<Player>(board[coord.y - 1][coord.x + 1]) == player) {
+            already_on_board_coords.y = coord.y - 1;
+            already_on_board_coords.x = coord.x + 1;
+            return already_on_board_coords;
+        } else if (static_cast<Player>(board[coord.y + 1][coord.x]) == player) {
+            already_on_board_coords.y = coord.y + 1;
+            already_on_board_coords.x = coord.x;
+            return already_on_board_coords;
+        } else if (static_cast<Player>(board[coord.y - 1][coord.x]) == player) {
+            already_on_board_coords.y = coord.y - 1;
+            already_on_board_coords.x = coord.x;
+            return already_on_board_coords;
+        } else {
+            already_on_board_coords.y = -1;
+            already_on_board_coords.x = -1;
+            return already_on_board_coords;
+        }
     }
 }
 
