@@ -37,7 +37,6 @@ private:
     void validateMove(Coordinates coords, std::stringstream &ss);
     void handleMouseButtonPressed(const sf::Event& event);
     void handleKeyPressed(const sf::Event& event);
-    void whichPlayer();
 };
 
 

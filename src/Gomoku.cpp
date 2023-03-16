@@ -74,24 +74,16 @@ void Gomoku::gameLoop() {
     }
 }
 
-void Gomoku::whichPlayer() {
-    static int x = 1;
-    if (++x % 2 == 0) {
-        _player = Player::PLAYERONE;
-    } else {
-        _player = Player::PLAYERTWO;
-    }
-}
-
 void Gomoku::doMove(const sf::Vector2<int>& moveLocation) {
     // TODO: validate if stone can be placed
-    whichPlayer();
     Coordinates coords{moveLocation.y, moveLocation.x};
     std::stringstream ss;
     LOG("coords y: %i, x: %i");
+
+    if (_state.state == State::ACCEPTED) {
+        _player = _player == Player::PLAYERONE ? Player::PLAYERTWO : Player::PLAYERONE;
+    }
     validateMove(coords, ss);
-
-
 
 
     // probably this check will become part of the validator
@@ -102,10 +94,8 @@ void Gomoku::doMove(const sf::Vector2<int>& moveLocation) {
         } else {
             _board[moveLocation.y][moveLocation.x] = Tile::P2;
         }
-        ss << "click at pos (" << moveLocation.x << "," << moveLocation.y << ")";
-    } else {
-        ss << "pos (" << moveLocation.x << ", " << moveLocation.y << ") is not allowed";
     }
+    ss << "\n\t\tat (" << moveLocation.x << ", " << moveLocation.y << ")";
     // set header to whatever we want it to be
     _graphics->setHeader(ss.str());
 

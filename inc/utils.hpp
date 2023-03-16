@@ -9,4 +9,5 @@
 
 std::vector<std::vector<Tile>> create_empty_board();
 std::vector<std::vector<Tile>> create_filled_board();
+void printBoard(const std::vector<std::vector<Tile>>& b);
 #endif //GOMOKU_UTILS_HPP
