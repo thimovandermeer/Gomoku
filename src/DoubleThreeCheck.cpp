@@ -107,7 +107,7 @@ bool 		DoubleThreeCheck::find_three(Coordinates newCoords, std::vector<Doubles> 
 			_doubleThreeList.push_back(three_in_a_row);
             return true;
         }
-		result = check_left_boundary(elem.left_boundary_coordinates, newCoords, elem.direction);
+		result = check_left_boundary(elem.left_boundary_coordinates, newCoords, elem.direction, _board);
         if(result.doubleType != NONE) {
 			three_in_a_row = fill_double_three_stack(elem.right_boundary_coordinates, newCoords, result, true, elem.direction);
             _doubleThreeList.push_back(three_in_a_row);
@@ -121,7 +121,11 @@ bool 		DoubleThreeCheck::find_three(Coordinates newCoords, std::vector<Doubles> 
 
 
 Threes DoubleThreeCheck::get_last_three() {
-    return  _doubleThreeList.back();
+    if(not _doubleThreeList.empty()) {
+        return  _doubleThreeList.back();
+    } else {
+        return {};
+    }
 }
 
 bool        DoubleThreeCheck::full_free_check() {

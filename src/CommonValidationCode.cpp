@@ -23,7 +23,7 @@ boundary_check_return check_right_boundary(Coordinates boundary_coords, Coordina
         LOG("IK RETURN HORIZONTAL");
         return result;
     } else if(direction == VERTICAL) {
-        auto three_type = check_right_boundary_vertical(boundary_coords, new_coords);
+        auto three_type = check_right_boundary_vertical(boundary_coords, new_coords, board);
         LOG("THREE TYPE = %I", three_type);
         result.doubleType = three_type;
         result.openSpace = Coordinates{-1,-1};
@@ -37,7 +37,7 @@ boundary_check_return check_right_boundary(Coordinates boundary_coords, Coordina
         LOG("IK RETURN VERTICAL");
         return result;
     } else if(direction == CROSS) {
-        auto three_type = check_right_boundary_cross(boundary_coords, new_coords);
+        auto three_type = check_right_boundary_cross(boundary_coords, new_coords, board);
         result.doubleType = three_type;
         result.openSpace = Coordinates{-1,-1};
         if(three_type == EMPTYSPACE) {
@@ -67,7 +67,7 @@ double_type			check_right_boundary_horizontal(Coordinates boundary_coords, Coord
         } if(new_coords.x - boundary_coords.x == 2) {
             LOG("Potentially one empty space in between");
             auto open_space_coords = new_coords;
-            open_space_coords.x = new_coords.x + 1;
+            open_space_coords.x = new_coords.x - 1;
             LOG("OPEN space coords = %i", open_space_coords.x);
             if(open_space_is_empty(open_space_coords, board)) {
                 LOG("Match horizontal we create double three with empty space in the middle new[%i] boundary[%i]", new_coords.x, new_coords.y);
@@ -83,15 +83,24 @@ double_type			check_right_boundary_horizontal(Coordinates boundary_coords, Coord
     return NONE;
 }
 
-double_type		check_right_boundary_vertical(Coordinates boundary_coords, Coordinates new_coords) {
+double_type		check_right_boundary_vertical(Coordinates boundary_coords, Coordinates new_coords, const std::vector<std::vector<Tile>> &board) {
     if(new_coords.x == boundary_coords.x){
         LOG("We are on the same vertical axis");
         if(new_coords.y - boundary_coords.y == 1) {
             LOG("Matching new[%i] boundary[%i]", new_coords.y, boundary_coords.y);
             return NORMAL;
         } if(new_coords.y - boundary_coords.y == 2) {
-            LOG("Match Vertical we create double three with empty space in the middle new[%i] boundary[%i]", new_coords.x, new_coords.y);
-            return EMPTYSPACE;
+            LOG("new coords y = %i boundary coords y", new_coords.y, boundary_coords.y);
+            auto open_space_coords = new_coords;
+            open_space_coords.y = new_coords.y - 1;
+            LOG("OPEN space coords = %i", open_space_coords.x);
+            if(open_space_is_empty(open_space_coords, board)) {
+                LOG("Match horizontal we create double three with empty space in the middle new[%i] boundary[%i]", new_coords.x, new_coords.y);
+                return EMPTYSPACE;
+            } else {
+                LOG("The space in between was not empty");
+                return NONE;
+            }
         }
         LOG("We are on the same vertical axis but not in line new[%i] boundary[%i]", new_coords.y, boundary_coords.y);
         return NONE;
@@ -100,7 +109,7 @@ double_type		check_right_boundary_vertical(Coordinates boundary_coords, Coordina
     return NONE;
 }
 
-double_type		check_right_boundary_cross(Coordinates boundary_coords, Coordinates new_coords) {
+double_type		check_right_boundary_cross(Coordinates boundary_coords, Coordinates new_coords, const std::vector<std::vector<Tile>> &board) {
     LOG("New coords y = %i", new_coords.y);
     LOG("boundary coords y = %i", boundary_coords.y);
     if((new_coords.y - boundary_coords.y) == 1) {
@@ -112,11 +121,17 @@ double_type		check_right_boundary_cross(Coordinates boundary_coords, Coordinates
         LOG("The new x coords are not in line with the boundary coords  coords new[%i] boundary[%i]", new_coords.x, boundary_coords.x);
         return NONE;
     } else if ((new_coords.y - boundary_coords.y) == 2) {
-        LOG("Potentially a match");
-        if (new_coords.x - boundary_coords.x == 2) {
-            LOG("Match Cross we create double three with empty space in the middle new[%i] boundary[%i]", new_coords.x,
-                new_coords.y);
+        LOG("Potentially one empty space in between");
+        auto open_space_coords = new_coords;
+        open_space_coords.y = new_coords.y - 1;
+        open_space_coords.x = new_coords.x - 1;
+        LOG("OPEN space coords = %i", open_space_coords.x);
+        if(open_space_is_empty(open_space_coords, board)) {
+            LOG("Match horizontal we create double three with empty space in the middle new[%i] boundary[%i]", new_coords.x, new_coords.y);
             return EMPTYSPACE;
+        } else {
+            LOG("The space in between was not empty");
+            return NONE;
         }
     }
     LOG("The new coords are not in line with the boundary coords new[%i] boundary[%i]", new_coords.y, boundary_coords.y);
@@ -124,7 +139,7 @@ double_type		check_right_boundary_cross(Coordinates boundary_coords, Coordinates
 }
 
 double_type			check_left_boundary_horizontal(Coordinates boundary_coords,
-                                                                        Coordinates new_coords)
+                                                                        Coordinates new_coords, const std::vector<std::vector<Tile>> &board)
 {
     if(new_coords.y == boundary_coords.y) {
         LOG("We are on the same horizontal axis");
@@ -132,17 +147,24 @@ double_type			check_left_boundary_horizontal(Coordinates boundary_coords,
             LOG("Matching new[%i] boundary[%i]", new_coords.x, boundary_coords.x);
             return NORMAL;
         } if(new_coords.x - boundary_coords.x == -2) {
-            LOG("EMPTY SPACE?");
-            return EMPTYSPACE;
+            LOG("new coords x = %i boundary coords x = %i", new_coords.x, new_coords.y);
+            auto open_space_coords = new_coords;
+            open_space_coords.x = new_coords.x + 1;
+            LOG("OPEN space coords = %i", open_space_coords.x);
+            if(open_space_is_empty(open_space_coords, board)) {
+                LOG("Match horizontal we create double three with empty space in the middle new[%i] boundary[%i]", new_coords.x, new_coords.y);
+                return EMPTYSPACE;
+            } else {
+                LOG("The space in between was not empty");
+                return NONE;
+            }
         }
-        LOG("We are on the same horizontal axis but not in line new[%i] boundary[%i]", new_coords.x, boundary_coords.x);
-        return NONE;
+         return NONE;
     }
     return NONE;
 }
 
-double_type			check_left_boundary_vertical(Coordinates boundary_coords,
-                                                                      Coordinates new_coords)
+double_type			check_left_boundary_vertical(Coordinates boundary_coords, Coordinates new_coords, const std::vector<std::vector<Tile>> &board)
 {
     if(new_coords.x == boundary_coords.x){
         LOG("We are on the same vertical axis");
@@ -150,8 +172,17 @@ double_type			check_left_boundary_vertical(Coordinates boundary_coords,
             LOG("Matching new[%i] boundary[%i]", new_coords.y, boundary_coords.y);
             return NORMAL;
         } if (new_coords.y - boundary_coords.y == -2) {
-            LOG("");
-            return EMPTYSPACE;
+            LOG("Potentially one empty space in between");
+            auto open_space_coords = new_coords;
+            open_space_coords.y = new_coords.y + 1;
+            LOG("OPEN space coords = %i", open_space_coords.x);
+            if(open_space_is_empty(open_space_coords, board)) {
+                LOG("Match horizontal we create double three with empty space in the middle new[%i] boundary[%i]", new_coords.x, new_coords.y);
+                return EMPTYSPACE;
+            } else {
+                LOG("The space in between was not empty");
+                return NONE;
+            }
         }
         LOG("We are on the same vertical axis but not in line new[%i] boundary[%i]", new_coords.y, boundary_coords.y);
         return NONE;
@@ -159,7 +190,7 @@ double_type			check_left_boundary_vertical(Coordinates boundary_coords,
     return NONE;
 }
 
-double_type			check_left_boundary_cross(Coordinates boundary_coords, Coordinates new_coords)
+double_type		check_left_boundary_cross(Coordinates boundary_coords, Coordinates new_coords, const std::vector<std::vector<Tile>> &board)
 {
     LOG("new coords y %i boundary_coors y %i ", new_coords.y, boundary_coords.y);
     if((new_coords.y - boundary_coords.y) == -1) {
@@ -171,22 +202,31 @@ double_type			check_left_boundary_cross(Coordinates boundary_coords, Coordinates
         }
         LOG("The new x coords are not in line with the boundary coords  coords new[%i] boundary[%i]", new_coords.x, boundary_coords.x);
         return NONE;
-    }else if ((new_coords.y - boundary_coords.y) == -2) {
-        LOG("Potential with open space");
-        if(new_coords.x - boundary_coords.x == -2) {
+    }
+    else if ((new_coords.y - boundary_coords.y) == -2) {
+        LOG("Potentially one empty space in between");
+        auto open_space_coords = new_coords;
+        open_space_coords.y = new_coords.y + 1;
+        open_space_coords.x = new_coords.x + 1;
+        LOG("OPEN space coords = %i", open_space_coords.x);
+        if(open_space_is_empty(open_space_coords, board)) {
+            LOG("Match horizontal we create double three with empty space in the middle new[%i] boundary[%i]", new_coords.x, new_coords.y);
             return EMPTYSPACE;
+        } else {
+            LOG("The space in between was not empty");
+            return NONE;
         }
     }
     return NONE;
 }
 
 
-boundary_check_return check_left_boundary(Coordinates boundary_coords, Coordinates new_coords, Direction direction) {
+boundary_check_return check_left_boundary(Coordinates boundary_coords, Coordinates new_coords, Direction direction, const std::vector<std::vector<Tile>> &board) {
     LOG("boundary_coords in left boundary checking %i %i", boundary_coords.y, boundary_coords.x);
     LOG("Direction = %i", direction);
     boundary_check_return result{};
     if(direction == HORIZONTAL) {
-        auto three_type = check_left_boundary_horizontal(boundary_coords, new_coords);
+        auto three_type = check_left_boundary_horizontal(boundary_coords, new_coords, board);
         result.doubleType = three_type;
         result.openSpace = Coordinates{-1,-1};
         if(three_type == EMPTYSPACE) {
@@ -197,7 +237,7 @@ boundary_check_return check_left_boundary(Coordinates boundary_coords, Coordinat
         }
         return result;
     } else if(direction == VERTICAL) {
-        auto three_type = check_left_boundary_vertical(boundary_coords, new_coords);
+        auto three_type = check_left_boundary_vertical(boundary_coords, new_coords, board);
         result.doubleType = three_type;
         result.openSpace = Coordinates{-1,-1};
         if (three_type == EMPTYSPACE) {
@@ -208,7 +248,7 @@ boundary_check_return check_left_boundary(Coordinates boundary_coords, Coordinat
         }
         return result;
     } else if(direction == CROSS) {
-        auto three_type = check_left_boundary_cross(boundary_coords, new_coords);
+        auto three_type = check_left_boundary_cross(boundary_coords, new_coords, board);
         result.doubleType = three_type;
         result.openSpace = Coordinates{-1,-1};
         if(three_type == EMPTYSPACE) {

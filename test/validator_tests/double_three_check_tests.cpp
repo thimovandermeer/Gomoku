@@ -209,6 +209,8 @@ TEST(double_three_check_tests, check_double_three_with_open_space_right_horizont
 	ASSERT_EQ(result.right_boundary_coordinates.x, 13);
 }
 
+
+
 TEST(double_three_check_tests, check_double_three_with_open_space_left_horizontal) {
 	Doubles doubles;
 
@@ -239,6 +241,8 @@ TEST(double_three_check_tests, check_double_three_with_open_space_left_horizonta
 	ASSERT_EQ(result.left_boundary_coordinates.y, 10);
 	ASSERT_EQ(result.right_boundary_coordinates.x, 11);
 }
+
+
 
 TEST(double_three_check_tests, check_double_three_with_open_space_up_vertical) {
 	Doubles doubles;
@@ -272,6 +276,8 @@ TEST(double_three_check_tests, check_double_three_with_open_space_up_vertical) {
 }
 
 
+
+
 TEST(double_three_check_tests, check_double_three_with_open_space_down_vertical) {
 	Doubles doubles;
 
@@ -302,6 +308,8 @@ TEST(double_three_check_tests, check_double_three_with_open_space_down_vertical)
 	ASSERT_EQ(result.left_boundary_coordinates.y, 8);
 	ASSERT_EQ(result.right_boundary_coordinates.y, 11);
 }
+
+
 
 TEST(double_three_check_tests, check_double_three_with_open_space_left_cross) {
     Doubles doubles;
@@ -336,6 +344,8 @@ TEST(double_three_check_tests, check_double_three_with_open_space_left_cross) {
     ASSERT_EQ(result.right_boundary_coordinates.y, 4);
 }
 
+
+
 TEST(double_three_check_tests, check_double_three_with_open_space_right_cross) {
     Doubles doubles;
 
@@ -369,6 +379,8 @@ TEST(double_three_check_tests, check_double_three_with_open_space_right_cross) {
     ASSERT_EQ(result.left_boundary_coordinates.y, 3);
     ASSERT_EQ(result.right_boundary_coordinates.y, 6);
 }
+
+
 
 TEST(double_three_check_tests, double_three_is_fully_free_true_left_horizontal) {
     // create a double with coordinates
