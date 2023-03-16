@@ -6,9 +6,10 @@
 
 #define MAX_BOARD_SIZE 19
 
-errorState Validator::validate(const std::vector<std::vector<Tile>>& board, const Coordinates& coord, const Player& player) {
+errorState Validator::validate(const std::vector<std::vector<Tile>>& board, const Coordinates& coord, const Player& player,const std::vector<Doubles> &opponent_doubles) {
     this->set_data(board, coord, player);
     this->board_validation();
+    this->set_opponent_doubles(opponent_doubles);
     if (_state.state == ERROR)
         return _state;
     this->coordinates_validation();
@@ -106,6 +107,13 @@ void Validator::update_double_list() {
     _double_list = _doubleThreeCheck->get_double_two();
 }
 
+void Validator::set_opponent_doubles(const std::vector<Doubles> &opponent_doubles) {
+    this->_opponent_doubles = opponent_doubles;
+}
+
+std::vector<Doubles> Validator::get_double_two_list() {
+    return _double_list;
+}
 
 
 
