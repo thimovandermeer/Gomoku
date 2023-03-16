@@ -60,9 +60,20 @@ Graphics::Graphics() : _rulesActive(false), _pixelsPerSpace(0) {
     _window->setVerticalSyncEnabled(true);
     _window->clear(Color::White);
 
-    std::string pathToFont(PROJECT_ROOT_DIR);
-    if (not _font.loadFromFile(pathToFont + "/resources/Arial.ttf")) {
+    std::string rersourcePath(PROJECT_ROOT_DIR);
+    rersourcePath += "/resources/";
+    auto image = Image{};
+    if (not image.loadFromFile(rersourcePath + "icon.png")) {
+        ERROR("icon not loaded from file");
+        _window->close();
+        return;
+    }
+    _window->setIcon(image.getSize().x, image.getSize().y, image.getPixelsPtr());
+
+    if (not _font.loadFromFile(rersourcePath + "Arial.ttf")) {
         ERROR("font not loaded from file");
+        _window->close();
+        return;
     }
     _header.setFont(_font);
     _header.setFillColor(Color::Black);
