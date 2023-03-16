@@ -7,6 +7,7 @@ target_sources(gomoku PRIVATE
         Utils.cpp
 		Two.cpp
 		Capture.cpp
+		ValidatorContainer.cpp
 		)
 
 target_sources(gomoku_test PRIVATE
@@ -18,4 +19,5 @@ target_sources(gomoku_test PRIVATE
         Utils.cpp
 		Two.cpp
 		Capture.cpp
+		ValidatorContainer.cpp
 		)

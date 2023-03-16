@@ -63,6 +63,7 @@ Coordinates Two::check_two_in_a_row(const std::vector<std::vector<Tile>>& board,
             return already_on_board_coords;
         }
     }
+    //TODO: boundary checkign should be done here if they near the boundaries of a board
 }
 
 Doubles Two::boundary_check(Coordinates coordinates_on_board, Coordinates new_coordinates) {

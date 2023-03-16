@@ -114,9 +114,9 @@ void Gomoku::validateMove(Coordinates coords, std::stringstream &ss) {
     LOG("Coords zijn y:%i x: %i", coords.y, coords.x);
     errorState result;
     if(_player == Player::PLAYERONE) {
-        result = _validator_P1->validate(_board, coords, _player);
+        result = _validator_container->p1_validate(_board, coords, _player);
     } else {
-        result = _validator_P2->validate(_board, coords, _player);
+        result = _validator_container->p2_validate(_board, coords, _player);
     }
     LOG("Result = %s", result.error_reason.c_str());
     LOG("Result = %i", result.state);

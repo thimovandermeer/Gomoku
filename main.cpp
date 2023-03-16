@@ -13,7 +13,9 @@ int main() {
 
     std::unique_ptr<IValidator> validator_p1 = std::make_unique<Validator>(doubleThreeCheck_p1, capture_p1);
     std::unique_ptr<IValidator> validator_p2 = std::make_unique<Validator>(doubleThreeCheck_p2, capture_p2);
-    Gomoku gomoku(validator_p1, validator_p2, graphics);
+
+    std::unique_ptr<IValidatorContainer> validator_container = std::make_unique<ValidatorContainer>(validator_p1, validator_p2);
+    Gomoku gomoku(validator_container, graphics);
 
     gomoku.gameLoop();
 
