@@ -9,11 +9,11 @@
 auto board = create_empty_board();
 TEST(common_validation_tests, check_right_boundary_horizontal) {
 // create board with double three on it
-Coordinates boundary_coords;
+Coordinate boundary_coords;
 boundary_coords.y = 10;
 boundary_coords.x = 10;
 
-Coordinates new_coords;
+Coordinate new_coords;
 new_coords.y = 10;
 new_coords.x = 11;
 auto result = check_right_boundary(boundary_coords, new_coords, HORIZONTAL, board);
@@ -22,11 +22,11 @@ ASSERT_EQ(result.doubleType, NORMAL);
 
 TEST(common_validation_tests, check_right_boundary_horizontal_false) {
 // create board with double three on it
-Coordinates boundary_coords;
+Coordinate boundary_coords;
 boundary_coords.y = 10;
 boundary_coords.x = 10;
 
-Coordinates new_coords;
+Coordinate new_coords;
 new_coords.y = 10;
 new_coords.x = 15;
 auto result = check_right_boundary(boundary_coords, new_coords, HORIZONTAL, board);
@@ -35,11 +35,11 @@ ASSERT_EQ(result.doubleType, NONE);
 
 TEST(common_validation_tests, check_right_boundary_vertical) {
 // create board with double three on it
-Coordinates boundary_coords;
+Coordinate boundary_coords;
 boundary_coords.y = 10;
 boundary_coords.x = 10;
 
-Coordinates new_coords;
+Coordinate new_coords;
 new_coords.y = 11;
 new_coords.x = 10;
 auto result = check_right_boundary(boundary_coords, new_coords, VERTICAL, board);
@@ -48,11 +48,11 @@ ASSERT_EQ(result.doubleType, NORMAL);
 
 TEST(common_validation_tests, check_right_boundary_vertical_false) {
 // create board with double three on it
-Coordinates boundary_coords;
+Coordinate boundary_coords;
 boundary_coords.y = 10;
 boundary_coords.x = 10;
 
-Coordinates new_coords;
+Coordinate new_coords;
 new_coords.y = 15;
 new_coords.x = 10;
 
@@ -61,11 +61,11 @@ ASSERT_EQ(check_right_boundary(boundary_coords, new_coords, VERTICAL, board).dou
 
 TEST(common_validation_tests, check_right_boundary_cross) {
 // create board with double three on it
-Coordinates boundary_coords;
+Coordinate boundary_coords;
 boundary_coords.y = 10;
 boundary_coords.x = 10;
 
-Coordinates new_coords;
+Coordinate new_coords;
 new_coords.y = 11;
 new_coords.x = 11;
 
@@ -74,11 +74,11 @@ ASSERT_EQ(check_right_boundary(boundary_coords, new_coords, CROSS, board).double
 
 TEST(common_validation_tests, check_right_boundary_cross_false_y_different) {
 // create board with double three on it
-Coordinates boundary_coords;
+Coordinate boundary_coords;
 boundary_coords.y = 10;
 boundary_coords.x = 10;
 
-Coordinates new_coords;
+Coordinate new_coords;
 new_coords.y = 13;
 new_coords.x = 11;
 
@@ -87,11 +87,11 @@ ASSERT_EQ(check_right_boundary(boundary_coords, new_coords, CROSS, board).double
 
 TEST(common_validation_tests, check_right_boundary_cross_false_x_different) {
 // create board with double three on it
-Coordinates boundary_coords;
+Coordinate boundary_coords;
 boundary_coords.y = 10;
 boundary_coords.x = 10;
 
-Coordinates new_coords;
+Coordinate new_coords;
 new_coords.y = 11;
 new_coords.x = 15;
 
@@ -100,11 +100,11 @@ ASSERT_EQ(check_right_boundary(boundary_coords, new_coords, CROSS, board).double
 
 TEST(common_validation_tests, check_left_boundary_horizontal) {
 // create board with double three on it
-Coordinates boundary_coords;
+Coordinate boundary_coords;
 boundary_coords.y = 10;
 boundary_coords.x = 10;
 
-Coordinates new_coords;
+Coordinate new_coords;
 new_coords.y = 10;
 new_coords.x = 9;
 
@@ -113,11 +113,11 @@ ASSERT_EQ(check_left_boundary(boundary_coords, new_coords, HORIZONTAL, board).do
 
 TEST(common_validation_tests, check_left_boundary_horizontal_false) {
 // create board with double three on it
-Coordinates boundary_coords;
+Coordinate boundary_coords;
 boundary_coords.y = 10;
 boundary_coords.x = 10;
 
-Coordinates new_coords;
+Coordinate new_coords;
 new_coords.y = 10;
 new_coords.x = 5;
 
@@ -126,11 +126,11 @@ ASSERT_EQ(check_left_boundary(boundary_coords, new_coords, HORIZONTAL, board).do
 
 TEST(common_validation_tests, check_left_boundary_vertical) {
 // create board with double three on it
-Coordinates boundary_coords;
+Coordinate boundary_coords;
 boundary_coords.y = 10;
 boundary_coords.x = 10;
 
-Coordinates new_coords;
+Coordinate new_coords;
 new_coords.y = 9;
 new_coords.x = 10;
 
@@ -139,11 +139,11 @@ ASSERT_EQ(check_left_boundary(boundary_coords, new_coords, VERTICAL, board).doub
 
 TEST(common_validation_tests, check_left_boundary_vertical_false) {
 // create board with double three on it
-Coordinates boundary_coords;
+Coordinate boundary_coords;
 boundary_coords.y = 10;
 boundary_coords.x = 10;
 
-Coordinates new_coords;
+Coordinate new_coords;
 new_coords.y = 5;
 new_coords.x = 10;
 
@@ -152,11 +152,11 @@ ASSERT_EQ(check_left_boundary(boundary_coords, new_coords, VERTICAL, board).doub
 
 TEST(common_validation_tests, check_left_boundary_cross) {
 // create board with double three on it
-Coordinates boundary_coords;
+Coordinate boundary_coords;
 boundary_coords.y = 10;
 boundary_coords.x = 10;
 
-Coordinates new_coords;
+Coordinate new_coords;
 new_coords.y = 9;
 new_coords.x = 9;
 
@@ -165,11 +165,11 @@ ASSERT_EQ(check_left_boundary(boundary_coords, new_coords, CROSS, board).doubleT
 
 TEST(common_validation_tests, check_left_boundary_cross_false_y_different) {
 // create board with double three on it
-Coordinates boundary_coords;
+Coordinate boundary_coords;
 boundary_coords.y = 10;
 boundary_coords.x = 10;
 
-Coordinates new_coords;
+Coordinate new_coords;
 new_coords.y = 7;
 new_coords.x = 9;
 
@@ -178,11 +178,11 @@ ASSERT_EQ(check_left_boundary(boundary_coords, new_coords, CROSS, board).doubleT
 
 TEST(common_validation_tests, check_left_boundary_cross_false_x_different) {
 // create board with double three on it
-Coordinates boundary_coords;
+Coordinate boundary_coords;
 boundary_coords.y = 10;
 boundary_coords.x = 10;
 
-Coordinates new_coords;
+Coordinate new_coords;
 new_coords.y = 9;
 new_coords.x = 7;
 
@@ -190,7 +190,7 @@ ASSERT_EQ(check_left_boundary(boundary_coords, new_coords, CROSS, board).doubleT
 }
 
 TEST(double_three_check_tests, open_space_is_empty_positive) {
-    Coordinates coords;
+    Coordinate coords;
     coords.y = 10;
     coords.x = 10;
 
@@ -203,7 +203,7 @@ TEST(double_three_check_tests, open_space_is_empty_positive) {
 }
 
 TEST(double_three_check_tests, open_space_is_empty_negative) {
-    Coordinates coords;
+    Coordinate coords;
     coords.y = 10;
     coords.x = 10;
 
@@ -215,8 +215,8 @@ TEST(double_three_check_tests, open_space_is_empty_negative) {
 }
 
 TEST(double_three_check_tests, check_double_three_with_open_space_not_free_right_horizontal) {
-    Coordinates boundary_coords{10,10};
-    Coordinates new_coords{10,12};
+    Coordinate boundary_coords{10, 10};
+    Coordinate new_coords{10, 12};
 
     auto board = create_empty_board();
     board[10][11] = Tile::P2;
@@ -224,8 +224,8 @@ TEST(double_three_check_tests, check_double_three_with_open_space_not_free_right
 }
 
 TEST(double_three_check_tests, check_double_three_with_open_space_not_free_left_horizontal) {
-    Coordinates boundary_coords{10,10};
-    Coordinates new_coords{10,8};
+    Coordinate boundary_coords{10, 10};
+    Coordinate new_coords{10, 8};
 
     auto board = create_empty_board();
     board[10][9] = Tile::P2;
@@ -233,8 +233,8 @@ TEST(double_three_check_tests, check_double_three_with_open_space_not_free_left_
 }
 
 TEST(double_three_check_tests, check_double_three_with_open_space_not_free_up_vertical) {
-    Coordinates boundary_coords{10,10};
-    Coordinates new_coords{12,10};
+    Coordinate boundary_coords{10, 10};
+    Coordinate new_coords{12, 10};
 
     auto board = create_empty_board();
     board[11][10] = Tile::P2;
@@ -242,8 +242,8 @@ TEST(double_three_check_tests, check_double_three_with_open_space_not_free_up_ve
 }
 
 TEST(double_three_check_tests, check_double_three_with_open_space_not_free_down_vertical) {
-    Coordinates boundary_coords{10,10};
-    Coordinates new_coords{8,10};
+    Coordinate boundary_coords{10, 10};
+    Coordinate new_coords{8, 10};
 
     auto board = create_empty_board();
     board[9][10] = Tile::P2;
@@ -251,8 +251,8 @@ TEST(double_three_check_tests, check_double_three_with_open_space_not_free_down_
 }
 
 TEST(double_three_check_tests, check_double_three_with_open_space_not_free_left_cross) {
-    Coordinates boundary_coords{10,10};
-    Coordinates new_coords{8,8};
+    Coordinate boundary_coords{10, 10};
+    Coordinate new_coords{8, 8};
 
     auto board = create_empty_board();
     board[9][9] = Tile::P2;
@@ -260,8 +260,8 @@ TEST(double_three_check_tests, check_double_three_with_open_space_not_free_left_
 }
 
 TEST(double_three_check_tests, check_double_three_with_open_space_not_free_right_cross) {
-    Coordinates boundary_coords{10,10};
-    Coordinates new_coords{12,12};
+    Coordinate boundary_coords{10, 10};
+    Coordinate new_coords{12, 12};
 
     auto board = create_empty_board();
     board[11][11] = Tile::P2;

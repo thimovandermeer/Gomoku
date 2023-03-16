@@ -13,19 +13,19 @@
 #define GREEN "\x1B[32m"
 #define YELLOW "\x1B[33m"
 
-static const std::map<log_level, const char*> clrs = {
+static const std::map<logLevel, const char*> clrs = {
         {LOG_DEBUG, GREEN"DBG"},
         {LOG_WARN,  YELLOW"WRN"},
         {LOG_ERROR, RED"ERR"}
 };
 
-log_level currentLogLevel = LOG_DEBUG;
+logLevel currentLogLevel = LOG_DEBUG;
 
-void setLogLevel(log_level lvl) {
+void setLogLevel(logLevel lvl) {
     currentLogLevel = lvl;
 }
 
-void log_func(log_level lvl, const char* file, const char* func, int line, const char* fmt, ...) {
+void log_func(logLevel lvl, const char* file, const char* func, int line, const char* fmt, ...) {
     if (lvl < currentLogLevel) {
         return;
     }

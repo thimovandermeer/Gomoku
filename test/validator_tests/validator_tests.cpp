@@ -27,7 +27,7 @@ TEST(validator_tests, out_of_board_test_y) {
     Validator validate = Validator(threeCheck,capture);
 
     std::vector<std::vector<Tile>> board = create_empty_board();
-    Coordinates coords{0, 20};
+    Coordinate coords{0, 20};
     Player player{Player::PLAYERONE};
     ASSERT_EQ(validate.validate(board, coords, player, fake_double).state, ERROR) << "location should be out of the board\n";
 }
@@ -39,7 +39,7 @@ TEST(validator_tests, in_board_test_y) {
     Validator validate = Validator(threeCheck,capture);
 
     std::vector<std::vector<Tile>> board = create_empty_board();
-    Coordinates coords{0, 18};
+    Coordinate coords{0, 18};
     Player player{Player::PLAYERONE};
     ASSERT_EQ(validate.validate(board, coords, player, fake_double).state, ACCEPTED) << "location should be out of the board\n";
 }
@@ -50,14 +50,14 @@ TEST(validator_tests, out_of_board_test_x) {
     std::unique_ptr<ICapture> capture = std::make_unique<Capture>();
     Validator validate = Validator(threeCheck,capture);
     std::vector<std::vector<Tile>> board = create_empty_board();
-    Coordinates coords{21, 0};
+    Coordinate coords{21, 0};
     Player player{Player::PLAYERONE};
     ASSERT_EQ(validate.validate(board, coords, player, fake_double).state, ERROR) << "location should be out of the board\n";
 }
 
 TEST(validator_tests, in_board_test_x) {
     std::vector<std::vector<Tile>> board = create_empty_board();
-    Coordinates coords{18, 0};
+    Coordinate coords{18, 0};
     Player player{Player::PLAYERONE};
     std::unique_ptr<ITwo> twoCheck = std::make_unique<Two>();
     std::unique_ptr<IDoubleThreeCheck> threeCheck = std::make_unique<DoubleThreeCheck>(twoCheck);
@@ -68,7 +68,7 @@ TEST(validator_tests, in_board_test_x) {
 
 TEST(validator_tests, out_of_board_test_minus) {
     std::vector<std::vector<Tile>> board = create_empty_board();
-    Coordinates coords{-21, 0};
+    Coordinate coords{-21, 0};
     Player player{Player::PLAYERONE};
     std::unique_ptr<ITwo> twoCheck = std::make_unique<Two>();
     std::unique_ptr<IDoubleThreeCheck> threeCheck = std::make_unique<DoubleThreeCheck>(twoCheck);
@@ -79,7 +79,7 @@ TEST(validator_tests, out_of_board_test_minus) {
 
 TEST(validator_tests, spot_taken) {
     std::vector<std::vector<Tile>> board = create_filled_board();
-    Coordinates coords{5, 5};
+    Coordinate coords{5, 5};
     Player player{Player::PLAYERONE};
     std::unique_ptr<ITwo> twoCheck = std::make_unique<Two>();
     std::unique_ptr<IDoubleThreeCheck> threeCheck = std::make_unique<DoubleThreeCheck>(twoCheck);

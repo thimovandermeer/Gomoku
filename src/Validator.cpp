@@ -2,117 +2,121 @@
 // Created by Jonas Bennink Bolt on 2/3/23.
 //
 #include "Validator.hpp"
-#include "Gomoku.hpp"
 
 #define MAX_BOARD_SIZE 19
 
-errorState Validator::validate(const std::vector<std::vector<Tile>>& board, const Coordinates& coord, const Player& player,const std::vector<Doubles> &opponent_doubles) {
-    this->set_data(board, coord, player);
-    this->board_validation();
-    this->set_opponent_doubles(opponent_doubles);
-    if (_state.state == ERROR)
+State Validator::validate(const std::vector<std::vector<Tile>>& board, const Coordinate& coord, const Player& player,
+                          const std::vector<Doubles>& opponentDoubles) {
+    this->setData(board, coord, player);
+    this->boardValidation();
+    this->setOpponentDoubles(opponentDoubles);
+    if (_state.state == ERROR) {
         return _state;
-    this->coordinates_validation();
-    if (_state.state == ERROR)
+    }
+    this->coordinatesValidation();
+    if (_state.state == ERROR) {
         return _state;
-    this->double_three_validation();
-    if(_state.state == ERROR)
+    }
+    this->doubleThreeValidation();
+    if (_state.state == ERROR) {
         return _state;
-    this->capture_validation();
+    }
+    this->captureValidation();
 
 
-    LOG("STATE = %s", _state.error_reason.c_str());
+    LOG("STATE = %s", _state.errorReason.c_str());
     LOG("STATE error = %i", _state.state);
     return _state;
 }
 
-void Validator::set_data(const std::vector<std::vector<Tile>>& board, const Coordinates& coord, const Player& player) {
-    this->set_board(board);
-    this->set_coordinates(coord);
-    this->set_player(player);
+void Validator::setData(const std::vector<std::vector<Tile>>& board, const Coordinate& coord, const Player& player) {
+    this->setBoard(board);
+    this->setCoordinates(coord);
+    this->setPlayer(player);
     std::string reason;
-    this->set_state(ACCEPTED, reason);
+    this->setState(ACCEPTED, reason);
 }
 
-void Validator::set_board(const std::vector<std::vector<Tile>>& board) {
+void Validator::setBoard(const std::vector<std::vector<Tile>>& board) {
     this->_board = board;
 }
 
-void Validator::set_coordinates(const Coordinates& coord) {
+void Validator::setCoordinates(const Coordinate& coord) {
     this->_coord = coord;
 }
 
-void Validator::set_player(const Player& player) {
+void Validator::setPlayer(const Player& player) {
     this->_player = player;
 }
 
-void Validator::board_validation() {
+void Validator::boardValidation() {
     LOG("Board size = %i", _board.size());
     if (_board.size() > MAX_BOARD_SIZE) {
         LOG("Board is bigger than max size");
         std::string reason = "Board is bigger than max size";
-        set_state(ERROR, reason);
+        setState(ERROR, reason);
     }
 }
 
-void Validator::coordinates_validation() {
+void Validator::coordinatesValidation() {
     LOG("coords x %i coords y %i", _coord.x, _coord.y);
-    this->boundary_checking();
-    if (_state.state == ERROR)
+    this->boundaryChecking();
+    if (_state.state == ERROR) {
         return;
-    this->taken_check();
+    }
+    this->takenCheck();
 }
 
-void Validator::player_validation() {
+void Validator::playerValidation() {
     //
 }
 
-void Validator::boundary_checking() {
+void Validator::boundaryChecking() {
     if (_coord.x >= MAX_BOARD_SIZE || _coord.y >= MAX_BOARD_SIZE) {
         LOG("coords is bigger than max board size");
         std::string reason = "coords is bigger than max board size";
-        set_state(ERROR, reason);
+        setState(ERROR, reason);
     }
     if (_coord.x < 0 || _coord.y < 0) {
         LOG("coords is smaller than 0");
         std::string reason = "coords is smaller than 0";
-        set_state(ERROR, reason);
+        setState(ERROR, reason);
     }
 }
 
-void Validator::taken_check() {
+void Validator::takenCheck() {
     LOG("Coordinates %i %i with ", _coord.y, _coord.x);
     if (_board[_coord.y][_coord.x] != Tile::EMPTY) {
         LOG("Coordinates %i %i are not free", _coord.y, _coord.x);
         std::string reason = "Coordinates are not free";
-        set_state(ERROR, reason);
+        setState(ERROR, reason);
     }
 }
 
-void Validator::set_state(State newState, std::string& errorReason) {
-    _state.error_reason = errorReason;
+void Validator::setState(OkState newState, std::string& errorReason) {
+    _state.errorReason = errorReason;
     _state.state = newState;
 }
 
-void Validator::double_three_validation() {
+void Validator::doubleThreeValidation() {
     _state = _doubleThreeCheck->DoubleThreeChecker(_board, _coord, _player);
 }
 
-void Validator::capture_validation() {
+void Validator::captureValidation() {
 //    update_double_list();
-    _capture->CaptureCheck(_opponent_doubles, _coord,_board);
-};
-
-void Validator::update_double_list() {
-    _double_list = _doubleThreeCheck->get_double_two();
+    _capture->CaptureCheck(_opponentDoubles, _coord, _board);
 }
 
-void Validator::set_opponent_doubles(const std::vector<Doubles> &opponent_doubles) {
-    this->_opponent_doubles = opponent_doubles;
+void Validator::updateDoubleList() {
+    _doubleVector = _doubleThreeCheck->getDoubleTwo();
 }
 
-std::vector<Doubles> Validator::get_double_two_list() {
-    return _double_list;
+void Validator::setOpponentDoubles(const std::vector<Doubles>& opponentDoubles) {
+    this->_opponentDoubles = opponentDoubles;
+}
+
+std::vector<Doubles> Validator::getDoubleTwoList() {
+    return _doubleVector;
 }
 
 

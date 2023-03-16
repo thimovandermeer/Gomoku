@@ -14,7 +14,8 @@
 class ITwo {
 public:
     virtual ~ITwo() = default;
-    virtual Doubles create_two(const std::vector<std::vector<Tile>>& board, const Coordinates& coord, const Player& player) = 0;
+    virtual Doubles
+    createTwo(const std::vector<std::vector<Tile>>& board, const Coordinate& coord, const Player& player) = 0;
 };
 
 class Two : public ITwo {
@@ -23,10 +24,12 @@ public:
     Two(const Two&) {};
     ~Two() override = default;
 
-    Doubles boundary_check(Coordinates coordinates_on_board, Coordinates new_coordinates);
-    Doubles create_two(const std::vector<std::vector<Tile>>& board, const Coordinates& coord, const Player& player) override;
-    Coordinates check_two_in_a_row(const std::vector<std::vector<Tile>>& board, const Coordinates& coord, const Player& player);
-    Direction determine_direction(Doubles doubles);
+    Doubles boundaryCheck(Coordinate coordinatesOnBoard, Coordinate newCoordinates);
+    Doubles
+    createTwo(const std::vector<std::vector<Tile>>& board, const Coordinate& coord, const Player& player) override;
+    static Coordinate
+    checkTwoInARow(const std::vector<std::vector<Tile>>& board, const Coordinate& coord, const Player& player);
+    static Direction determineDirection(Doubles doubles);
 };
 
 

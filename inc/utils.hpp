@@ -4,7 +4,7 @@
 
 #ifndef GOMOKU_UTILS_HPP
 #define GOMOKU_UTILS_HPP
-#include "string"
+
 #include "Gomoku.hpp"
 
 std::vector<std::vector<Tile>> create_empty_board();

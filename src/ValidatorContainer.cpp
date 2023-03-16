@@ -5,18 +5,18 @@
 #include "ValidatorContainer.hpp"
 
 // TODO: REMOVE PLAYER FROM THIS STRUCT WE ALREADY KNOW WHAT IT IS
-errorState ValidatorContainer::p1_validate(const std::vector<std::vector<Tile>>& board, const Coordinates& coord, const Player& player) {
-    return (_p1->validate(board, coord, player, get_opponent_double_two_list(Player::PLAYERONE)));
+State ValidatorContainer::p1Validate(const std::vector<std::vector<Tile>>& board, const Coordinate& coord, const Player& player) {
+    return (_p1->validate(board, coord, player, getOpponentDoubleTwoList(Player::PLAYERONE)));
 }
 
-errorState ValidatorContainer::p2_validate(const std::vector<std::vector<Tile>>& board, const Coordinates& coord, const Player& player) {
-    return (_p2->validate(board, coord, player, get_opponent_double_two_list(Player::PLAYERTWO)));
+State ValidatorContainer::p2Validate(const std::vector<std::vector<Tile>>& board, const Coordinate& coord, const Player& player) {
+    return (_p2->validate(board, coord, player, getOpponentDoubleTwoList(Player::PLAYERTWO)));
 }
 
-std::vector<Doubles> ValidatorContainer::get_opponent_double_two_list(Player player) {
-    if(player == Player::PLAYERONE) {
-        return (_p2->get_double_two_list());
+std::vector<Doubles> ValidatorContainer::getOpponentDoubleTwoList(Player player) {
+    if (player == Player::PLAYERONE) {
+        return (_p2->getDoubleTwoList());
     } else {
-        return (_p1->get_double_two_list());
+        return (_p1->getDoubleTwoList());
     }
 }

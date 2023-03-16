@@ -4,7 +4,9 @@
 
 #ifndef GOMOKU_TYPES_HPP
 #define GOMOKU_TYPES_HPP
-#include "string"
+
+#include <string>
+
 enum class Tile {
     P1, P2, EMPTY
 };
@@ -17,43 +19,42 @@ enum Direction {
     HORIZONTAL, VERTICAL, CROSS
 };
 
-struct Coordinates {
+struct Coordinate {
     int y;
     int x;
 };
 
-enum State {
+enum OkState {
     ACCEPTED, ERROR
 };
 
-struct errorState {
-    State state;
-    std::string error_reason;
+struct State {
+    OkState state;
+    std::string errorReason;
 };
 
 struct Doubles {
-    Coordinates left_boundary_coordinates;
-    Coordinates right_boundary_coordinates;
+    Coordinate leftBoundaryCoordinates;
+    Coordinate rightBoundaryCoordinates;
     Direction direction;
 };
 
 struct Threes {
-    Coordinates left_boundary_coordinates;
-    Coordinates right_boundary_coordinates;
-    Coordinates open_space_coordinates;
-    bool        full_free;
-    bool        open_space;
-    Direction   direction;
+    Coordinate leftBoundaryCoordinates;
+    Coordinate rightBoundaryCoordinates;
+    Coordinate openSpaceCoordinates;
+    bool fullFree;
+    bool openSpace;
+    Direction direction;
 };
 
-enum double_type {
+enum DoubleType {
     NORMAL, EMPTYSPACE, NONE
 };
 
-struct boundary_check_return {
-    double_type doubleType;
-    Coordinates	openSpace;
+struct BoundaryCheckReturn {
+    DoubleType doubleType;
+    Coordinate openSpace;
 };
-
 
 #endif //GOMOKU_TYPES_HPP

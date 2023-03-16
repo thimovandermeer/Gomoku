@@ -11,46 +11,45 @@
 #include "Two.hpp"
 #include "types.hpp"
 
-
 class ITwo;
+
 class IDoubleThreeCheck {
 public:
     virtual ~IDoubleThreeCheck() = default;
-    virtual errorState DoubleThreeChecker(const std::vector<std::vector<Tile>>& board, const Coordinates& coord, const Player& player) = 0;
-    virtual std::vector<Doubles>    get_double_two() = 0;
+    virtual State
+    DoubleThreeChecker(const std::vector<std::vector<Tile>>& board, const Coordinate& coord, const Player& player) = 0;
+    virtual std::vector<Doubles> getDoubleTwo() = 0;
 };
 
 class DoubleThreeCheck : public IDoubleThreeCheck {
 public:
-    explicit DoubleThreeCheck(std::unique_ptr<ITwo>& Two) : _two(std::move(Two)) {
-        _doubleTwoList = std::vector<Doubles>();
-        _full_frees = 0;
-    }
-    DoubleThreeCheck(const DoubleThreeCheck&) {}
+    explicit DoubleThreeCheck(std::unique_ptr<ITwo>& Two) : _doubleThreeVector{}, _doubleTwoVector{}, _state{}, _two(std::move(Two)), _fullFrees(0) {}
+    DoubleThreeCheck(const DoubleThreeCheck&) : _state{}, _fullFrees{} {}
     ~DoubleThreeCheck() override = default;
 
-	Threes			fill_double_three_stack(Coordinates bound_coordinates, Coordinates newCoords, boundary_check_return type, bool left, Direction dir);
-	void 			set_board(const std::vector<std::vector<Tile>> &board);
-	size_t			double_two_size();
-	errorState 		DoubleThreeChecker(const std::vector<std::vector<Tile>> &board, const Coordinates& new_coord, const Player& player) override;
-    bool 			find_three(Coordinates newCoords, std::vector<Doubles> &double_two);
-    errorState 		find_double_three();
+    static Threes fillDoubleThreeStack(Coordinate boundCoordinates, Coordinate newCoords, BoundaryCheckReturn type,
+                                       bool left, Direction dir);
+    void setBoard(const std::vector<std::vector<Tile>>& board);
+    size_t doubleTwoSize();
+    State DoubleThreeChecker(const std::vector<std::vector<Tile>>& board, const Coordinate& newCoord,
+                             const Player& player) override;
+    bool findThree(Coordinate newCoords, std::vector<Doubles>& doubleTwo);
+//    State findDoubleThree();
 
 
-	bool 			two_in_a_row(const std::vector<std::vector<Tile>> &board, const Coordinates &coord, const Player& play);
-    Threes			get_last_three();
-    bool            full_free_check();
+    bool twoInARow(const std::vector<std::vector<Tile>>& board, const Coordinate& coord, const Player& play);
+    Threes getLastThree();
+    bool fullFreeCheck();
 
-    std::vector<Doubles>    get_double_two() override;
+    std::vector<Doubles> getDoubleTwo() override;
 private:
-    void set_state(State newState, std::string& errorReason);
-    std::vector<Threes>             _doubleThreeList;
-    std::vector<Doubles>            _doubleTwoList;
-    errorState                      _state;
-    std::shared_ptr<ITwo>          _two;
+    void setState(OkState newState, std::string& errorReason);
+    std::vector<Threes> _doubleThreeVector;
+    std::vector<Doubles> _doubleTwoVector;
+    State _state;
+    std::shared_ptr<ITwo> _two;
     std::vector<std::vector<Tile>> _board;
-    int                             _full_frees;
-
+    int _fullFrees;
 };
 
 

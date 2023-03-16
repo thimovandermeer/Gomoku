@@ -76,18 +76,18 @@ void Gomoku::gameLoop() {
 
 void Gomoku::doMove(const sf::Vector2<int>& moveLocation) {
     // TODO: validate if stone can be placed
-    Coordinates coords{moveLocation.y, moveLocation.x};
+    Coordinate coords{moveLocation.y, moveLocation.x};
     std::stringstream ss;
     LOG("coords y: %i, x: %i");
 
-    if (_state.state == State::ACCEPTED) {
+    if (_state.state == OkState::ACCEPTED) {
         _player = _player == Player::PLAYERONE ? Player::PLAYERTWO : Player::PLAYERONE;
     }
     validateMove(coords, ss);
 
 
     // probably this check will become part of the validator
-    if (_state.state == State::ACCEPTED) {
+    if (_state.state == OkState::ACCEPTED) {
         // change _board to reflect new board state
         if (_player == Player::PLAYERONE) {
             _board[moveLocation.y][moveLocation.x] = Tile::P1;
@@ -101,14 +101,14 @@ void Gomoku::doMove(const sf::Vector2<int>& moveLocation) {
 
 }
 
-void Gomoku::validateMove(Coordinates coords, std::stringstream &ss) {
+void Gomoku::validateMove(Coordinate coords, std::stringstream& ss) {
     LOG("Coords zijn y:%i x: %i", coords.y, coords.x);
-    if(_player == Player::PLAYERONE) {
-        _state = _validator_container->p1_validate(_board, coords, _player);
+    if (_player == Player::PLAYERONE) {
+        _state = _validatorContainer->p1Validate(_board, coords, _player);
     } else {
-        _state = _validator_container->p2_validate(_board, coords, _player);
+        _state = _validatorContainer->p2Validate(_board, coords, _player);
     }
-    LOG("Result = %s", _state.error_reason.c_str());
+    LOG("Result = %s", _state.errorReason.c_str());
     LOG("Result = %i", _state.state);
-    ss << _state.error_reason.c_str();
+    ss << _state.errorReason.c_str();
 }

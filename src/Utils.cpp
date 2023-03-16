@@ -14,8 +14,8 @@ std::vector<std::vector<Tile>> create_filled_board() {
 }
 
 void printBoard(const std::vector<std::vector<Tile>>& b) {
-    for (const auto& elem : b) {
-        for (const auto& nr : elem) {
+    for (const auto& elem: b) {
+        for (const auto& nr: elem) {
             std::cerr << (int)nr << " ";
         }
         std::cerr << "\n";
