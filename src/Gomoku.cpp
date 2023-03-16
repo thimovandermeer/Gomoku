@@ -5,6 +5,7 @@
 #include "Gomoku.hpp"
 #include <SFML/Graphics.hpp>
 #include <sstream>
+#include "types.hpp"
 
 void Gomoku::handleKeyPressed(const sf::Event& event) {
     if (event.key.code == sf::Keyboard::Key::Escape) {
@@ -84,7 +85,7 @@ void Gomoku::whichPlayer() {
 
 void Gomoku::doMove(const sf::Vector2<int>& moveLocation) {
     // TODO: validate if stone can be placed
-    whichPlayer();
+
     Coordinates coords{moveLocation.y, moveLocation.x};
     std::stringstream ss;
     LOG("coords y: %i, x: %i");
@@ -94,7 +95,8 @@ void Gomoku::doMove(const sf::Vector2<int>& moveLocation) {
 
 
     // probably this check will become part of the validator
-    if (_board[moveLocation.y][moveLocation.x] == Tile::EMPTY) {
+    if (_state.state == State::ACCEPTED) {
+        whichPlayer();
         // change _board to reflect new board state
         if (_player == Player::PLAYERONE) {
             _board[moveLocation.y][moveLocation.x] = Tile::P1;
@@ -112,13 +114,12 @@ void Gomoku::doMove(const sf::Vector2<int>& moveLocation) {
 
 void Gomoku::validateMove(Coordinates coords, std::stringstream &ss) {
     LOG("Coords zijn y:%i x: %i", coords.y, coords.x);
-    errorState result;
     if(_player == Player::PLAYERONE) {
-        result = _validator_container->p1_validate(_board, coords, _player);
+        _state = _validator_container->p1_validate(_board, coords, _player);
     } else {
-        result = _validator_container->p2_validate(_board, coords, _player);
+        _state = _validator_container->p2_validate(_board, coords, _player);
     }
-    LOG("Result = %s", result.error_reason.c_str());
-    LOG("Result = %i", result.state);
-    ss << result.error_reason.c_str();
+    LOG("Result = %s", _state.error_reason.c_str());
+    LOG("Result = %i", _state.state);
+    ss << _state.error_reason.c_str();
 }
