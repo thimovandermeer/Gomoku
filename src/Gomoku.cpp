@@ -6,6 +6,7 @@
 #include <SFML/Graphics.hpp>
 #include <sstream>
 #include "types.hpp"
+#include <functional>
 
 void Gomoku::handleKeyPressed(const sf::Event& event) {
     if (event.key.code == sf::Keyboard::Key::Escape) {
@@ -35,6 +36,11 @@ void Gomoku::handleMouseButtonPressed(const sf::Event& event) {
             return;
         }
         doMove(moveLocation.value());
+        if (_gameEnd) {
+            std::stringstream ss;
+            ss << "Player " << static_cast<int>(_player) + 1 << " has won!";
+            _graphics->setHeader(ss.str());
+        }
         // only redraw the board in this case because we don't change the board for other events
         _graphics->update(_board);
     }
@@ -62,7 +68,9 @@ void Gomoku::gameLoop() {
                     break;
                 }
                 case sf::Event::MouseButtonPressed: {
-                    handleMouseButtonPressed(event);
+                    if (not _gameEnd) {
+                        handleMouseButtonPressed(event);
+                    }
                     break;
                 }
                 default:
@@ -75,7 +83,6 @@ void Gomoku::gameLoop() {
 }
 
 void Gomoku::doMove(const sf::Vector2<int>& moveLocation) {
-    // TODO: validate if stone can be placed
     Coordinate coords{moveLocation.y, moveLocation.x};
     std::stringstream ss;
     LOG("coords y: %i, x: %i");
@@ -94,11 +101,11 @@ void Gomoku::doMove(const sf::Vector2<int>& moveLocation) {
         } else {
             _board[moveLocation.y][moveLocation.x] = Tile::P2;
         }
+        _gameEnd = hasGameEnded(moveLocation);
     }
     ss << "\n\t\tat (" << moveLocation.x << ", " << moveLocation.y << ")";
     // set header to whatever we want it to be
     _graphics->setHeader(ss.str());
-
 }
 
 void Gomoku::validateMove(Coordinate coords, std::stringstream& ss) {
@@ -111,4 +118,46 @@ void Gomoku::validateMove(Coordinate coords, std::stringstream& ss) {
     LOG("Result = %s", _state.errorReason.c_str());
     LOG("Result = %i", _state.state);
     ss << _state.errorReason.c_str();
+}
+
+static bool isCorrectTile(const std::vector<std::vector<Tile>>& board, const sf::Vector2i& pos, const Tile& val) {
+    return board[pos.y][pos.x] == val;
+}
+
+static bool isInBounds(const sf::Vector2i& pos) {
+    return pos.x >= 0 && pos.x < BOARD_SIZE && pos.y >= 0 && pos.y <= BOARD_SIZE;
+}
+
+static int totalInDirection(const std::vector<std::vector<Tile>>& board, const std::function<void(sf::Vector2i&)>& move,
+                            const sf::Vector2i& start, const Tile& val) {
+    sf::Vector2i checkPos = start;
+    int ret = 0;
+    for (int i = 0; i < 4; ++i) {
+        move(checkPos);
+        if (not isInBounds(checkPos) || not isCorrectTile(board, checkPos, val)) {
+            return ret;
+        }
+        ++ret;
+    }
+    return ret;
+}
+
+bool Gomoku::hasGameEnded(const sf::Vector2i& placedStone) const {
+    const Tile lastMoved = _player == Player::PLAYERONE ? Tile::P1 : Tile::P2;
+
+    std::vector<std::pair<std::function<void(sf::Vector2i&)>, std::function<void(sf::Vector2i&)>>> vec;
+    vec.emplace_back([](sf::Vector2i& v) { --v.x; }, [](sf::Vector2i& v) { ++v.x; });
+    vec.emplace_back([](sf::Vector2i& v) { --v.y; }, [](sf::Vector2i& v) { ++v.y; });
+    vec.emplace_back([](sf::Vector2i& v) { --v.x; --v.y; }, [](sf::Vector2i& v) { ++v.x; ++v.y; });
+    vec.emplace_back([](sf::Vector2i& v) { --v.x; ++v.y; }, [](sf::Vector2i& v) { ++v.x; --v.y; });
+
+    for (const auto& pair: vec) {
+        if (totalInDirection(_board, pair.first, placedStone, lastMoved) +
+            totalInDirection(_board, pair.second, placedStone, lastMoved) >= 4) {
+            WARN("game has ended, player %d has won", static_cast<int>(_player) + 1);
+            return true;
+        }
+    }
+
+    return false;
 }
