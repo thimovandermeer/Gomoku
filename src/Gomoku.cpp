@@ -85,7 +85,7 @@ void Gomoku::whichPlayer() {
 
 void Gomoku::doMove(const sf::Vector2<int>& moveLocation) {
     // TODO: validate if stone can be placed
-
+    whichPlayer();
     Coordinates coords{moveLocation.y, moveLocation.x};
     std::stringstream ss;
     LOG("coords y: %i, x: %i");
@@ -96,7 +96,6 @@ void Gomoku::doMove(const sf::Vector2<int>& moveLocation) {
 
     // probably this check will become part of the validator
     if (_state.state == State::ACCEPTED) {
-        whichPlayer();
         // change _board to reflect new board state
         if (_player == Player::PLAYERONE) {
             _board[moveLocation.y][moveLocation.x] = Tile::P1;

@@ -35,20 +35,12 @@ public:
 	errorState 		DoubleThreeChecker(const std::vector<std::vector<Tile>> &board, const Coordinates& new_coord, const Player& player) override;
     bool 			find_three(Coordinates newCoords, std::vector<Doubles> &double_two);
     errorState 		find_double_three();
-	boundary_check_return check_right_boundary(Coordinates boundary_coords, Coordinates new_coords, Direction direction);
-	double_type		check_right_boundary_horizontal(Coordinates boundary_coords, Coordinates new_coords);
-	double_type		check_right_boundary_vertical(Coordinates boundary_coords, Coordinates new_coords);
-	double_type		check_right_boundary_cross(Coordinates boundary_coords, Coordinates new_coords);
-	boundary_check_return 	check_left_boundary(Coordinates boundary_coords, Coordinates new_coords, Direction direction);
-	double_type		check_left_boundary_horizontal(Coordinates boundary_coords, Coordinates new_coords);
-	double_type		check_left_boundary_vertical(Coordinates boundary_coords, Coordinates new_coords);
-	double_type		check_left_boundary_cross(Coordinates boundary_coords, Coordinates new_coords);
+
+
 	bool 			two_in_a_row(const std::vector<std::vector<Tile>> &board, const Coordinates &coord, const Player& play);
     Threes			get_last_three();
-	bool 			open_space_is_empty(Coordinates empty_space);
     bool            full_free_check();
-    bool            check_free_left(Coordinates left_boundary, Direction dir);
-    bool            check_free_right(Coordinates right_boundary, Direction dir);
+
     std::vector<Doubles>    get_double_two() override;
 private:
     void set_state(State newState, std::string& errorReason);

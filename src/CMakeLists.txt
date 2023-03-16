@@ -8,6 +8,7 @@ target_sources(gomoku PRIVATE
 		Two.cpp
 		Capture.cpp
 		ValidatorContainer.cpp
+		CommonValidationCode.cpp
 		)
 
 target_sources(gomoku_test PRIVATE
@@ -20,4 +21,5 @@ target_sources(gomoku_test PRIVATE
 		Two.cpp
 		Capture.cpp
 		ValidatorContainer.cpp
+		CommonValidationCode.cpp
 		)
