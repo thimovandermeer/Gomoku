@@ -3,6 +3,7 @@
 //
 
 #include "ValidatorContainer.hpp"
+#include "logger.hpp"
 
 // TODO: REMOVE PLAYER FROM THIS STRUCT WE ALREADY KNOW WHAT IT IS
 State ValidatorContainer::p1Validate(const std::vector<std::vector<Tile>>& board, const Coordinate& coord, const Player& player) {

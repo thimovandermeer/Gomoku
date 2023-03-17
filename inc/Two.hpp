@@ -7,7 +7,6 @@
 
 #include <string>
 #include <vector>
-#include "logger.hpp"
 #include "Gomoku.hpp"
 #include "types.hpp"
 

@@ -7,6 +7,7 @@
 
 #include <string>
 
+
 enum class Tile {
     P1, P2, EMPTY
 };
@@ -35,13 +36,11 @@ struct Doubles {
 };
 
 struct State {
-    OkState         state;
-    std::string     errorReason;
-    bool            capture;
-    Doubles         capture_pos;
+    OkState state;
+    std::string errorReason;
+    bool capture;
+    Doubles capture_pos;
 };
-
-
 
 struct Threes {
     Coordinate leftBoundaryCoordinates;

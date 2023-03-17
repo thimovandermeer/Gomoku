@@ -5,14 +5,11 @@
 #ifndef GOMOKU_VALIDATOR_HPP
 #define GOMOKU_VALIDATOR_HPP
 
+#include <string>
+#include <vector>
 #include "DoubleThreeCheck.hpp"
 #include "Capture.hpp"
-#include <vector>
-#include <string>
 #include "types.hpp"
-
-// TODO: remove this redeclaration
-#define MAX_BOARD_SIZE 19
 
 class IValidator {
 public:

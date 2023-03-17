@@ -6,9 +6,9 @@
 #define GOMOKU_GOMOKU_HPP
 
 #include <vector>
+#include <SFML/Graphics.hpp>
 #include "Validator.hpp"
 #include "Graphics.hpp"
-#include <SFML/Graphics.hpp>
 #include "types.hpp"
 #include "ValidatorContainer.hpp"
 
@@ -17,6 +17,8 @@
 class IValidator;
 
 class IValidatorContainer;
+
+class IGraphics;
 
 class Gomoku {
 public:

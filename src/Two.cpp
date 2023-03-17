@@ -3,6 +3,7 @@
 //
 
 #include "Two.hpp"
+#include "logger.hpp"
 
 Two::Two() {
     LOG("TWO constructor");

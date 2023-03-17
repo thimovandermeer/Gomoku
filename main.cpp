@@ -1,4 +1,9 @@
 #include "Gomoku.hpp"
+#include "Graphics.hpp"
+#include "Validator.hpp"
+#include "ValidatorContainer.hpp"
+#include "Two.hpp"
+#include "DoubleThreeCheck.hpp"
 
 int main() {
     std::unique_ptr<IGraphics> graphics = std::make_unique<Graphics>();

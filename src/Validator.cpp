@@ -2,8 +2,7 @@
 // Created by Jonas Bennink Bolt on 2/3/23.
 //
 #include "Validator.hpp"
-
-#define MAX_BOARD_SIZE 19
+#include "logger.hpp"
 
 State Validator::validate(const std::vector<std::vector<Tile>>& board, const Coordinate& coord, const Player& player,
                           const std::vector<Doubles>& opponentDoubles) {
@@ -53,7 +52,7 @@ void Validator::setPlayer(const Player& player) {
 
 void Validator::boardValidation() {
     LOG("Board size = %i", _board.size());
-    if (_board.size() > MAX_BOARD_SIZE) {
+    if (_board.size() > BOARD_SIZE) {
         LOG("Board is bigger than max size");
         std::string reason = "Board is bigger than max size";
         setState(ERROR, reason);
@@ -74,7 +73,7 @@ void Validator::playerValidation() {
 }
 
 void Validator::boundaryChecking() {
-    if (_coord.x >= MAX_BOARD_SIZE || _coord.y >= MAX_BOARD_SIZE) {
+    if (_coord.x >= BOARD_SIZE || _coord.y >= BOARD_SIZE) {
         LOG("coords is bigger than max board size");
         std::string reason = "coords is bigger than max board size";
         setState(ERROR, reason);

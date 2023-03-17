@@ -2,11 +2,12 @@
 // Created by Jonas Bennink Bolt on 2/3/23.
 //
 
-#include "Gomoku.hpp"
 #include <SFML/Graphics.hpp>
 #include <sstream>
-#include "types.hpp"
 #include <functional>
+#include "logger.hpp"
+#include "types.hpp"
+#include "Gomoku.hpp"
 
 void Gomoku::handleKeyPressed(const sf::Event& event) {
     if (event.key.code == sf::Keyboard::Key::Escape) {
