@@ -28,16 +28,20 @@ enum OkState {
     ACCEPTED, ERROR
 };
 
-struct State {
-    OkState state;
-    std::string errorReason;
-};
-
 struct Doubles {
     Coordinate leftBoundaryCoordinates;
     Coordinate rightBoundaryCoordinates;
     Direction direction;
 };
+
+struct State {
+    OkState         state;
+    std::string     errorReason;
+    bool            capture;
+    Doubles         capture_pos;
+};
+
+
 
 struct Threes {
     Coordinate leftBoundaryCoordinates;

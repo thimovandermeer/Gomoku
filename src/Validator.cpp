@@ -104,7 +104,7 @@ void Validator::doubleThreeValidation() {
 
 void Validator::captureValidation() {
 //    update_double_list();
-    _capture->CaptureCheck(_opponentDoubles, _coord, _board);
+    _state = _capture->CaptureCheck(_opponentDoubles, _coord, _board, _player);
 }
 
 void Validator::updateDoubleList() {

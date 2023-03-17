@@ -33,7 +33,7 @@ public:
     size_t doubleTwoSize();
     State DoubleThreeChecker(const std::vector<std::vector<Tile>>& board, const Coordinate& newCoord,
                              const Player& player) override;
-    bool findThree(Coordinate newCoords, std::vector<Doubles>& doubleTwo);
+    bool findThree(Coordinate newCoords, const std::vector<Doubles>& doubleTwo);
 //    State findDoubleThree();
 
 

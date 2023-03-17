@@ -91,7 +91,7 @@ Threes DoubleThreeCheck::fillDoubleThreeStack(Coordinate boundCoordinates, Coord
     return result;
 }
 
-bool DoubleThreeCheck::findThree(Coordinate newCoords, std::vector<Doubles>& doubleTwo) {
+bool DoubleThreeCheck::findThree(Coordinate newCoords, const std::vector<Doubles>& doubleTwo) {
     LOG("newcoords are %i %i", newCoords.y, newCoords.x);
     for (auto elem: doubleTwo) {
         Threes three_in_a_row{};
