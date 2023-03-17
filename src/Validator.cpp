@@ -9,6 +9,7 @@ State Validator::validate(const std::vector<std::vector<Tile>>& board, const Coo
                           const std::vector<Doubles>& opponentDoubles) {
     this->setData(board, coord, player);
     this->boardValidation();
+    LOG("OPPONENT DOUBLES SIZE = %i", opponentDoubles.size());
     this->setOpponentDoubles(opponentDoubles);
     if (_state.state == ERROR) {
         return _state;
@@ -21,6 +22,7 @@ State Validator::validate(const std::vector<std::vector<Tile>>& board, const Coo
     if (_state.state == ERROR) {
         return _state;
     }
+    updateDoubleList();
     this->captureValidation();
 
 
@@ -103,7 +105,6 @@ void Validator::doubleThreeValidation() {
 }
 
 void Validator::captureValidation() {
-//    update_double_list();
     _state = _capture->CaptureCheck(_opponentDoubles, _coord, _board, _player);
 }
 
@@ -116,6 +117,7 @@ void Validator::setOpponentDoubles(const std::vector<Doubles>& opponentDoubles) 
 }
 
 std::vector<Doubles> Validator::getDoubleTwoList() {
+    LOG("DIT IS DE WAARDE DIE WORDT GERETURNT %i", _doubleVector.size());
     return _doubleVector;
 }
 

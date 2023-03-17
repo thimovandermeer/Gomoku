@@ -173,6 +173,7 @@ bool Capture::is_other_boundary_same_color(const Doubles &elem) {
 State Capture::CaptureCheck(const std::vector<Doubles>& doubles, const Coordinate& newCoords,
                             const std::vector<std::vector<Tile>>& board, const Player &player) {
     set_variables(doubles, newCoords, board, player);
+    LOG("WE start capture check with a double stack size of %i", doubles.size());
     for (auto elem: doubles) {
         is_new_stone_boundary(elem);
         if(_boundary.is_boundary) {

@@ -15,8 +15,10 @@ State ValidatorContainer::p2Validate(const std::vector<std::vector<Tile>>& board
 
 std::vector<Doubles> ValidatorContainer::getOpponentDoubleTwoList(Player player) {
     if (player == Player::PLAYERONE) {
+        LOG("WE pakken p2 double two list");
         return (_p2->getDoubleTwoList());
     } else {
+        LOG("We pakken p1 double two list");
         return (_p1->getDoubleTwoList());
     }
 }

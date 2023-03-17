@@ -135,5 +135,6 @@ bool DoubleThreeCheck::fullFreeCheck() {
 }
 
 std::vector<Doubles> DoubleThreeCheck::getDoubleTwo() {
+    LOG("Bestaat dat kreng hier wel gewoon? %i", _doubleTwoVector.size());
     return _doubleTwoVector;
 }
