@@ -34,10 +34,10 @@ TEST(capture_tests, left_boundary_horizontal_capture) {
     LOG("TEST");
     auto result = capture_object.CaptureCheck(vec, coords, board, Player::PLAYERONE);
     ASSERT_TRUE(result.capture);
-    ASSERT_EQ(result.capture_pos.leftBoundaryCoordinates.y, doubles.leftBoundaryCoordinates.y);
-    ASSERT_EQ(result.capture_pos.leftBoundaryCoordinates.x, doubles.leftBoundaryCoordinates.x);
-    ASSERT_EQ(result.capture_pos.rightBoundaryCoordinates.y, doubles.rightBoundaryCoordinates.y);
-    ASSERT_EQ(result.capture_pos.rightBoundaryCoordinates.x, doubles.rightBoundaryCoordinates.x);
+    ASSERT_EQ(result.capturePos.leftBoundaryCoordinates.y, doubles.leftBoundaryCoordinates.y);
+    ASSERT_EQ(result.capturePos.leftBoundaryCoordinates.x, doubles.leftBoundaryCoordinates.x);
+    ASSERT_EQ(result.capturePos.rightBoundaryCoordinates.y, doubles.rightBoundaryCoordinates.y);
+    ASSERT_EQ(result.capturePos.rightBoundaryCoordinates.x, doubles.rightBoundaryCoordinates.x);
 
 }
 
@@ -64,10 +64,10 @@ TEST(capture_tests, left_boundary_vertical_capture) {
     board[10][8] = Tile::P1;
     auto result = capture_object.CaptureCheck(vec, coords, board, Player::PLAYERONE);
     ASSERT_TRUE(result.capture);
-    ASSERT_EQ(result.capture_pos.leftBoundaryCoordinates.y, doubles.leftBoundaryCoordinates.y);
-    ASSERT_EQ(result.capture_pos.leftBoundaryCoordinates.x, doubles.leftBoundaryCoordinates.x);
-    ASSERT_EQ(result.capture_pos.rightBoundaryCoordinates.y, doubles.rightBoundaryCoordinates.y);
-    ASSERT_EQ(result.capture_pos.rightBoundaryCoordinates.x, doubles.rightBoundaryCoordinates.x);
+    ASSERT_EQ(result.capturePos.leftBoundaryCoordinates.y, doubles.leftBoundaryCoordinates.y);
+    ASSERT_EQ(result.capturePos.leftBoundaryCoordinates.x, doubles.leftBoundaryCoordinates.x);
+    ASSERT_EQ(result.capturePos.rightBoundaryCoordinates.y, doubles.rightBoundaryCoordinates.y);
+    ASSERT_EQ(result.capturePos.rightBoundaryCoordinates.x, doubles.rightBoundaryCoordinates.x);
 
 }
 
@@ -94,10 +94,10 @@ TEST(capture_tests, left_boundary_cross_capture) {
     board[10][10] = Tile::P1;
     auto result = capture_object.CaptureCheck(vec, coords, board, Player::PLAYERONE);
     ASSERT_TRUE(result.capture);
-    ASSERT_EQ(result.capture_pos.leftBoundaryCoordinates.y, doubles.leftBoundaryCoordinates.y);
-    ASSERT_EQ(result.capture_pos.leftBoundaryCoordinates.x, doubles.leftBoundaryCoordinates.x);
-    ASSERT_EQ(result.capture_pos.rightBoundaryCoordinates.y, doubles.rightBoundaryCoordinates.y);
-    ASSERT_EQ(result.capture_pos.rightBoundaryCoordinates.x, doubles.rightBoundaryCoordinates.x);
+    ASSERT_EQ(result.capturePos.leftBoundaryCoordinates.y, doubles.leftBoundaryCoordinates.y);
+    ASSERT_EQ(result.capturePos.leftBoundaryCoordinates.x, doubles.leftBoundaryCoordinates.x);
+    ASSERT_EQ(result.capturePos.rightBoundaryCoordinates.y, doubles.rightBoundaryCoordinates.y);
+    ASSERT_EQ(result.capturePos.rightBoundaryCoordinates.x, doubles.rightBoundaryCoordinates.x);
 }
 
 TEST(capture_tests, right_boundary_horizontal_capture) {
@@ -123,10 +123,10 @@ TEST(capture_tests, right_boundary_horizontal_capture) {
     board[8][7] = Tile::P1;
     auto result = capture_object.CaptureCheck(vec, coords, board, Player::PLAYERONE);
     ASSERT_TRUE(result.capture);
-    ASSERT_EQ(result.capture_pos.leftBoundaryCoordinates.y, doubles.leftBoundaryCoordinates.y);
-    ASSERT_EQ(result.capture_pos.leftBoundaryCoordinates.x, doubles.leftBoundaryCoordinates.x);
-    ASSERT_EQ(result.capture_pos.rightBoundaryCoordinates.y, doubles.rightBoundaryCoordinates.y);
-    ASSERT_EQ(result.capture_pos.rightBoundaryCoordinates.x, doubles.rightBoundaryCoordinates.x);
+    ASSERT_EQ(result.capturePos.leftBoundaryCoordinates.y, doubles.leftBoundaryCoordinates.y);
+    ASSERT_EQ(result.capturePos.leftBoundaryCoordinates.x, doubles.leftBoundaryCoordinates.x);
+    ASSERT_EQ(result.capturePos.rightBoundaryCoordinates.y, doubles.rightBoundaryCoordinates.y);
+    ASSERT_EQ(result.capturePos.rightBoundaryCoordinates.x, doubles.rightBoundaryCoordinates.x);
 }
 
 TEST(capture_tests, right_boundary_vertical_capture) {
@@ -152,10 +152,10 @@ TEST(capture_tests, right_boundary_vertical_capture) {
     board[7][8] = Tile::P1;
     auto result = capture_object.CaptureCheck(vec, coords, board, Player::PLAYERONE);
     ASSERT_TRUE(result.capture);
-    ASSERT_EQ(result.capture_pos.leftBoundaryCoordinates.y, doubles.leftBoundaryCoordinates.y);
-    ASSERT_EQ(result.capture_pos.leftBoundaryCoordinates.x, doubles.leftBoundaryCoordinates.x);
-    ASSERT_EQ(result.capture_pos.rightBoundaryCoordinates.y, doubles.rightBoundaryCoordinates.y);
-    ASSERT_EQ(result.capture_pos.rightBoundaryCoordinates.x, doubles.rightBoundaryCoordinates.x);
+    ASSERT_EQ(result.capturePos.leftBoundaryCoordinates.y, doubles.leftBoundaryCoordinates.y);
+    ASSERT_EQ(result.capturePos.leftBoundaryCoordinates.x, doubles.leftBoundaryCoordinates.x);
+    ASSERT_EQ(result.capturePos.rightBoundaryCoordinates.y, doubles.rightBoundaryCoordinates.y);
+    ASSERT_EQ(result.capturePos.rightBoundaryCoordinates.x, doubles.rightBoundaryCoordinates.x);
 }
 
 TEST(capture_tests, right_boundary_cross_capture) {
@@ -181,9 +181,9 @@ TEST(capture_tests, right_boundary_cross_capture) {
     board[7][7] = Tile::P1;
     auto result = capture_object.CaptureCheck(vec, coords, board, Player::PLAYERONE);
     ASSERT_TRUE(result.capture);
-    ASSERT_EQ(result.capture_pos.leftBoundaryCoordinates.y, doubles.leftBoundaryCoordinates.y);
-    ASSERT_EQ(result.capture_pos.leftBoundaryCoordinates.x, doubles.leftBoundaryCoordinates.x);
-    ASSERT_EQ(result.capture_pos.rightBoundaryCoordinates.y, doubles.rightBoundaryCoordinates.y);
-    ASSERT_EQ(result.capture_pos.rightBoundaryCoordinates.x, doubles.rightBoundaryCoordinates.x);
+    ASSERT_EQ(result.capturePos.leftBoundaryCoordinates.y, doubles.leftBoundaryCoordinates.y);
+    ASSERT_EQ(result.capturePos.leftBoundaryCoordinates.x, doubles.leftBoundaryCoordinates.x);
+    ASSERT_EQ(result.capturePos.rightBoundaryCoordinates.y, doubles.rightBoundaryCoordinates.y);
+    ASSERT_EQ(result.capturePos.rightBoundaryCoordinates.x, doubles.rightBoundaryCoordinates.x);
 }
 

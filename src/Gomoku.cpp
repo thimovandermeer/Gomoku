@@ -102,6 +102,17 @@ void Gomoku::doMove(const sf::Vector2<int>& moveLocation) {
         } else {
             _board[moveLocation.y][moveLocation.x] = Tile::P2;
         }
+        if (_state.capture) {
+            Coordinate p = _state.capturePos.leftBoundaryCoordinates;
+            _board[p.y][p.x] = Tile::EMPTY;
+            p = _state.capturePos.rightBoundaryCoordinates;
+            _board[p.y][p.x] = Tile::EMPTY;
+            if (_player == Player::PLAYERONE) {
+                ++_p1Captures;
+            } else {
+                ++_p2Captures;
+            }
+        }
         _gameEnd = hasGameEnded(moveLocation);
     }
     ss << "\n\t\tat (" << moveLocation.x << ", " << moveLocation.y << ")";

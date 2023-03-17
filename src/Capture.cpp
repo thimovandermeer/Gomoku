@@ -177,6 +177,7 @@ bool Capture::isOtherBoundarySameColor(const Doubles& elem) {
             }
         }
     }
+    return false;
 }
 
 State Capture::CaptureCheck(const std::vector<Doubles>& doubles, const Coordinate& newCoords,
@@ -193,7 +194,7 @@ State Capture::CaptureCheck(const std::vector<Doubles>& doubles, const Coordinat
         }
 
     }
-    return State{ACCEPTED, "No capture", false};
+    return State{ACCEPTED, "No capture", false, {}};
 }
 
 void Capture::setVariables(const std::vector<Doubles>& doubles, const Coordinate& newCoords,

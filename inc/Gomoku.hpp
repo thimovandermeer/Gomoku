@@ -28,7 +28,8 @@ public:
     ~Gomoku() = default;
     Gomoku(std::unique_ptr<IValidatorContainer>& validatorContainer, std::unique_ptr<IGraphics>& graphics) :
             _validatorContainer(std::move(validatorContainer)), _graphics(std::move(graphics)),
-            _board({BOARD_SIZE, {BOARD_SIZE, Tile::EMPTY}}), _player(Player::PLAYERTWO), _state{}, _gameEnd(false) {}
+            _board({BOARD_SIZE, {BOARD_SIZE, Tile::EMPTY}}), _player(Player::PLAYERTWO), _state{}, _gameEnd(false),
+            _p1Captures(0), _p2Captures(0) {}
 
     void gameLoop();
 
@@ -39,6 +40,8 @@ private:
     Player _player;
     State _state;
     bool _gameEnd;
+    int _p1Captures;
+    int _p2Captures;
     void handleKeyPressed(const sf::Event& event);
     void handleMouseButtonPressed(const sf::Event& event);
     void doMove(const sf::Vector2<int>& moveLocation);

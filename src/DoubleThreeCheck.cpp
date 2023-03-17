@@ -134,7 +134,7 @@ bool DoubleThreeCheck::fullFreeCheck() {
             return false;
         }
     }
-
+    return false;
 }
 
 std::vector<Doubles> DoubleThreeCheck::getDoubleTwo() {

@@ -39,7 +39,7 @@ struct State {
     OkState state;
     std::string errorReason;
     bool capture;
-    Doubles capture_pos;
+    Doubles capturePos;
 };
 
 struct Threes {
