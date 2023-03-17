@@ -155,6 +155,9 @@ static int totalInDirection(const std::vector<std::vector<Tile>>& board, const s
 }
 
 bool Gomoku::hasGameEnded(const sf::Vector2i& placedStone) const {
+    if (_p1Captures >= 5 || _p2Captures >= 5) {
+        return true;
+    }
     const Tile lastMoved = _player == Player::PLAYERONE ? Tile::P1 : Tile::P2;
 
     std::vector<std::pair<std::function<void(sf::Vector2i&)>, std::function<void(sf::Vector2i&)>>> vec;
