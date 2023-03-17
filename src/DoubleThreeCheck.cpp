@@ -123,18 +123,15 @@ Threes DoubleThreeCheck::getLastThree() {
 }
 
 bool DoubleThreeCheck::fullFreeCheck() {
-    for (auto elem : _doubleThreeVector) {
-        if (check_free_left(elem.leftBoundaryCoordinates, elem.direction, _board) &&
-            check_free_right(elem.rightBoundaryCoordinates, elem.direction, _board)) {
-            _fullFrees++;
-            elem.fullFree = true;
-            return true;
-        } else {
-            elem.fullFree = false;
-            return false;
-        }
+    auto three = getLastThree();
+    if (check_free_left(three.leftBoundaryCoordinates, three.direction, _board) &&
+        check_free_right(three.rightBoundaryCoordinates, three.direction, _board)) {
+        three.fullFree = true;
+        return true;
+    } else {
+        three.fullFree = false;
+        return false;
     }
-    return false;
 }
 
 std::vector<Doubles> DoubleThreeCheck::getDoubleTwo() {

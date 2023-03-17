@@ -4,6 +4,7 @@
 
 #include "Capture.hpp"
 #include "logger.hpp"
+#include "utils.hpp"
 #include <vector>
 
 Capture::Capture() {
@@ -136,12 +137,14 @@ bool Capture::isOtherBoundarySameColor(const Doubles& elem) {
         if (_boundary.orientation == RIGHT) {
             LOG("The orientation is right");
             if (static_cast<Player>(_board[elem.leftBoundaryCoordinates.y][elem.leftBoundaryCoordinates.x - 1]) ==
-                _player)
+                _player) {
                 LOG("So we check the other side");
-            return true;
+                return true;
+            }
         } else {
             if (static_cast<Player>(_board[elem.rightBoundaryCoordinates.y][elem.rightBoundaryCoordinates.x + 1]) ==
                 _player) {
+                LOG("Kom ik hierin?");
                 return true;
             }
         }
@@ -189,6 +192,7 @@ State Capture::CaptureCheck(const std::vector<Doubles>& doubles, const Coordinat
         if (_boundary.is_boundary) {
             LOG("We are going to check if the other one is also boundary coords");
             if (isOtherBoundarySameColor(elem)) {
+                LOG("DUS DIT IS EEN VALID CAPTURE?");
                 return State{ACCEPTED, "Valid capture", true, elem};
             }
         }
