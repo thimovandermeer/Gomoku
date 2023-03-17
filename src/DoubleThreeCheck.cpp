@@ -23,8 +23,8 @@ State DoubleThreeCheck::DoubleThreeChecker(const std::vector<std::vector<Tile>>&
                     result.state = OkState::ERROR;
                     return result;
                 } else {
-                    LOG("KOM IK HIER IN VOORDAT IK ERROR");
                     _fullFrees++;
+                    LOG("Full free size = %i", _fullFrees);
                     result.errorReason = "This is a valid move";
                     result.state = OkState::ACCEPTED;
                     return result;
@@ -123,15 +123,18 @@ Threes DoubleThreeCheck::getLastThree() {
 }
 
 bool DoubleThreeCheck::fullFreeCheck() {
-    auto three = getLastThree();
-    if (check_free_left(three.leftBoundaryCoordinates, three.direction, _board) &&
-        check_free_right(three.rightBoundaryCoordinates, three.direction, _board)) {
-        three.fullFree = true;
-        return true;
-    } else {
-        three.fullFree = false;
-        return false;
+    for (auto elem : _doubleThreeVector) {
+        if (check_free_left(elem.leftBoundaryCoordinates, elem.direction, _board) &&
+            check_free_right(elem.rightBoundaryCoordinates, elem.direction, _board)) {
+            _fullFrees++;
+            elem.fullFree = true;
+            return true;
+        } else {
+            elem.fullFree = false;
+            return false;
+        }
     }
+
 }
 
 std::vector<Doubles> DoubleThreeCheck::getDoubleTwo() {
