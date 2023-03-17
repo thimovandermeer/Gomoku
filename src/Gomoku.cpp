@@ -137,7 +137,7 @@ static bool isCorrectTile(const std::vector<std::vector<Tile>>& board, const sf:
 }
 
 static bool isInBounds(const sf::Vector2i& pos) {
-    return pos.x >= 0 && pos.x < BOARD_SIZE && pos.y >= 0 && pos.y <= BOARD_SIZE;
+    return pos.x >= 0 && pos.x < BOARD_SIZE && pos.y >= 0 && pos.y < BOARD_SIZE;
 }
 
 static int totalInDirection(const std::vector<std::vector<Tile>>& board, const std::function<void(sf::Vector2i&)>& move,
@@ -163,9 +163,9 @@ bool Gomoku::hasGameEnded(const sf::Vector2i& placedStone) const {
     vec.emplace_back([](sf::Vector2i& v) { --v.x; --v.y; }, [](sf::Vector2i& v) { ++v.x; ++v.y; });
     vec.emplace_back([](sf::Vector2i& v) { --v.x; ++v.y; }, [](sf::Vector2i& v) { ++v.x; --v.y; });
 
-    for (const auto& pair: vec) {
-        if (totalInDirection(_board, pair.first, placedStone, lastMoved) +
-            totalInDirection(_board, pair.second, placedStone, lastMoved) >= 4) {
+    for (const auto& [f1, f2]: vec) {
+        if (totalInDirection(_board, f1, placedStone, lastMoved) +
+            totalInDirection(_board, f2, placedStone, lastMoved) >= 4) {
             WARN("game has ended, player %d has won", static_cast<int>(_player) + 1);
             return true;
         }
