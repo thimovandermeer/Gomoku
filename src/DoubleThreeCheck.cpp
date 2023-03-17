@@ -12,34 +12,32 @@ State DoubleThreeCheck::DoubleThreeChecker(const std::vector<std::vector<Tile>>&
     this->setBoard(board);
     auto size = _doubleTwoVector.size();
     if (size > 0) {
-        LOG("SIZE OF TWO IS BIGGER THEN 0 first check if this one is close to two block");
         if (this->findThree(newCoord, _doubleTwoVector)) {
-            LOG("FOUND THREE");
-            if (this->fullFreeCheck()) {
-                LOG("OOk hier meoten we in komen bij de first occ");
-                LOG("Full free size = %i", _fullFrees);
-                if (_fullFrees == 1) {
-                    result.errorReason = "second fully free for this player";
-                    result.state = OkState::ERROR;
-                    return result;
-                } else {
+            for (auto elem : _doubleThreeVector) {
+                if (check_free_left(elem.leftBoundaryCoordinates, elem.direction, _board) &&
+                    check_free_right(elem.rightBoundaryCoordinates, elem.direction, _board)) {
+                    elem.fullFree = true;
                     _fullFrees++;
-                    LOG("Full free size = %i", _fullFrees);
-                    result.errorReason = "This is a valid move";
-                    result.state = OkState::ACCEPTED;
-                    return result;
+                } else {
+                    elem.fullFree = false;
                 }
+            }
+            if(_fullFrees > 1) {
+                result.errorReason = "second fully free for this player";
+                result.state = OkState::ERROR;
+                return result;
+            } else {
+                result.errorReason = "This is a valid move";
+                result.state = OkState::ACCEPTED;
+                return result;
             }
         }
     }
-    LOG("Checking two in a row");
     if (this->twoInARow(board, newCoord, player)) {
-        LOG("Created two in a row so no need to check three in a row");
         result.errorReason = "creating two in a row";
         result.state = ACCEPTED;
         return result;
     }
-    LOG("NOT two in a roww and not three in a row so fine regular move");
     result.errorReason = "valid move openfield";
     result.state = ACCEPTED;
     return result;
@@ -60,10 +58,7 @@ size_t DoubleThreeCheck::doubleTwoSize() {
 
 bool DoubleThreeCheck::twoInARow(const std::vector<std::vector<Tile>>& board, const Coordinate& coord, const Player& play) {
     auto result = _two->createTwo(board, coord, play);
-    LOG("Result = %i", result.rightBoundaryCoordinates.y);
-    LOG("Double two list size = %i", _doubleTwoVector.size());
     if (result.rightBoundaryCoordinates.y != -1) {
-        LOG("Wordt er uberhaupt iets gepusht?");
         _doubleTwoVector.push_back(result);
         return true;
     }
@@ -92,7 +87,6 @@ Threes DoubleThreeCheck::fillDoubleThreeStack(Coordinate boundCoordinates, Coord
 }
 
 bool DoubleThreeCheck::findThree(Coordinate newCoords, const std::vector<Doubles>& doubleTwo) {
-    LOG("newcoords are %i %i", newCoords.y, newCoords.x);
     for (auto elem: doubleTwo) {
         Threes three_in_a_row{};
         auto result = check_right_boundary(elem.rightBoundaryCoordinates, newCoords, elem.direction, _board);
@@ -135,6 +129,5 @@ bool DoubleThreeCheck::fullFreeCheck() {
 }
 
 std::vector<Doubles> DoubleThreeCheck::getDoubleTwo() {
-    LOG("Bestaat dat kreng hier wel gewoon? %i", _doubleTwoVector.size());
     return _doubleTwoVector;
 }
