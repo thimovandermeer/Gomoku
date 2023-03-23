@@ -7,6 +7,7 @@
 #include "Gomoku.hpp"
 #include <SFML/Graphics.hpp>
 #include <cmath>
+#include <sstream>
 
 using namespace sf;
 
@@ -62,13 +63,13 @@ Graphics::Graphics() : _rulesActive(false), _pixelsPerSpace(0) {
 
     std::string rersourcePath(PROJECT_ROOT_DIR);
     rersourcePath += "/resources/";
-    auto image = Image{};
-    if (not image.loadFromFile(rersourcePath + "icon.png")) {
+    auto icon = Image{};
+    if (not icon.loadFromFile(rersourcePath + "icon.png")) {
         ERROR("icon not loaded from file");
         _window->close();
         return;
     }
-    _window->setIcon(image.getSize().x, image.getSize().y, image.getPixelsPtr());
+    _window->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
     if (not _font.loadFromFile(rersourcePath + "Arial.ttf")) {
         ERROR("font not loaded from file");
@@ -81,6 +82,13 @@ Graphics::Graphics() : _rulesActive(false), _pixelsPerSpace(0) {
     createLines();
     createButton();
     _stoneRadius = static_cast<float>(_pixelsPerSpace) / 2 * CIRCLE_SCALE;
+
+    if (not _boardTexture.loadFromFile(rersourcePath + "board.jpg")) {
+        ERROR("board image not loaded from file");
+        _window->close();
+        return;
+    }
+    _boardImage.setTexture(_boardTexture);
 }
 
 bool Graphics::isWindowOpen() const {
@@ -128,8 +136,7 @@ void Graphics::setHeader(const std::string& text) {
     auto localBounds = center + _header.getLocalBounds().getPosition();
     Vector2f rounded = {std::round(localBounds.x), std::round(localBounds.y)};
     _header.setOrigin(rounded);
-    _header.setPosition(
-            Vector2f{static_cast<float>(_window->getSize().x) / 2.f, static_cast<float>(_window->getSize().y) / 20.f});
+    _header.setPosition({static_cast<float>(_window->getSize().x) / 2.f, static_cast<float>(_window->getSize().y) / 20.f});
 }
 
 bool Graphics::isRulesClick(const Vector2i& loc) const {
@@ -146,12 +153,27 @@ bool Graphics::getRulesActive() const {
     return _rulesActive;
 }
 
-void Graphics::addStone(int x, int y, Color clr, std::vector<CircleShape>& stones) {
+void Graphics::addStone(int x, int y, Color clr, std::vector<CircleShape>& stones, std::vector<Text>& stoneText) {
     Vector2<int> loc = {_xCoordinates[x], _yCoordinates[y]};
-    CircleShape ret(_stoneRadius);
-    ret.setFillColor(clr);
-    ret.setPosition(static_cast<float>(loc.x) - _stoneRadius, static_cast<float>(loc.y) - _stoneRadius);
-    stones.push_back(ret);
+    CircleShape stone(_stoneRadius);
+    stone.setFillColor(clr);
+    stone.setPosition(static_cast<float>(loc.x) - _stoneRadius, static_cast<float>(loc.y) - _stoneRadius);
+    stones.push_back(stone);
+
+    Text txt{};
+    txt.setFont(_font);
+    txt.setFillColor(clr == Color::White ? Color::Black : Color::White);
+    txt.setCharacterSize(static_cast<unsigned int>(_stoneRadius * 0.6));
+    txt.setStyle(Text::Bold);
+    std::stringstream ss;
+    ss << x << "," << y;
+    txt.setString(ss.str());
+    auto center = txt.getGlobalBounds().getSize() / 2.f;
+    auto localbounds = center + txt.getLocalBounds().getPosition();
+    Vector2f rounded = {std::round(localbounds.x), std::round(localbounds.y)};
+    txt.setOrigin(rounded);
+    txt.setPosition({static_cast<float>(loc.x), static_cast<float>(loc.y)});
+    stoneText.push_back(txt);
 }
 
 void Graphics::drawRules() {
@@ -186,15 +208,18 @@ void Graphics::update(const std::vector<std::vector<Tile>>& board) {
     }
     // create circles to place on the board
     std::vector<CircleShape> stones;
+    std::vector<Text> stoneText;
     for (int y = 0; y < BOARD_SIZE; ++y) {
         for (int x = 0; x < BOARD_SIZE; ++x) {
             if (board[y][x] == Tile::P1) {
-                addStone(x, y, Color::Blue, stones);
+                addStone(x, y, Color::White, stones, stoneText);
             } else if (board[y][x] == Tile::P2) {
-                addStone(x, y, Color::Red, stones);
+                addStone(x, y, Color::Black, stones, stoneText);
             }
         }
     }
+
+    _window->draw(_boardImage);
     _window->draw(_header);
     _window->draw(_rulesButton);
     _window->draw(_rulesString);
@@ -203,6 +228,9 @@ void Graphics::update(const std::vector<std::vector<Tile>>& board) {
     }
     for (const auto& stone: stones) {
         _window->draw(stone);
+    }
+    for (const auto& txt : stoneText) {
+        _window->draw(txt);
     }
     _window->display();
 }

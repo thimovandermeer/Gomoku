@@ -66,10 +66,12 @@ private:
     sf::RectangleShape _rulesButton;
     int _pixelsPerSpace;
     float _stoneRadius;
+    sf::Texture _boardTexture;
+    sf::Sprite _boardImage;
 
     void createLines();
     void createButton();
-    void addStone(int x, int y, sf::Color clr, std::vector<sf::CircleShape>& stones);
+    void addStone(int x, int y, sf::Color clr, std::vector<sf::CircleShape>& stones, std::vector<sf::Text>& stoneText);
     void drawRules();
 };
 
