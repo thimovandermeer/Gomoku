@@ -13,7 +13,7 @@ void Gomoku::handleKeyPressed(const sf::Event& event) {
     if (event.key.code == sf::Keyboard::Key::Escape) {
         if (_graphics->getRulesActive()) {
             _graphics->setRulesActive(false);
-            _graphics->update(_board);
+            _graphics->update(_board, _p1Captures, _p2Captures);
         } else {
             _graphics->closeWindow();
         }
@@ -25,7 +25,7 @@ void Gomoku::handleMouseButtonPressed(const sf::Event& event) {
         if (_graphics->isRulesClick({event.mouseButton.x, event.mouseButton.y})) {
             // toggle rules
             _graphics->setRulesActive(not _graphics->getRulesActive());
-            _graphics->update(_board);
+            _graphics->update(_board, _p1Captures, _p2Captures);
             return;
         }
         if (_graphics->getRulesActive()) {
@@ -43,13 +43,13 @@ void Gomoku::handleMouseButtonPressed(const sf::Event& event) {
             _graphics->setHeader(ss.str());
         }
         // only redraw the board in this case because we don't change the board for other events
-        _graphics->update(_board);
+        _graphics->update(_board, _p1Captures, _p2Captures);
     }
 }
 
 void Gomoku::gameLoop() {
     // draw board for the first time
-    _graphics->update(_board);
+    _graphics->update(_board, _p1Captures, _p2Captures);
     while (true) {
         if (not _graphics->isWindowOpen()) {
             // potential cleanup, but essentially the window is closed, so we exit

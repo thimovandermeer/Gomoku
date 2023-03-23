@@ -79,6 +79,10 @@ Graphics::Graphics() : _rulesActive(false), _pixelsPerSpace(0) {
     _header.setFont(_font);
     _header.setFillColor(Color::Black);
     _header.setCharacterSize(WINDOW_WIDTH * (0.1 / MAX_HEADER_LINES));
+
+    _captures.setFont(_font);
+    _captures.setFillColor(Color::Black);
+    _captures.setCharacterSize(WINDOW_WIDTH * (0.08 / MAX_HEADER_LINES));
     createLines();
     createButton();
     _stoneRadius = static_cast<float>(_pixelsPerSpace) / 2 * CIRCLE_SCALE;
@@ -204,7 +208,7 @@ void Graphics::drawRules() {
     _window->display();
 }
 
-void Graphics::update(const std::vector<std::vector<Tile>>& board) {
+void Graphics::update(const std::vector<std::vector<Tile>>& board, int p1Captures, int p2Captures) {
     _window->clear(Color::White);
     if (_rulesActive) {
         drawRules();
@@ -216,17 +220,22 @@ void Graphics::update(const std::vector<std::vector<Tile>>& board) {
     for (int y = 0; y < BOARD_SIZE; ++y) {
         for (int x = 0; x < BOARD_SIZE; ++x) {
             if (board[y][x] == Tile::P1) {
-                addStone(x, y, Color::White, stones, stoneText);
-            } else if (board[y][x] == Tile::P2) {
                 addStone(x, y, Color::Black, stones, stoneText);
+            } else if (board[y][x] == Tile::P2) {
+                addStone(x, y, Color::White, stones, stoneText);
             }
         }
     }
+
+    std::stringstream ss;
+    ss << "P1 caps: " << p1Captures << "\nP2 caps: " << p2Captures;
+    _captures.setString(ss.str());
 
     _window->draw(_boardImage);
     _window->draw(_header);
     _window->draw(_rulesButton);
     _window->draw(_rulesString);
+    _window->draw(_captures);
     for (const auto& shape: _lines) {
         _window->draw(shape);
     }

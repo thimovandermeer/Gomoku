@@ -30,7 +30,7 @@ public:
     virtual bool isRulesClick(const sf::Vector2i& loc) const = 0;
     virtual void setRulesActive(bool b) = 0;
     virtual bool getRulesActive() const = 0;
-    virtual void update(const std::vector<std::vector<Tile>>& board) = 0;
+    virtual void update(const std::vector<std::vector<Tile>>& board, int p1Captures, int p2Captures) = 0;
 };
 
 class Graphics : public IGraphics {
@@ -50,12 +50,13 @@ public:
     void setRulesActive(bool b) override;
     bool getRulesActive() const override;
 
-    void update(const std::vector<std::vector<Tile>>& board) override;
+    void update(const std::vector<std::vector<Tile>>& board, int p1Captures, int p2Captures) override;
 
 private:
     sf::Text _header;
     bool _rulesActive;
     sf::Text _rulesString;
+    sf::Text _captures;
 
 // these are (likely) set only once
     std::unique_ptr<sf::RenderWindow> _window;
