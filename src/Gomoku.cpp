@@ -3,8 +3,8 @@
 //
 
 #include <SFML/Graphics.hpp>
-#include <sstream>
 #include <functional>
+#include <fmt/core.h>
 #include "logger.hpp"
 #include "types.hpp"
 #include "Gomoku.hpp"
@@ -21,30 +21,30 @@ void Gomoku::handleKeyPressed(const sf::Event& event) {
 }
 
 void Gomoku::handleMouseButtonPressed(const sf::Event& event) {
-    if (event.mouseButton.button == sf::Mouse::Left) {
-        if (_graphics->isRulesClick({event.mouseButton.x, event.mouseButton.y})) {
-            // toggle rules
-            _graphics->setRulesActive(not _graphics->getRulesActive());
-            _graphics->update(_board, _p1Captures, _p2Captures);
-            return;
-        }
-        if (_graphics->getRulesActive()) {
-            LOG("rules page up, board not active");
-            return;
-        }
-        auto moveLocation = _graphics->nearestIntersection(event.mouseButton.x, event.mouseButton.y);
-        if (moveLocation == std::nullopt) {
-            return;
-        }
-        doMove(moveLocation.value());
-        if (_gameEnd) {
-            std::stringstream ss;
-            ss << "Player " << static_cast<int>(_player) + 1 << " has won!";
-            _graphics->setHeader(ss.str());
-        }
-        // only redraw the board in this case because we don't change the board for other events
-        _graphics->update(_board, _p1Captures, _p2Captures);
+    if (event.mouseButton.button == sf::Mouse::Right) {
+        LOG("Right click at (%d, %d)", event.mouseButton.x, event.mouseButton.y);
+        return;
     }
+    if (_graphics->isRulesClick({event.mouseButton.x, event.mouseButton.y})) {
+        // toggle rules
+        _graphics->setRulesActive(not _graphics->getRulesActive());
+        _graphics->update(_board, _p1Captures, _p2Captures);
+        return;
+    }
+    if (_graphics->getRulesActive()) {
+        LOG("rules page up, board not active");
+        return;
+    }
+    auto moveLocation = _graphics->nearestIntersection(event.mouseButton.x, event.mouseButton.y);
+    if (moveLocation == std::nullopt) {
+        return;
+    }
+    doMove(moveLocation.value());
+    if (_gameEnd) {
+        _graphics->setHeader(fmt::format("Player {} has won!", static_cast<int>(_player) + 1));
+    }
+    // only redraw the board in this case because we don't change the board for other events
+    _graphics->update(_board, _p1Captures, _p2Captures);
 }
 
 void Gomoku::gameLoop() {
@@ -85,13 +85,12 @@ void Gomoku::gameLoop() {
 
 void Gomoku::doMove(const sf::Vector2<int>& moveLocation) {
     Coordinate coords{moveLocation.y, moveLocation.x};
-    std::stringstream ss;
     LOG("coords y: %i, x: %i");
 
     if (_state.state == OkState::ACCEPTED) {
         _player = _player == Player::PLAYERONE ? Player::PLAYERTWO : Player::PLAYERONE;
     }
-    validateMove(coords, ss);
+    validateMove(coords);
 
 
     // probably this check will become part of the validator
@@ -115,12 +114,11 @@ void Gomoku::doMove(const sf::Vector2<int>& moveLocation) {
         }
         _gameEnd = hasGameEnded(moveLocation);
     }
-    ss << "\n\t\tat (" << moveLocation.x << ", " << moveLocation.y << ")";
     // set header to whatever we want it to be
-    _graphics->setHeader(ss.str());
+    _graphics->setHeader(fmt::format("{}\n\tat ({}, {})", _state.errorReason, moveLocation.x, moveLocation.y));
 }
 
-void Gomoku::validateMove(Coordinate coords, std::stringstream& ss) {
+void Gomoku::validateMove(Coordinate coords) {
     LOG("Coords zijn y:%i x: %i", coords.y, coords.x);
     if (_player == Player::PLAYERONE) {
         _state = _validatorContainer->p1Validate(_board, coords, _player);
@@ -129,7 +127,6 @@ void Gomoku::validateMove(Coordinate coords, std::stringstream& ss) {
     }
     LOG("Result = %s", _state.errorReason.c_str());
     LOG("Result = %i", _state.state);
-    ss << _state.errorReason.c_str();
 }
 
 static bool isCorrectTile(const std::vector<std::vector<Tile>>& board, const sf::Vector2i& pos, const Tile& val) {

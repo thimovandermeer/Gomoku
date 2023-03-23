@@ -7,7 +7,7 @@
 #include "Gomoku.hpp"
 #include <SFML/Graphics.hpp>
 #include <cmath>
-#include <sstream>
+#include <fmt/core.h>
 
 using namespace sf;
 
@@ -170,9 +170,7 @@ void Graphics::addStone(int x, int y, Color clr, std::vector<CircleShape>& stone
     txt.setFillColor(clr == Color::White ? Color::Black : Color::White);
     txt.setCharacterSize(static_cast<unsigned int>(_stoneRadius * 0.6));
     txt.setStyle(Text::Bold);
-    std::stringstream ss;
-    ss << x << "," << y;
-    txt.setString(ss.str());
+    txt.setString(fmt::format("{},{}", x, y));
     auto center = txt.getGlobalBounds().getSize() / 2.f;
     auto localbounds = center + txt.getLocalBounds().getPosition();
     Vector2f rounded = {std::round(localbounds.x), std::round(localbounds.y)};
@@ -227,9 +225,7 @@ void Graphics::update(const std::vector<std::vector<Tile>>& board, int p1Capture
         }
     }
 
-    std::stringstream ss;
-    ss << "P1 caps: " << p1Captures << "\nP2 caps: " << p2Captures;
-    _captures.setString(ss.str());
+    _captures.setString(fmt::format("P1 caps: {}\nP2 caps: {}", p1Captures, p2Captures));
 
     _window->draw(_boardImage);
     _window->draw(_header);

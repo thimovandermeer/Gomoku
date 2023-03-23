@@ -47,7 +47,7 @@ private:
     void handleKeyPressed(const sf::Event& event);
     void handleMouseButtonPressed(const sf::Event& event);
     void doMove(const sf::Vector2<int>& moveLocation);
-    void validateMove(Coordinate coords, std::stringstream& ss);
+    void validateMove(Coordinate coords);
     bool hasGameEnded(const sf::Vector2i& placedStone) const;
 };
 
