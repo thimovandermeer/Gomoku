@@ -160,6 +160,7 @@ void Graphics::addStone(int x, int y, Color clr, std::vector<CircleShape>& stone
     stone.setPosition(static_cast<float>(loc.x) - _stoneRadius, static_cast<float>(loc.y) - _stoneRadius);
     stones.push_back(stone);
 
+#ifdef DEBUG_STONE_COORDINATES
     Text txt{};
     txt.setFont(_font);
     txt.setFillColor(clr == Color::White ? Color::Black : Color::White);
@@ -174,6 +175,9 @@ void Graphics::addStone(int x, int y, Color clr, std::vector<CircleShape>& stone
     txt.setOrigin(rounded);
     txt.setPosition({static_cast<float>(loc.x), static_cast<float>(loc.y)});
     stoneText.push_back(txt);
+#else
+    (void)stoneText;
+#endif
 }
 
 void Graphics::drawRules() {
@@ -229,8 +233,10 @@ void Graphics::update(const std::vector<std::vector<Tile>>& board) {
     for (const auto& stone: stones) {
         _window->draw(stone);
     }
+#ifdef DEBUG_STONE_COORDINATES
     for (const auto& txt : stoneText) {
         _window->draw(txt);
     }
+#endif
     _window->display();
 }

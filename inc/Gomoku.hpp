@@ -12,6 +12,8 @@
 #include "types.hpp"
 #include "ValidatorContainer.hpp"
 
+#define DEBUG_STONE_COORDINATES
+
 #define BOARD_SIZE 19
 
 class IValidator;
