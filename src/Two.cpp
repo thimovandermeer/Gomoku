@@ -23,7 +23,6 @@ Doubles Two::createTwo(const std::vector<std::vector<Tile>>& board, const Coordi
 
 Coordinate Two::checkTwoInARow(const std::vector<std::vector<Tile>>& board, const Coordinate& coord, const Player& player) {
     Coordinate already_on_board_coords{};
-    LOG("incoming coords %i, %i", coord.y, coord.x);
     // TODO: do the boundary checks properly now everything around the boundaries is not done
     if (coord.x > 0 && coord.y > 0) {
         if (static_cast<Player>(board[coord.y - 1][coord.x - 1]) == player) {

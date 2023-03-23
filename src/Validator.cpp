@@ -25,8 +25,6 @@ State Validator::validate(const std::vector<std::vector<Tile>>& board, const Coo
     this->captureValidation();
 
 
-    LOG("STATE = %s", _state.errorReason.c_str());
-    LOG("STATE error = %i", _state.state);
     return _state;
 }
 
@@ -51,16 +49,13 @@ void Validator::setPlayer(const Player& player) {
 }
 
 void Validator::boardValidation() {
-    LOG("Board size = %i", _board.size());
     if (_board.size() > BOARD_SIZE) {
-        LOG("Board is bigger than max size");
         std::string reason = "Board is bigger than max size";
         setState(ERROR, reason);
     }
 }
 
 void Validator::coordinatesValidation() {
-    LOG("coords x %i coords y %i", _coord.x, _coord.y);
     this->boundaryChecking();
     if (_state.state == ERROR) {
         return;
@@ -74,21 +69,17 @@ void Validator::playerValidation() {
 
 void Validator::boundaryChecking() {
     if (_coord.x >= BOARD_SIZE || _coord.y >= BOARD_SIZE) {
-        LOG("coords is bigger than max board size");
         std::string reason = "coords is bigger than max board size";
         setState(ERROR, reason);
     }
     if (_coord.x < 0 || _coord.y < 0) {
-        LOG("coords is smaller than 0");
         std::string reason = "coords is smaller than 0";
         setState(ERROR, reason);
     }
 }
 
 void Validator::takenCheck() {
-    LOG("Coordinates %i %i with ", _coord.y, _coord.x);
     if (_board[_coord.y][_coord.x] != Tile::EMPTY) {
-        LOG("Coordinates %i %i are not free", _coord.y, _coord.x);
         std::string reason = "Coordinates are not free";
         setState(ERROR, reason);
     }
@@ -116,7 +107,6 @@ void Validator::setOpponentDoubles(const std::vector<Doubles>& opponentDoubles) 
 }
 
 std::vector<Doubles> Validator::getDoubleTwoList() {
-    LOG("DIT IS DE WAARDE DIE WORDT GERETURNT %i", _doubleVector.size());
     return _doubleVector;
 }
 

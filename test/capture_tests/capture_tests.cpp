@@ -31,7 +31,6 @@ TEST(capture_tests, left_boundary_horizontal_capture) {
     vec.push_back(doubles);
     auto board = create_empty_board();
     board[8][9] = Tile::P1;
-    LOG("TEST");
     auto result = capture_object.CaptureCheck(vec, coords, board, Player::PLAYERONE);
     ASSERT_TRUE(result.capture);
     ASSERT_EQ(result.capturePos.leftBoundaryCoordinates.y, doubles.leftBoundaryCoordinates.y);
