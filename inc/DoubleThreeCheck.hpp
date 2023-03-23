@@ -40,7 +40,9 @@ public:
     bool twoInARow(const std::vector<std::vector<Tile>>& board, const Coordinate& coord, const Player& play);
     Threes getLastThree();
     bool fullFreeCheck();
-
+    size_t getFullFreeSize();
+    void setDoubleTwoVec(std::vector<Doubles> double_two);
+    void flushDoubleThreeVec();
     std::vector<Doubles> getDoubleTwo() override;
 private:
     void setState(OkState newState, std::string& errorReason);

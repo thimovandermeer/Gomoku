@@ -132,7 +132,6 @@ bool Capture::isOtherBoundarySameColor(const Doubles& elem) {
         }
     } else if (elem.direction == VERTICAL) {
         if (_boundary.orientation == RIGHT) {
-                elem.leftBoundaryCoordinates.x);
             if (static_cast<Player>(_board[elem.leftBoundaryCoordinates.y - 1][elem.leftBoundaryCoordinates.x]) ==
                 _player) {
                 return true;

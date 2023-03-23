@@ -119,10 +119,8 @@ DoubleType check_right_boundary_cross(Coordinate boundaryCoords, Coordinate newC
                                       const std::vector<std::vector<Tile>>& board) {
     if ((newCoords.y - boundaryCoords.y) == 1) {
         if (newCoords.x - boundaryCoords.x == 1) {
-                boundaryCoords.x);
             return NORMAL;
         }
-            boundaryCoords.x);
         return NONE;
     } else if ((newCoords.y - boundaryCoords.y) == 2) {
         auto openSpaceCoords = newCoords;

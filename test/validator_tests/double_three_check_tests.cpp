@@ -705,3 +705,42 @@ TEST(double_three_check_tests, double_three_is_fully_free_false_right_cross) {
     ASSERT_FALSE(threeCheck.fullFreeCheck());
 
 }
+
+TEST(double_three_check_tests, two_double_threes_at_once) {
+    Coordinate coords;
+    coords.y = 10;
+    coords.x = 11;
+    // check coordinates
+
+    auto board = create_empty_board();
+    Doubles first_double;
+    first_double.leftBoundaryCoordinates.y = 10;
+    first_double.leftBoundaryCoordinates.x = 9;
+    first_double.direction = HORIZONTAL;
+
+    first_double.rightBoundaryCoordinates.y = 10;
+    first_double.rightBoundaryCoordinates.x = 10;
+
+    Doubles second_double;
+    second_double.direction = VERTICAL;
+    second_double.leftBoundaryCoordinates.y = 11;
+    second_double.leftBoundaryCoordinates.x = 11;
+    second_double.rightBoundaryCoordinates.y = 12;
+    second_double.rightBoundaryCoordinates.x = 11;
+    std::vector<Doubles> vec;
+    vec.push_back(first_double);
+    vec.push_back(second_double);
+    board[10][10] = Tile::P1;
+    board[10][9] = Tile::P1;
+    board[11][11] = Tile::P1;
+    board[12][11] = Tile::P1;
+
+//    board[10][11] = Tile::P1;
+    printBoard(board);
+
+    threeCheck.setDoubleTwoVec(vec);
+    threeCheck.DoubleThreeChecker(board, coords, Player::PLAYERONE);
+
+    ASSERT_EQ(threeCheck.getFullFreeSize(), 2);
+
+}
