@@ -60,7 +60,6 @@ void Validator::coordinatesValidation() {
     if (_state.state == ERROR) {
         return;
     }
-    this->takenCheck();
 }
 
 void Validator::playerValidation() {
@@ -74,13 +73,6 @@ void Validator::boundaryChecking() {
     }
     if (_coord.x < 0 || _coord.y < 0) {
         std::string reason = "coords is smaller than 0";
-        setState(ERROR, reason);
-    }
-}
-
-void Validator::takenCheck() {
-    if (_board[_coord.y][_coord.x] != Tile::EMPTY) {
-        std::string reason = "Coordinates are not free";
         setState(ERROR, reason);
     }
 }

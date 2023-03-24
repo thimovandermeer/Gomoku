@@ -40,7 +40,6 @@ private:
     void boardValidation();
     void coordinatesValidation();
     void boundaryChecking();
-    void takenCheck();
     void playerValidation();
     void doubleThreeValidation();
     void updateDoubleList();

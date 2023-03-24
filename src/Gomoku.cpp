@@ -90,17 +90,22 @@ void Gomoku::doMove(const sf::Vector2<int>& moveLocation) {
     if (_state.state == OkState::ACCEPTED) {
         _player = _player == Player::PLAYERONE ? Player::PLAYERTWO : Player::PLAYERONE;
     }
+    if (_board[moveLocation.y][moveLocation.x] != Tile::EMPTY) {
+        _state.state = OkState::ERROR;
+        _state.errorReason = "tile not empty";
+        _graphics->setHeader(fmt::format("{}\n\tat ({}, {})", _state.errorReason, moveLocation.x, moveLocation.y));
+        return;
+    }
+    if (_player == Player::PLAYERONE) {
+        _board[moveLocation.y][moveLocation.x] = Tile::P1;
+    } else {
+        _board[moveLocation.y][moveLocation.x] = Tile::P2;
+    }
     validateMove(coords);
-
 
     // probably this check will become part of the validator
     if (_state.state == OkState::ACCEPTED) {
         // change _board to reflect new board state
-        if (_player == Player::PLAYERONE) {
-            _board[moveLocation.y][moveLocation.x] = Tile::P1;
-        } else {
-            _board[moveLocation.y][moveLocation.x] = Tile::P2;
-        }
         if (_state.capture) {
             Coordinate p = _state.capturePos.leftBoundaryCoordinates;
             _board[p.y][p.x] = Tile::EMPTY;
@@ -113,6 +118,9 @@ void Gomoku::doMove(const sf::Vector2<int>& moveLocation) {
             }
         }
         _gameEnd = hasGameEnded(moveLocation);
+    } else {
+        // undo move that is not ok
+        _board[moveLocation.y][moveLocation.x] = Tile::EMPTY;
     }
     // set header to whatever we want it to be
     _graphics->setHeader(fmt::format("{}\n\tat ({}, {})", _state.errorReason, moveLocation.x, moveLocation.y));
