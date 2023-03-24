@@ -66,13 +66,15 @@ private:
     std::vector<sf::RectangleShape> _lines;
     sf::RectangleShape _rulesButton;
     int _pixelsPerSpace;
-    float _stoneRadius;
+    float _stoneSize;
+    sf::Texture _blackStone;
+    sf::Texture _whiteStone;
     sf::Texture _boardTexture;
     sf::Sprite _boardImage;
 
     void createLines();
     void createButton();
-    void addStone(int x, int y, sf::Color clr, std::vector<sf::CircleShape>& stones, std::vector<sf::Text>& stoneText);
+    void addStone(int x, int y, Tile player, std::vector<sf::Sprite>& stones, std::vector<sf::Text>& stoneText);
     void drawRules();
 };
 

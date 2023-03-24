@@ -38,14 +38,14 @@ void Graphics::createLines() {
 
 void Graphics::createButton() {
     _rulesButton = RectangleShape({WINDOW_WIDTH * 0.125, WINDOW_HEIGHT * 0.03});
-    _rulesButton.setFillColor(Color::White);
+    _rulesButton.setFillColor(Color::Black);
     _rulesButton.setOutlineColor(Color::Black);
     _rulesButton.setOutlineThickness(3);
     _rulesButton.setPosition({WINDOW_WIDTH - (WINDOW_WIDTH * 0.175), WINDOW_HEIGHT * 0.03});
 
     _rulesString.setFont(_font);
     _rulesString.setCharacterSize(WINDOW_WIDTH / 50);
-    _rulesString.setFillColor(Color::Black);
+    _rulesString.setFillColor(Color::White);
     _rulesString.setString("Rules");
 
     const FloatRect bounds(_rulesString.getLocalBounds());
@@ -61,17 +61,17 @@ Graphics::Graphics() : _rulesActive(false), _pixelsPerSpace(0) {
     _window->setVerticalSyncEnabled(true);
     _window->clear(Color::White);
 
-    std::string rersourcePath(PROJECT_ROOT_DIR);
-    rersourcePath += "/resources/";
+    std::string resourcePath(PROJECT_ROOT_DIR);
+    resourcePath += "/resources/";
     auto icon = Image{};
-    if (not icon.loadFromFile(rersourcePath + "icon.png")) {
+    if (not icon.loadFromFile(resourcePath + "icon.png")) {
         ERROR("icon not loaded from file");
         _window->close();
         return;
     }
     _window->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
-    if (not _font.loadFromFile(rersourcePath + "Arial.ttf")) {
+    if (not _font.loadFromFile(resourcePath + "Arial.ttf")) {
         ERROR("font not loaded from file");
         _window->close();
         return;
@@ -85,14 +85,33 @@ Graphics::Graphics() : _rulesActive(false), _pixelsPerSpace(0) {
     _captures.setCharacterSize(WINDOW_WIDTH * (0.08 / MAX_HEADER_LINES));
     createLines();
     createButton();
-    _stoneRadius = static_cast<float>(_pixelsPerSpace) / 2 * CIRCLE_SCALE;
+    _stoneSize = static_cast<float>(_pixelsPerSpace) * CIRCLE_SCALE;
 
-    if (not _boardTexture.loadFromFile(rersourcePath + "board.jpg")) {
+    if (not _boardTexture.loadFromFile(resourcePath + "board.jpg")) {
         ERROR("board image not loaded from file");
         _window->close();
         return;
     }
     _boardImage.setTexture(_boardTexture);
+
+    Vector2u textureSize = _boardTexture.getSize();
+    Vector2u windowSize = _window->getSize();
+    Vector2f boardScale = {static_cast<float>(windowSize.x) / static_cast<float>(textureSize.x),
+                           static_cast<float>(windowSize.y) / static_cast<float>(textureSize.y)};
+    _boardImage.setScale(boardScale);
+
+    if (not _blackStone.loadFromFile(resourcePath + "blackStone.png")) {
+        ERROR("black stone not loaded from file");
+        _window->close();
+        return;
+    }
+    _blackStone.setSmooth(true);
+    if (not _whiteStone.loadFromFile(resourcePath + "whiteStone.png")) {
+        ERROR("white stone not loaded from file");
+        _window->close();
+        return;
+    }
+    _whiteStone.setSmooth(true);
 }
 
 bool Graphics::isWindowOpen() const {
@@ -140,7 +159,8 @@ void Graphics::setHeader(const std::string& text) {
     auto localBounds = center + _header.getLocalBounds().getPosition();
     Vector2f rounded = {std::round(localBounds.x), std::round(localBounds.y)};
     _header.setOrigin(rounded);
-    _header.setPosition({static_cast<float>(_window->getSize().x) / 2.f, static_cast<float>(_window->getSize().y) / 20.f});
+    _header.setPosition(
+            {static_cast<float>(_window->getSize().x) / 2.f, static_cast<float>(_window->getSize().y) / 20.f});
 }
 
 bool Graphics::isRulesClick(const Vector2i& loc) const {
@@ -149,7 +169,7 @@ bool Graphics::isRulesClick(const Vector2i& loc) const {
 }
 
 void Graphics::setRulesActive(bool b) {
-    _rulesString.setString(b ? "Back" : "Rules");
+    _rulesString.setString(b ? " Back" : "Rules");
     _rulesActive = b;
 }
 
@@ -157,18 +177,22 @@ bool Graphics::getRulesActive() const {
     return _rulesActive;
 }
 
-void Graphics::addStone(int x, int y, Color clr, std::vector<CircleShape>& stones, std::vector<Text>& stoneText) {
+void Graphics::addStone(int x, int y, Tile player, std::vector<Sprite>& stones, std::vector<Text>& stoneText) {
     Vector2<int> loc = {_xCoordinates[x], _yCoordinates[y]};
-    CircleShape stone(_stoneRadius);
-    stone.setFillColor(clr);
-    stone.setPosition(static_cast<float>(loc.x) - _stoneRadius, static_cast<float>(loc.y) - _stoneRadius);
-    stones.push_back(stone);
+
+    const Texture& texture = player == Tile::P1 ? _blackStone : _whiteStone;
+    Sprite sprt(texture);
+    auto textureSize = texture.getSize();
+    Vector2f sizeF{static_cast<float>(textureSize.x), static_cast<float>(textureSize.y)};
+    sprt.setScale(_stoneSize / sizeF.x, _stoneSize / sizeF.y);
+    sprt.setPosition(static_cast<float>(loc.x) - _stoneSize / 2, static_cast<float>(loc.y) - _stoneSize / 2);
+    stones.push_back(sprt);
 
 #ifdef DEBUG_STONE_COORDINATES
     Text txt{};
     txt.setFont(_font);
-    txt.setFillColor(clr == Color::White ? Color::Black : Color::White);
-    txt.setCharacterSize(static_cast<unsigned int>(_stoneRadius * 0.6));
+    txt.setFillColor(player == Tile::P1 ? Color::White : Color::Black);
+    txt.setCharacterSize(static_cast<unsigned int>(_stoneSize * 0.3));
     txt.setStyle(Text::Bold);
     txt.setString(fmt::format("{},{}", x, y));
     auto center = txt.getGlobalBounds().getSize() / 2.f;
@@ -208,26 +232,24 @@ void Graphics::drawRules() {
 
 void Graphics::update(const std::vector<std::vector<Tile>>& board, int p1Captures, int p2Captures) {
     _window->clear(Color::White);
+    _window->draw(_boardImage);
     if (_rulesActive) {
         drawRules();
         return;
     }
     // create circles to place on the board
-    std::vector<CircleShape> stones;
     std::vector<Text> stoneText;
+    std::vector<Sprite> stones;
     for (int y = 0; y < BOARD_SIZE; ++y) {
         for (int x = 0; x < BOARD_SIZE; ++x) {
-            if (board[y][x] == Tile::P1) {
-                addStone(x, y, Color::Black, stones, stoneText);
-            } else if (board[y][x] == Tile::P2) {
-                addStone(x, y, Color::White, stones, stoneText);
+            if (board[y][x] != Tile::EMPTY) {
+                addStone(x, y, board[y][x], stones, stoneText);
             }
         }
     }
 
     _captures.setString(fmt::format("P1 caps: {}\nP2 caps: {}", p1Captures, p2Captures));
 
-    _window->draw(_boardImage);
     _window->draw(_header);
     _window->draw(_rulesButton);
     _window->draw(_rulesString);
@@ -239,7 +261,7 @@ void Graphics::update(const std::vector<std::vector<Tile>>& board, int p1Capture
         _window->draw(stone);
     }
 #ifdef DEBUG_STONE_COORDINATES
-    for (const auto& txt : stoneText) {
+    for (const auto& txt: stoneText) {
         _window->draw(txt);
     }
 #endif
