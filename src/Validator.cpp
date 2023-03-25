@@ -29,6 +29,7 @@ State Validator::validate(const std::vector<std::vector<Tile>>& board, const Coo
         return _state;
     }
 
+	this->captureValidation(board_hack, coord, player);
 	LOG("Doet hij dus niet");
 
     return _state;
@@ -75,7 +76,6 @@ void Validator::setState(OkState newState, std::string& errorReason) {
 
 void Validator::doubleThreeValidation(const std::vector<std::vector<Tile>>& board, const Coordinate& coord, const Player& player) {
 	auto result =  _doubleThreeCheck->DoubleThreeChecker(board, coord, player);
-	LOG("HALLOOOOO = %s", result.errorReason.c_str());
 	_state = result;
 }
 

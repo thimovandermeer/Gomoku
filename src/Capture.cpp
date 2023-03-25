@@ -2,47 +2,103 @@
 #include <vector>
 #include "Capture.hpp"
 #include "Gomoku.hpp"
+#include "logger.hpp"
+
 // Capture test function
-bool Capture::captureLogic(const Coordinate &newCoords,const Tile &player,const std::vector<std::vector<Tile>>& board) {
-	// Check for captures in all directions
-	for (int dx = -1; dx <= 1; dx++) {
-		for (int dy = -1; dy <= 1; dy++) {
-			// Skip the center square
-			if (dx == 0 && dy == 0) {
-				continue;
-			}
-			// Check for a possible capture
-			int i = newCoords.x + dx;
-			int j = newCoords.y + dy;
-			if (i < 0 || i >= BOARD_SIZE || j < 0 || j >= BOARD_SIZE) {
-				continue;
-			}
-			if (board[i][j] != player && board[i][j] != Tile::EMPTY) {
-				int count = 0;
-				// Check for a line of enemy pieces
-				while (i >= 0 && i < BOARD_SIZE && j >= 0 && j < BOARD_SIZE && board[i][j] == board[newCoords.x][newCoords.y]) {
-					count++;
-					i += dx;
-					j += dy;
-				}
-				// Check for a capture
-				if (i >= 0 && i < BOARD_SIZE && j >= 0 && j < BOARD_SIZE && board[i][j] == Tile::EMPTY && count >= 2) {
-					// Perform the capture
-					i = newCoords.x + dx;
-					j = newCoords.y + dy;
-					while (i >= 0 && i < BOARD_SIZE && j >= 0 && j < BOARD_SIZE && board[i][j] == board[newCoords.x][newCoords.y]) {
-//						Doubles result;
-						// dit moet ik zo nog even fixen
-//						board[i][j] = Tile::EMPTY;
-						i += dx;
-						j += dy;
-					}
-					return true;
-				}
-			}
+
+State Capture::captureLogic(const Coordinate &newCoords, const Tile &player, const std::vector<std::vector<Tile>>& board) {
+	Tile opponent = (player == Tile::P1) ? Tile::P2 : Tile::P1;
+
+	// Check for horizontal captures
+	if (newCoords.x > 1 && board[newCoords.y][newCoords.x-2] == opponent && board[newCoords.y][newCoords.x-1] == opponent && board[newCoords.y][newCoords.x] == player) {
+		LOG("Before last validation step");
+		if(board[newCoords.y][newCoords.x -3] == player) {
+			LOG("first horizontal if");
+			Coordinate one{newCoords.y, newCoords.x-2};
+			Coordinate two{newCoords.y, newCoords.x-1};
+			auto doubles = Doubles{one, two};
+			State return_value{ACCEPTED, "Valid horizontal capture", true, doubles};
+			return return_value;
 		}
 	}
-	return false;
+	if (newCoords.x < BOARD_SIZE-2 && board[newCoords.y][newCoords.x+2] == opponent && board[newCoords.y][newCoords.x+1] == opponent && board[newCoords.y][newCoords.x] == player) {
+		LOG("Second horizontal if");
+		if(board[newCoords.y][newCoords.x +3] == player) {
+			Coordinate one{newCoords.y, newCoords.x+2};
+			Coordinate two{newCoords.y, newCoords.x+1};
+			auto doubles = Doubles{one, two};
+			State return_value{ACCEPTED, "Valid horizontal capture", true, doubles};
+			return return_value;
+		}
+	}
+
+	// Check for vertical captures
+	if (newCoords.y > 1 && board[newCoords.y-2][newCoords.x] == opponent && board[newCoords.y-1][newCoords.x] == opponent && board[newCoords.y][newCoords.x] == player) {
+		LOG("First vertical if");
+		if(board[newCoords.y -3][newCoords.x] == player) {
+			Coordinate one{newCoords.y -2, newCoords.x};
+			Coordinate two{newCoords.y -1, newCoords.x};
+			auto doubles = Doubles{one, two};
+			State return_value{ACCEPTED, "Valid vertical capture", true, doubles};
+			return return_value;
+		}
+	}
+	if (newCoords.y < BOARD_SIZE-2 && board[newCoords.y+2][newCoords.x] == opponent && board[newCoords.y+1][newCoords.x] == opponent && board[newCoords.y][newCoords.x] == player) {
+		LOG("Second vertical if");
+		if(board[newCoords.y +3][newCoords.x] == player) {
+			Coordinate one{newCoords.y +2, newCoords.x};
+			Coordinate two{newCoords.y +1, newCoords.x};
+			auto doubles = Doubles{one, two};
+			State return_value{ACCEPTED, "Valid vertical capture", true, doubles};
+			return return_value;
+		}
+	}
+
+	// Check for diagonal captures
+	if (newCoords.y > 1 && newCoords.x > 1 && board[newCoords.y-2][newCoords.x-2] == opponent && board[newCoords.y-1][newCoords.x-1] == opponent && board[newCoords.y][newCoords.x] == player) {
+		LOG("First diagonal if");
+		if(board[newCoords.y -3][newCoords.x-3] == player) {
+			Coordinate one{newCoords.y -2, newCoords.x-2};
+			Coordinate two{newCoords.y -1, newCoords.x-1};
+			auto doubles = Doubles{one, two};
+			State return_value{ACCEPTED, "Valid diagonal capture", true, doubles};
+			return return_value;
+		}
+
+	}
+	if (newCoords.y > 1 && newCoords.x < BOARD_SIZE-2 && board[newCoords.y-2][newCoords.x+2] == opponent && board[newCoords.y-1][newCoords.x+1] == opponent && board[newCoords.y][newCoords.x] == player) {
+		LOG("second diagonal if");
+		if(board[newCoords.y -3][newCoords.x+3] == player) {
+			Coordinate one{newCoords.y -2, newCoords.x-2};
+			Coordinate two{newCoords.y -1, newCoords.x-1};
+			auto doubles = Doubles{one, two};
+			State return_value{ACCEPTED, "Valid diagonal capture", true, doubles};
+			return return_value;
+		}
+	}
+	if (newCoords.y < BOARD_SIZE-2 && newCoords.x > 1 && board[newCoords.y+2][newCoords.x-2] == opponent && board[newCoords.y+1][newCoords.x-1] == opponent && board[newCoords.y][newCoords.x] == player) {
+		LOG("third diagonal if");
+		if(board[newCoords.y +3][newCoords.x-3] == player) {
+			Coordinate one{newCoords.y + 2, newCoords.x - 2};
+			Coordinate two{newCoords.y + 1, newCoords.x - 1};
+			auto doubles = Doubles{one, two};
+			State return_value{ACCEPTED, "Valid diagonal capture", true, doubles};
+			return return_value;
+		}
+	}
+	if (newCoords.y < BOARD_SIZE-2 && newCoords.x < BOARD_SIZE-2 && board[newCoords.y+2][newCoords.x+2] == opponent && board[newCoords.y+1][newCoords.x+1] == opponent && board[newCoords.y][newCoords.x] == player) {
+		LOG("Fourth diagonal if");
+		if(board[newCoords.y +3][newCoords.x+3] == player) {
+			Coordinate one{newCoords.y +2, newCoords.x+2};
+			Coordinate two{newCoords.y +1, newCoords.x+1};
+			auto doubles = Doubles{one, two};
+			State return_value{ACCEPTED, "Valid diagonal capture", true, doubles};
+			return return_value;
+		}
+	}
+
+	// No capture found
+	return (State{ACCEPTED, "No capture found", false, {}});
 }
 
 
@@ -56,6 +112,7 @@ Capture::CaptureCheck(const Coordinate &newCoords, const std::vector<std::vector
 		playerCapture = Tile::P2;
 	}
 
-	captureLogic(newCoords, playerCapture, board);
-	return State{};
+	auto result = captureLogic(newCoords, playerCapture, board);
+	LOG("Result = %s",result.errorReason.c_str());
+	return result;
 }

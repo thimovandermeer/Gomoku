@@ -107,9 +107,9 @@ void Gomoku::doMove(const sf::Vector2<int>& moveLocation) {
     if (_state.state == OkState::ACCEPTED) {
         // change _board to reflect new board state
         if (_state.capture) {
-            Coordinate p = _state.capturePos.leftBoundaryCoordinates;
+            Coordinate p = _state.capturePos.one;
             _board[p.y][p.x] = Tile::EMPTY;
-            p = _state.capturePos.rightBoundaryCoordinates;
+            p = _state.capturePos.two;
             _board[p.y][p.x] = Tile::EMPTY;
             if (_player == Player::PLAYERONE) {
                 ++_p1Captures;

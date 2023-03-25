@@ -28,7 +28,7 @@ public:
 					   const std::vector<std::vector<Tile>> &board, const Player &player) override;
 
 private:
-	bool captureLogic(const Coordinate &newCoords, const Tile &player, const std::vector<std::vector<Tile>> &board);
+	State captureLogic(const Coordinate &newCoords, const Tile &player, const std::vector<std::vector<Tile>> &board);
 };
 
 #endif //GOMOKU_CAPTURE_HPP

@@ -30,9 +30,8 @@ enum OkState {
 };
 
 struct Doubles {
-    Coordinate leftBoundaryCoordinates;
-    Coordinate rightBoundaryCoordinates;
-    Direction direction;
+    Coordinate one;
+    Coordinate two;
 };
 
 struct State {
