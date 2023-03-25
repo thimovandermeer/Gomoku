@@ -8,739 +8,176 @@
 #include "utils.hpp"
 #include "types.hpp"
 
-std::unique_ptr<ITwo> twoCheck = std::make_unique<Two>();
-DoubleThreeCheck threeCheck = DoubleThreeCheck(twoCheck);
-
-std::vector<std::vector<Tile>> create_double_three_board_horizontally() {
-    std::vector<std::vector<Tile>> board = create_empty_board();
-    board[10][11] = Tile::P1;
-    board[10][12] = Tile::P1;
-//    board[10][13] = Tile::PLAYERONE;
-    return board;
-}
-
-
-
-TEST(double_three_check_tests, check_double_three_vector_coordinates_right_side_addition_cross) {
-    // create a double with coordinates
-    Doubles doubles;
-
-    doubles.leftBoundaryCoordinates.y = 10;
-    doubles.leftBoundaryCoordinates.x = 10;
-
-    doubles.rightBoundaryCoordinates.y = 11;
-    doubles.rightBoundaryCoordinates.x = 11;
-    // add coordinates right side
-
-    Coordinate coords;
-    coords.y = 12;
-    coords.x = 12;
-    doubles.direction = CROSS;
-
-
-    // check coordinates
-    std::vector<Doubles> vec;
-    vec.push_back(doubles);
-    threeCheck.findThree(coords, vec);
-    auto result = threeCheck.getLastThree();
-
-    ASSERT_EQ(result.leftBoundaryCoordinates.y, 10);
-    ASSERT_EQ(result.rightBoundaryCoordinates.y, 12);
-
-}
-
-TEST(double_three_check_tests, check_double_three_vector_coordinates_right_side_addition_horizontal) {
-    // create a double with coordinates
-    Doubles doubles;
-
-    doubles.leftBoundaryCoordinates.y = 10;
-    doubles.leftBoundaryCoordinates.x = 11;
-
-    doubles.rightBoundaryCoordinates.y = 10;
-    doubles.rightBoundaryCoordinates.x = 12;
-    // add coordinates right side
-
-    Coordinate coords;
-    coords.y = 10;
-    coords.x = 13;
-    doubles.direction = HORIZONTAL;
-
-
-    // check coordinates
-    std::vector<Doubles> vec;
-    vec.push_back(doubles);
-    threeCheck.findThree(coords, vec);
-    auto result = threeCheck.getLastThree();
-
-    ASSERT_EQ(result.leftBoundaryCoordinates.x, 11);
-    ASSERT_EQ(result.rightBoundaryCoordinates.x, 13);
-
-}
-
-TEST(double_three_check_tests, check_double_three_vector_coordinates_right_side_addition_vertical) {
-    // create a double with coordinates
-    Doubles doubles;
-
-    doubles.leftBoundaryCoordinates.y = 9;
-    doubles.leftBoundaryCoordinates.x = 11;
-
-    doubles.rightBoundaryCoordinates.y = 10;
-    doubles.rightBoundaryCoordinates.x = 11;
-    // add coordinates right side
-
-    Coordinate coords;
-    coords.y = 11;
-    coords.x = 11;
-    doubles.direction = VERTICAL;
-
-
-    // check coordinates
-    std::vector<Doubles> vec;
-    vec.push_back(doubles);
-    threeCheck.findThree(coords, vec);
-    auto result = threeCheck.getLastThree();
-
-    ASSERT_EQ(result.leftBoundaryCoordinates.y, 9);
-    ASSERT_EQ(result.rightBoundaryCoordinates.y, 11);
-
-}
-
-TEST(double_three_check_tests, check_double_three_vector_coordinates_left_side_addition_cross) {
-    // create a double with coordinates
-    Doubles doubles;
-
-    doubles.leftBoundaryCoordinates.y = 10;
-    doubles.leftBoundaryCoordinates.x = 10;
-
-    doubles.rightBoundaryCoordinates.y = 11;
-    doubles.rightBoundaryCoordinates.x = 11;
-    // add coordinates right side
-
-    Coordinate coords;
-    coords.y = 9;
-    coords.x = 9;
-    doubles.direction = CROSS;
-    // check coordinates
-    std::vector<Doubles> vec;
-    vec.push_back(doubles);
-    threeCheck.findThree(coords, vec);
-    auto result = threeCheck.getLastThree();
-    ASSERT_EQ(result.leftBoundaryCoordinates.y, 9);
-    ASSERT_EQ(result.rightBoundaryCoordinates.y, 11);
-}
-
-TEST(double_three_check_tests, check_double_three_vector_coordinates_left_side_addition_horizontal) {
-    // create a double with coordinates
-    Doubles doubles;
-
-    doubles.leftBoundaryCoordinates.y = 10;
-    doubles.leftBoundaryCoordinates.x = 10;
-
-    doubles.rightBoundaryCoordinates.y = 10;
-    doubles.rightBoundaryCoordinates.x = 11;
-    // add coordinates right side
-
-    Coordinate coords;
-    coords.y = 10;
-    coords.x = 9;
-    doubles.direction = HORIZONTAL;
-    // check coordinates
-    std::vector<Doubles> vec;
-    vec.push_back(doubles);
-    threeCheck.findThree(coords, vec);
-    auto result = threeCheck.getLastThree();
-    ASSERT_EQ(result.leftBoundaryCoordinates.x, 9);
-    ASSERT_EQ(result.rightBoundaryCoordinates.x, 11);
-}
-
-TEST(double_three_check_tests, check_double_three_vector_coordinates_left_side_addition_vertical) {
-    // create a double with coordinates
-    Doubles doubles;
-
-    doubles.leftBoundaryCoordinates.y = 10;
-    doubles.leftBoundaryCoordinates.x = 10;
-
-    doubles.rightBoundaryCoordinates.y = 11;
-    doubles.rightBoundaryCoordinates.x = 10;
-    // add coordinates right side
-
-    Coordinate coords;
-    coords.y = 12;
-    coords.x = 10;
-    doubles.direction = VERTICAL;
-    // check coordinates
-    std::vector<Doubles> vec;
-    vec.push_back(doubles);
-    threeCheck.findThree(coords, vec);
-    auto result = threeCheck.getLastThree();
-    ASSERT_EQ(result.leftBoundaryCoordinates.y, 10);
-    ASSERT_EQ(result.rightBoundaryCoordinates.y, 12);
-}
-
-
-TEST(double_three_check_tests, check_double_three_with_open_space_right_horizontal) {
-	Doubles doubles;
-
-	doubles.leftBoundaryCoordinates.y = 10;
-	doubles.leftBoundaryCoordinates.x = 10;
-
-	doubles.rightBoundaryCoordinates.y = 10;
-	doubles.rightBoundaryCoordinates.x = 11;
-	// add coordinates right side
-
-	Coordinate coords;
-	coords.y = 10;
-	coords.x = 13;
-	doubles.direction = HORIZONTAL;
-
-
-	// check coordinates
-	std::vector<Doubles> vec;
-	vec.push_back(doubles);
+TEST(one_double_three_horizontal, double_three_check_test) {
 	auto board = create_empty_board();
-    threeCheck.setBoard(board);
-    threeCheck.findThree(coords, vec);
-	auto result = threeCheck.getLastThree();
+	board[1][1] = Tile::P1;
+	board[1][2] = Tile::P1;
+	board[1][3]= Tile::P1;
+	Coordinate newCoords{1,3};
 
-	ASSERT_TRUE(result.openSpace);
-	ASSERT_EQ(result.openSpaceCoordinates.y, 10);
-	ASSERT_EQ(result.openSpaceCoordinates.x, 12);
-	ASSERT_EQ(result.leftBoundaryCoordinates.y, 10);
-	ASSERT_EQ(result.rightBoundaryCoordinates.x, 13);
+
+	auto threeCheck = DoubleThreeCheck();
+	auto result = threeCheck.DoubleThreeChecker(board,newCoords, Player::PLAYERONE);
+	ASSERT_EQ(result.state,ACCEPTED);
+	ASSERT_EQ(result.errorReason, "FIRST DOUBLE THREE");
 }
 
-
-
-TEST(double_three_check_tests, check_double_three_with_open_space_left_horizontal) {
-	Doubles doubles;
-
-	doubles.leftBoundaryCoordinates.y = 10;
-	doubles.leftBoundaryCoordinates.x = 10;
-
-	doubles.rightBoundaryCoordinates.y = 10;
-	doubles.rightBoundaryCoordinates.x = 11;
-	// add coordinates right side
-
-	Coordinate coords;
-	coords.y = 10;
-	coords.x = 8;
-	doubles.direction = HORIZONTAL;
-
-
-	// check coordinates
-	std::vector<Doubles> vec;
-	vec.push_back(doubles);
+TEST(one_double_three_open_space_horizontal, double_three_check_test) {
 	auto board = create_empty_board();
-    threeCheck.setBoard(board);
-    threeCheck.findThree(coords, vec);
-	auto result = threeCheck.getLastThree();
+	board[1][1] = Tile::P1;
+	board[1][2] = Tile::P1;
+	board[1][4]= Tile::P1;
+	Coordinate newCoords{1,4};
 
-	ASSERT_TRUE(result.openSpace);
-	ASSERT_EQ(result.openSpaceCoordinates.y, 10);
-	ASSERT_EQ(result.openSpaceCoordinates.x, 9);
-	ASSERT_EQ(result.leftBoundaryCoordinates.y, 10);
-	ASSERT_EQ(result.rightBoundaryCoordinates.x, 11);
+
+	auto threeCheck = DoubleThreeCheck();
+	auto result = threeCheck.DoubleThreeChecker(board,newCoords, Player::PLAYERONE);
+	ASSERT_EQ(result.state,ACCEPTED);
+	ASSERT_EQ(result.errorReason, "FIRST DOUBLE THREE");
 }
 
-
-
-TEST(double_three_check_tests, check_double_three_with_open_space_up_vertical) {
-	Doubles doubles;
-
-	doubles.leftBoundaryCoordinates.y = 10;
-	doubles.leftBoundaryCoordinates.x = 10;
-
-	doubles.rightBoundaryCoordinates.y = 11;
-	doubles.rightBoundaryCoordinates.x = 10;
-	// add coordinates right side
-
-	Coordinate coords;
-	coords.y = 13;
-	coords.x = 10;
-	doubles.direction = VERTICAL;
-
-
-	// check coordinates
-	std::vector<Doubles> vec;
-	vec.push_back(doubles);
+TEST(no_double_three, double_three_check_test) {
 	auto board = create_empty_board();
-    threeCheck.setBoard(board);
-    threeCheck.findThree(coords, vec);
-	auto result = threeCheck.getLastThree();
+	board[1][1] = Tile::P1;
+	board[1][2] = Tile::P1;
+	board[1][7]= Tile::P1;
+	Coordinate newCoords{1,4};
 
-	ASSERT_TRUE(result.openSpace);
-	ASSERT_EQ(result.openSpaceCoordinates.y, 12);
-	ASSERT_EQ(result.openSpaceCoordinates.x, 10);
-	ASSERT_EQ(result.leftBoundaryCoordinates.y, 10);
-	ASSERT_EQ(result.rightBoundaryCoordinates.y, 13);
+
+	auto threeCheck = DoubleThreeCheck();
+	auto result = threeCheck.DoubleThreeChecker(board,newCoords, Player::PLAYERONE);
+	ASSERT_EQ(result.state,ACCEPTED);
+	ASSERT_EQ(result.errorReason, "NO DOUBLE THREE FOUND");
 }
 
-
-
-
-TEST(double_three_check_tests, check_double_three_with_open_space_down_vertical) {
-	Doubles doubles;
-
-	doubles.leftBoundaryCoordinates.y = 10;
-	doubles.leftBoundaryCoordinates.x = 10;
-
-	doubles.rightBoundaryCoordinates.y = 11;
-	doubles.rightBoundaryCoordinates.x = 10;
-	// add coordinates right side
-
-	Coordinate coords;
-	coords.y = 8;
-	coords.x = 10;
-	doubles.direction = VERTICAL;
-
-
-	// check coordinates
-	std::vector<Doubles> vec;
-	vec.push_back(doubles);
+TEST(one_double_three_vertical, double_three_check_test) {
 	auto board = create_empty_board();
-    threeCheck.setBoard(board);
-    threeCheck.findThree(coords, vec);
-	auto result = threeCheck.getLastThree();
+	board[1][1] = Tile::P1;
+	board[2][1] = Tile::P1;
+	board[3][1]= Tile::P1;
+	Coordinate newCoords{3,1};
 
-	ASSERT_TRUE(result.openSpace);
-	ASSERT_EQ(result.openSpaceCoordinates.y, 9);
-	ASSERT_EQ(result.openSpaceCoordinates.x, 10);
-	ASSERT_EQ(result.leftBoundaryCoordinates.y, 8);
-	ASSERT_EQ(result.rightBoundaryCoordinates.y, 11);
+
+	auto threeCheck = DoubleThreeCheck();
+	auto result = threeCheck.DoubleThreeChecker(board,newCoords, Player::PLAYERONE);
+	ASSERT_EQ(result.state,ACCEPTED);
+	ASSERT_EQ(result.errorReason, "FIRST DOUBLE THREE");
 }
 
+TEST(one_double_three_open_space_vertical, double_three_check_test) {
+	auto board = create_empty_board();
+	board[1][1] = Tile::P1;
+	board[2][1] = Tile::P1;
+	board[4][1]= Tile::P1;
+	Coordinate newCoords{4,1};
 
 
-TEST(double_three_check_tests, check_double_three_with_open_space_left_cross) {
-    Doubles doubles;
-
-    doubles.leftBoundaryCoordinates.y = 3;
-    doubles.leftBoundaryCoordinates.x = 2;
-
-    doubles.rightBoundaryCoordinates.y = 4;
-    doubles.rightBoundaryCoordinates.x = 3;
-    // add coordinates right side
-
-    Coordinate coords;
-    coords.y = 1;
-    coords.x = 0;
-    doubles.direction = CROSS;
-
-
-    // check coordinates
-    std::vector<Doubles> vec;
-    vec.push_back(doubles);
-    auto board = create_empty_board();
-    threeCheck.setBoard(board);
-    threeCheck.findThree(coords, vec);
-    auto result = threeCheck.getLastThree();
-
-    ASSERT_TRUE(result.openSpace);
-    ASSERT_EQ(result.openSpaceCoordinates.y, 2);
-    ASSERT_EQ(result.openSpaceCoordinates.x, 1);
-    ASSERT_EQ(result.leftBoundaryCoordinates.x, 0);
-    ASSERT_EQ(result.rightBoundaryCoordinates.x, 3);
-    ASSERT_EQ(result.leftBoundaryCoordinates.y, 1);
-    ASSERT_EQ(result.rightBoundaryCoordinates.y, 4);
+	auto threeCheck = DoubleThreeCheck();
+	auto result = threeCheck.DoubleThreeChecker(board,newCoords, Player::PLAYERONE);
+	ASSERT_EQ(result.state,ACCEPTED);
+	ASSERT_EQ(result.errorReason, "FIRST DOUBLE THREE");
 }
 
+TEST(one_double_three_diagonal, double_three_check_test) {
+	auto board = create_empty_board();
+	board[1][1] = Tile::P1;
+	board[2][2] = Tile::P1;
+	board[3][3]= Tile::P1;
+	Coordinate newCoords{3,3};
 
 
-TEST(double_three_check_tests, check_double_three_with_open_space_right_cross) {
-    Doubles doubles;
-
-    doubles.leftBoundaryCoordinates.y = 3;
-    doubles.leftBoundaryCoordinates.x = 2;
-
-    doubles.rightBoundaryCoordinates.y = 4;
-    doubles.rightBoundaryCoordinates.x = 3;
-    // add coordinates right side
-
-    Coordinate coords;
-    coords.y = 6;
-    coords.x = 5;
-    doubles.direction = CROSS;
-
-
-    // check coordinates
-    std::vector<Doubles> vec;
-    vec.push_back(doubles);
-    auto board = create_empty_board();
-    threeCheck.setBoard(board);
-    threeCheck.findThree(coords, vec);
-    auto result = threeCheck.getLastThree();
-
-    ASSERT_TRUE(result.openSpace);
-    ASSERT_NE(result.direction, NULL);
-    ASSERT_EQ(result.openSpaceCoordinates.y, 5);
-    ASSERT_EQ(result.openSpaceCoordinates.x, 4);
-    ASSERT_EQ(result.leftBoundaryCoordinates.x, 2);
-    ASSERT_EQ(result.rightBoundaryCoordinates.x, 5);
-    ASSERT_EQ(result.leftBoundaryCoordinates.y, 3);
-    ASSERT_EQ(result.rightBoundaryCoordinates.y, 6);
+	auto threeCheck = DoubleThreeCheck();
+	auto result = threeCheck.DoubleThreeChecker(board,newCoords, Player::PLAYERONE);
+	ASSERT_EQ(result.state,ACCEPTED);
+	ASSERT_EQ(result.errorReason, "FIRST DOUBLE THREE");
 }
 
+TEST(one_double_three_open_space_diagonal, double_three_check_test) {
+	auto board = create_empty_board();
+	board[1][1] = Tile::P1;
+	board[2][2] = Tile::P1;
+	board[4][4]= Tile::P1;
+	Coordinate newCoords{4,4};
 
 
-TEST(double_three_check_tests, double_three_is_fully_free_true_left_horizontal) {
-    // create a double with coordinates
-    Doubles doubles;
-
-    doubles.leftBoundaryCoordinates.y = 10;
-    doubles.leftBoundaryCoordinates.x = 10;
-
-    doubles.rightBoundaryCoordinates.y = 10;
-    doubles.rightBoundaryCoordinates.x = 11;
-    // add coordinates right side
-
-    Coordinate coords;
-    coords.y = 10;
-    coords.x = 9;
-    doubles.direction = HORIZONTAL;
-    // check coordinates
-    std::vector<Doubles> vec;
-    vec.push_back(doubles);
-    threeCheck.findThree(coords, vec);
-    auto board = create_empty_board();
-    board[10][8] = Tile::EMPTY;
-    threeCheck.setBoard(board);
-    auto result = threeCheck.getLastThree();
-    ASSERT_TRUE(threeCheck.fullFreeCheck());
-
+	auto threeCheck = DoubleThreeCheck();
+	auto result = threeCheck.DoubleThreeChecker(board,newCoords, Player::PLAYERONE);
+	ASSERT_EQ(result.state,ACCEPTED);
+	ASSERT_EQ(result.errorReason, "FIRST DOUBLE THREE");
 }
 
-TEST(double_three_check_tests, double_three_is_fully_free_false_left_horizontal) {
-    // create a double with coordinates
-    Doubles doubles;
+TEST(one_double_three_anti_diagonal, double_three_check_test) {
+	auto board = create_empty_board();
 
-    doubles.leftBoundaryCoordinates.y = 10;
-    doubles.leftBoundaryCoordinates.x = 10;
+	board[0][9] = Tile::P1;
+	board[1][8] = Tile::P1;
+	board[2][7] = Tile::P1;
 
-    doubles.rightBoundaryCoordinates.y = 10;
-    doubles.rightBoundaryCoordinates.x = 11;
-    // add coordinates right side
+	Coordinate newCoords{2,7};
 
-    Coordinate coords;
-    coords.y = 10;
-    coords.x = 9;
-    doubles.direction = HORIZONTAL;
-    // check coordinates
-    std::vector<Doubles> vec;
-    vec.push_back(doubles);
-    threeCheck.findThree(coords, vec);
-    auto board = create_empty_board();
-    board[10][8] = Tile::P2;
-    threeCheck.setBoard(board);
-    auto result = threeCheck.getLastThree();
-    ASSERT_FALSE(threeCheck.fullFreeCheck());
 
+	auto threeCheck = DoubleThreeCheck();
+	auto result = threeCheck.DoubleThreeChecker(board,newCoords, Player::PLAYERONE);
+	ASSERT_EQ(result.state,ACCEPTED);
+	ASSERT_EQ(result.errorReason, "FIRST DOUBLE THREE");
 }
 
-TEST(double_three_check_tests, double_three_is_fully_free_true_left_vertical) {
-    // create a double with coordinates
-    Doubles doubles;
+TEST(one_double_three_open_space_anti_diagonal, double_three_check_test) {
+	auto board = create_empty_board();
 
-    doubles.leftBoundaryCoordinates.y = 10;
-    doubles.leftBoundaryCoordinates.x = 10;
+	board[0][9] = Tile::P1;
+	board[1][8] = Tile::P1;
+	board[3][6] = Tile::P1;
 
-    doubles.rightBoundaryCoordinates.y = 11;
-    doubles.rightBoundaryCoordinates.x = 10;
-    // add coordinates right side
+	Coordinate newCoords{3,6};
 
-    Coordinate coords;
-    coords.y = 12;
-    coords.x = 10;
-    doubles.direction = VERTICAL;
-    // check coordinates
-    std::vector<Doubles> vec;
-    vec.push_back(doubles);
-    threeCheck.findThree(coords, vec);
-    auto board = create_empty_board();
-    board[9][10] = Tile::EMPTY;
-    threeCheck.setBoard(board);
-    auto result = threeCheck.getLastThree();
-    ASSERT_TRUE(threeCheck.fullFreeCheck());
 
+	auto threeCheck = DoubleThreeCheck();
+	printBoard(board);
+	auto result = threeCheck.DoubleThreeChecker(board,newCoords, Player::PLAYERONE);
+	ASSERT_EQ(result.state,ACCEPTED);
+	ASSERT_EQ(result.errorReason, "FIRST DOUBLE THREE");
 }
 
-TEST(double_three_check_tests, double_three_is_fully_free_false_left_vertical) {
-    // create a double with coordinates
-    Doubles doubles;
+TEST(two_double_three, double_three_check_test) {
+	auto board = create_empty_board();
 
-    doubles.leftBoundaryCoordinates.y = 10;
-    doubles.leftBoundaryCoordinates.x = 10;
+	board[0][9] = Tile::P1;
+	board[1][8] = Tile::P1;
+	board[3][6] = Tile::P1;
 
-    doubles.rightBoundaryCoordinates.y = 11;
-    doubles.rightBoundaryCoordinates.x = 10;
-    // add coordinates right side
+	Coordinate newCoords{3,6};
 
-    Coordinate coords;
-    coords.y = 12;
-    coords.x = 10;
-    doubles.direction = VERTICAL;
-    // check coordinates
-    std::vector<Doubles> vec;
-    vec.push_back(doubles);
-    threeCheck.findThree(coords, vec);
-    auto board = create_empty_board();
-    board[9][10] = Tile::P2;
-    threeCheck.setBoard(board);
-    auto result = threeCheck.getLastThree();
-    ASSERT_FALSE(threeCheck.fullFreeCheck());
 
+	auto threeCheck = DoubleThreeCheck();
+	auto result = threeCheck.DoubleThreeChecker(board,newCoords, Player::PLAYERONE);
+
+	board[1][1] = Tile::P1;
+	board[1][2] = Tile::P1;
+	board[1][3]= Tile::P1;
+	Coordinate secondCoords{1,3};
+
+
+	auto second_result = threeCheck.DoubleThreeChecker(board,secondCoords, Player::PLAYERONE);
+	ASSERT_EQ(second_result.state,ERROR);
+	ASSERT_EQ(second_result.errorReason, "SECOND DOUBLE THREE");
 }
 
-TEST(double_three_check_tests, double_three_is_fully_free_true_left_cross) {
-    // create a double with coordinates
-    Doubles doubles;
+TEST(two_double_three_same_time, double_three_check_test) {
+	auto board = create_empty_board();
 
-    doubles.leftBoundaryCoordinates.y = 10;
-    doubles.leftBoundaryCoordinates.x = 10;
+	board[6][4] = Tile::P1;
+	board[5][4] = Tile::P1;
+	board[4][5] = Tile::P1;
+	board[4][6] = Tile::P1;
+	board[4][4] = Tile::P1;
+	Coordinate newCoords{4,4};
 
-    doubles.rightBoundaryCoordinates.y = 11;
-    doubles.rightBoundaryCoordinates.x = 11;
-    // add coordinates right side
 
-    Coordinate coords;
-    coords.y = 12;
-    coords.x = 12;
-    doubles.direction = CROSS;
-    // check coordinates
-    std::vector<Doubles> vec;
-    vec.push_back(doubles);
-    threeCheck.findThree(coords, vec);
-    auto board = create_empty_board();
-    board[9][9] = Tile::EMPTY;
-    threeCheck.setBoard(board);
-    auto result = threeCheck.getLastThree();
-    ASSERT_TRUE(threeCheck.fullFreeCheck());
+	auto threeCheck = DoubleThreeCheck();
+	auto result = threeCheck.DoubleThreeChecker(board,newCoords, Player::PLAYERONE);
 
-}
-
-TEST(double_three_check_tests, double_three_is_fully_free_false_left_cross) {
-    // create a double with coordinates
-    Doubles doubles;
-
-    doubles.leftBoundaryCoordinates.y = 10;
-    doubles.leftBoundaryCoordinates.x = 10;
-
-    doubles.rightBoundaryCoordinates.y = 11;
-    doubles.rightBoundaryCoordinates.x = 11;
-    // add coordinates right side
-
-    Coordinate coords;
-    coords.y = 12;
-    coords.x = 12;
-    doubles.direction = CROSS;
-    // check coordinates
-    std::vector<Doubles> vec;
-    vec.push_back(doubles);
-    threeCheck.findThree(coords, vec);
-    auto board = create_empty_board();
-    board[9][9] = Tile::P2;
-    threeCheck.setBoard(board);
-    auto result = threeCheck.getLastThree();
-    ASSERT_FALSE(threeCheck.fullFreeCheck());
-
-}
-
-TEST(double_three_check_tests, double_three_is_fully_free_true_right_horizontal) {
-    // create a double with coordinates
-    Doubles doubles;
-
-    doubles.leftBoundaryCoordinates.y = 10;
-    doubles.leftBoundaryCoordinates.x = 10;
-
-    doubles.rightBoundaryCoordinates.y = 10;
-    doubles.rightBoundaryCoordinates.x = 11;
-    // add coordinates right side
-
-    Coordinate coords;
-    coords.y = 10;
-    coords.x = 9;
-    doubles.direction = HORIZONTAL;
-    // check coordinates
-    std::vector<Doubles> vec;
-    vec.push_back(doubles);
-    threeCheck.findThree(coords, vec);
-    auto board = create_empty_board();
-    board[10][12] = Tile::EMPTY;
-    threeCheck.setBoard(board);
-    auto result = threeCheck.getLastThree();
-    ASSERT_TRUE(threeCheck.fullFreeCheck());
-
-}
-
-TEST(double_three_check_tests, double_three_is_fully_free_false_right_horizontal) {
-    // create a double with coordinates
-    Doubles doubles;
-
-    doubles.leftBoundaryCoordinates.y = 10;
-    doubles.leftBoundaryCoordinates.x = 10;
-
-    doubles.rightBoundaryCoordinates.y = 10;
-    doubles.rightBoundaryCoordinates.x = 11;
-    // add coordinates right side
-
-    Coordinate coords;
-    coords.y = 10;
-    coords.x = 9;
-    doubles.direction = HORIZONTAL;
-    // check coordinates
-    std::vector<Doubles> vec;
-    vec.push_back(doubles);
-    threeCheck.findThree(coords, vec);
-    auto board = create_empty_board();
-    board[10][12] = Tile::P2;
-    threeCheck.setBoard(board);
-    auto result = threeCheck.getLastThree();
-    ASSERT_FALSE(threeCheck.fullFreeCheck());
-
-}
-
-TEST(double_three_check_tests, double_three_is_fully_free_true_right_vertical) {
-    // create a double with coordinates
-    Doubles doubles;
-
-    doubles.leftBoundaryCoordinates.y = 10;
-    doubles.leftBoundaryCoordinates.x = 10;
-
-    doubles.rightBoundaryCoordinates.y = 11;
-    doubles.rightBoundaryCoordinates.x = 10;
-    // add coordinates right side
-
-    Coordinate coords;
-    coords.y = 12;
-    coords.x = 10;
-    doubles.direction = VERTICAL;
-    // check coordinates
-    std::vector<Doubles> vec;
-    vec.push_back(doubles);
-    threeCheck.findThree(coords, vec);
-    auto board = create_empty_board();
-    board[13][10] = Tile::EMPTY;
-    threeCheck.setBoard(board);
-    auto result = threeCheck.getLastThree();
-    ASSERT_TRUE(threeCheck.fullFreeCheck());
-
-}
-
-TEST(double_three_check_tests, double_three_is_fully_free_false_right_vertical) {
-    // create a double with coordinates
-    Doubles doubles;
-
-    doubles.leftBoundaryCoordinates.y = 10;
-    doubles.leftBoundaryCoordinates.x = 10;
-
-    doubles.rightBoundaryCoordinates.y = 11;
-    doubles.rightBoundaryCoordinates.x = 10;
-    // add coordinates right side
-
-    Coordinate coords;
-    coords.y = 12;
-    coords.x = 10;
-    doubles.direction = VERTICAL;
-    // check coordinates
-    std::vector<Doubles> vec;
-    vec.push_back(doubles);
-    threeCheck.findThree(coords, vec);
-    auto board = create_empty_board();
-    board[13][10] = Tile::P2;
-    threeCheck.setBoard(board);
-    auto result = threeCheck.getLastThree();
-    ASSERT_FALSE(threeCheck.fullFreeCheck());
-
-}
-
-TEST(double_three_check_tests, double_three_is_fully_free_true_right_cross) {
-    // create a double with coordinates
-    Doubles doubles;
-
-    doubles.leftBoundaryCoordinates.y = 10;
-    doubles.leftBoundaryCoordinates.x = 10;
-
-    doubles.rightBoundaryCoordinates.y = 11;
-    doubles.rightBoundaryCoordinates.x = 11;
-    // add coordinates right side
-
-    Coordinate coords;
-    coords.y = 12;
-    coords.x = 12;
-    doubles.direction = CROSS;
-    // check coordinates
-    std::vector<Doubles> vec;
-    vec.push_back(doubles);
-    threeCheck.findThree(coords, vec);
-    auto board = create_empty_board();
-    board[13][13] = Tile::EMPTY;
-    threeCheck.setBoard(board);
-    auto result = threeCheck.getLastThree();
-    ASSERT_TRUE(threeCheck.fullFreeCheck());
-
-}
-
-TEST(double_three_check_tests, double_three_is_fully_free_false_right_cross) {
-    // create a double with coordinates
-    Doubles doubles;
-
-    doubles.leftBoundaryCoordinates.y = 10;
-    doubles.leftBoundaryCoordinates.x = 10;
-
-    doubles.rightBoundaryCoordinates.y = 11;
-    doubles.rightBoundaryCoordinates.x = 11;
-    // add coordinates right side
-
-    Coordinate coords;
-    coords.y = 12;
-    coords.x = 12;
-    doubles.direction = CROSS;
-    // check coordinates
-    std::vector<Doubles> vec;
-    vec.push_back(doubles);
-    threeCheck.findThree(coords, vec);
-    auto board = create_empty_board();
-    board[13][13] = Tile::P2;
-    threeCheck.setBoard(board);
-    auto result = threeCheck.getLastThree();
-    ASSERT_FALSE(threeCheck.fullFreeCheck());
-
-}
-
-TEST(double_three_check_tests, two_double_threes_at_once) {
-    Coordinate coords;
-    coords.y = 10;
-    coords.x = 11;
-    // check coordinates
-
-    auto board = create_empty_board();
-    Doubles first_double;
-    first_double.leftBoundaryCoordinates.y = 10;
-    first_double.leftBoundaryCoordinates.x = 9;
-    first_double.direction = HORIZONTAL;
-
-    first_double.rightBoundaryCoordinates.y = 10;
-    first_double.rightBoundaryCoordinates.x = 10;
-
-    Doubles second_double;
-    second_double.direction = VERTICAL;
-    second_double.leftBoundaryCoordinates.y = 11;
-    second_double.leftBoundaryCoordinates.x = 11;
-    second_double.rightBoundaryCoordinates.y = 12;
-    second_double.rightBoundaryCoordinates.x = 11;
-    std::vector<Doubles> vec;
-    vec.push_back(first_double);
-    vec.push_back(second_double);
-    board[10][10] = Tile::P1;
-    board[10][9] = Tile::P1;
-    board[11][11] = Tile::P1;
-    board[12][11] = Tile::P1;
-
-//    board[10][11] = Tile::P1;
-    printBoard(board);
-
-    threeCheck.setDoubleTwoVec(vec);
-    threeCheck.DoubleThreeChecker(board, coords, Player::PLAYERONE);
-
-    ASSERT_EQ(threeCheck.getFullFreeSize(), 2);
+	ASSERT_EQ(result.state,ERROR);
+	ASSERT_EQ(result.errorReason, "SECOND DOUBLE THREE");
 
 }

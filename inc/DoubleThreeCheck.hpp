@@ -8,7 +8,6 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include "Two.hpp"
 #include "types.hpp"
 
 class ITwo;
@@ -16,42 +15,30 @@ class ITwo;
 class IDoubleThreeCheck {
 public:
     virtual ~IDoubleThreeCheck() = default;
-    virtual State
-    DoubleThreeChecker(const std::vector<std::vector<Tile>>& board, const Coordinate& coord, const Player& player) = 0;
-    virtual std::vector<Doubles> getDoubleTwo() = 0;
+    virtual State DoubleThreeChecker(const std::vector<std::vector<Tile>>& board, const Coordinate& coord, const Player& player) = 0;
 };
 
 class DoubleThreeCheck : public IDoubleThreeCheck {
 public:
-    explicit DoubleThreeCheck(std::unique_ptr<ITwo>& Two) : _doubleThreeVector{}, _doubleTwoVector{}, _state{}, _two(std::move(Two)), _fullFrees(0) {}
-    DoubleThreeCheck(const DoubleThreeCheck&) : _state{}, _fullFrees{} {}
+    explicit DoubleThreeCheck() {
+		p1_doubleThreeExists = 0;
+		p2_doubleThreeExists = 0;
+	}
+    DoubleThreeCheck(const DoubleThreeCheck&){}
     ~DoubleThreeCheck() override = default;
 
-    static Threes fillDoubleThreeStack(Coordinate boundCoordinates, Coordinate newCoords, BoundaryCheckReturn type,
-                                       bool left, Direction dir);
-    void setBoard(const std::vector<std::vector<Tile>>& board);
-    size_t doubleTwoSize();
-    State DoubleThreeChecker(const std::vector<std::vector<Tile>>& board, const Coordinate& newCoord,
-                             const Player& player) override;
-    bool findThree(Coordinate newCoords, const std::vector<Doubles>& doubleTwo);
-//    State findDoubleThree();
+	State DoubleThreeChecker(const std::vector<std::vector<Tile>>& board, const Coordinate& coord, const Player& player) override;
 
 
-    bool twoInARow(const std::vector<std::vector<Tile>>& board, const Coordinate& coord, const Player& play);
-    Threes getLastThree();
-    bool fullFreeCheck();
-    size_t getFullFreeSize();
-    void setDoubleTwoVec(std::vector<Doubles> double_two);
-    void flushDoubleThreeVec();
-    std::vector<Doubles> getDoubleTwo() override;
 private:
-    void setState(OkState newState, std::string& errorReason);
-    std::vector<Threes> _doubleThreeVector;
-    std::vector<Doubles> _doubleTwoVector;
-    State _state;
-    std::shared_ptr<ITwo> _two;
-    std::vector<std::vector<Tile>> _board;
-    int _fullFrees;
+	int doubleThreeCheckLogic(const Coordinate &coords, Tile player, const std::vector<std::vector<Tile>> &board);
+	int checkHorizontal(const Coordinate &coords, Tile player, const std::vector<std::vector<Tile>> &board);
+	int checkVertical(const Coordinate &coords, Tile player, const std::vector<std::vector<Tile>> &board);
+	int checkDiagonal(const Coordinate &coords, Tile player, const std::vector<std::vector<Tile>> &board);
+	int checkAntiDiagonal(const Coordinate &coords, Tile player, const std::vector<std::vector<Tile>> &board);
+
+	int p1_doubleThreeExists;
+	int p2_doubleThreeExists;
 };
 
 

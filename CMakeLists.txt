@@ -36,6 +36,7 @@ set(EXTRA_COMPILER_FLAGS
 
 add_executable(gomoku main.cpp)
 target_include_directories(gomoku PUBLIC inc)
+target_include_directories (gomoku PUBLIC usr/local/opt/freetype/include/freetype2)
 target_compile_options(gomoku PUBLIC
 		${EXTRA_COMPILER_FLAGS}
 		)
@@ -56,7 +57,7 @@ target_include_directories(gomoku_test PUBLIC inc)
 target_link_libraries(gomoku_test
 		GTest::gtest_main
 		sfml-graphics
-
+		fmt::fmt
 		)
 
 add_subdirectory(src)

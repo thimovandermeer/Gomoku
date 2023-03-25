@@ -5,10 +5,7 @@ target_sources(gomoku PRIVATE
 		logger.cpp
 		DoubleThreeCheck.cpp
         Utils.cpp
-		Two.cpp
 		Capture.cpp
-		ValidatorContainer.cpp
-		CommonValidationCode.cpp
 		)
 
 target_sources(gomoku_test PRIVATE
@@ -18,8 +15,5 @@ target_sources(gomoku_test PRIVATE
 		logger.cpp
 		DoubleThreeCheck.cpp
         Utils.cpp
-		Two.cpp
 		Capture.cpp
-		ValidatorContainer.cpp
-		CommonValidationCode.cpp
 		)

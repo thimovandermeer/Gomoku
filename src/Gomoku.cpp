@@ -120,13 +120,9 @@ void Gomoku::doMove(const sf::Vector2<int>& moveLocation) {
 
 void Gomoku::validateMove(Coordinate coords) {
     LOG("Coords zijn y:%i x: %i", coords.y, coords.x);
-    if (_player == Player::PLAYERONE) {
-        _state = _validatorContainer->p1Validate(_board, coords, _player);
-    } else {
-        _state = _validatorContainer->p2Validate(_board, coords, _player);
-    }
-    LOG("Result = %s", _state.errorReason.c_str());
-    LOG("Result = %i", _state.state);
+	_state = _validator->validate(_board, coords, _player);
+    LOG("Result string = %s", _state.errorReason.c_str());
+	LOG("Result accepted or error  %i", _state.state);
 }
 
 static bool isCorrectTile(const std::vector<std::vector<Tile>>& board, const sf::Vector2i& pos, const Tile& val) {

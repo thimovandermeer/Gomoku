@@ -4,148 +4,166 @@
 
 #include "DoubleThreeCheck.hpp"
 #include "logger.hpp"
-#include "CommonValidationCode.hpp"
+#include "Gomoku.hpp"
+#include "utils.hpp"
+
+int DoubleThreeCheck::checkHorizontal(const Coordinate &coords, Tile player, const std::vector<std::vector<Tile>> &board)
+{
+	int count = 0;
+	LOG("Double three check logic");
+	for (int i = coords.x-3; i <= coords.x+3; i++) {
+		// check board boundaries
+		if(i >= 0 && i+5 < BOARD_SIZE) {
+			// check if we have three in line
+			if (board[coords.y][i] == player && board[coords.y][i+1] == player && board[coords.y][i+2] == player) {
+				LOG("We got three in a row");
+				if (board[coords.y][i+3] == Tile::EMPTY) {
+					LOG("We got a regular three in a row horizontal");
+					count++;
+				}
+			}
+			// double three with open space afmaken
+			if(board[coords.y][i] == player && board[coords.y][i+1] == player && board[coords.y][i+2] == Tile::EMPTY && board[coords.y][i+3] == player) {
+				LOG("We got a double three with empty space");
+				count++;
+			}
+		}
+	}
+	return count;
+}
+
+int DoubleThreeCheck::checkVertical(const Coordinate &coords, Tile player, const std::vector<std::vector<Tile>> &board)
+{
+	int count = 0;
+	for (int j = coords.y-3; j <= coords.y+3; j++) {
+		if(j >= 0 && j+5 < BOARD_SIZE) {
+			if(board[j][coords.x] == player && board[j+1][coords.x] == player && board[j+2][coords.x] == player) {
+				LOG("We have three in a row");
+				if(board[j+3][coords.x] == Tile::EMPTY) {
+					LOG("We got a regular three in a row vertical");
+					count++;
+				}
+			}
+			// double three with open space
+			if(board[j][coords.x] == player && board[j+1][coords.x] == player && board[j+2][coords.x] == Tile::EMPTY && board[j+3][coords.x] == player) {
+				LOG("We got a double three with empty space");
+				count++;
+			}
+		}
+	}
+	return count;
+}
+
+int DoubleThreeCheck::checkDiagonal(const Coordinate &coords, Tile player, const std::vector<std::vector<Tile>> &board)
+{
+	int count = 0;
+	for (int i = coords.x-3, j = coords.y-3; i <= coords.x+3 && j <= coords.y+3; i++, j++) {
+		if(i >= 0 && i+5 < BOARD_SIZE && j >= 0 && j+5 < BOARD_SIZE) {
+			if(board[j][i] == player && board[j+1][i+1] == player && board[j+2][i+2] == player) {
+				LOG("Three in a row found");
+				if(board[j+3][i+3] == Tile::EMPTY) {
+					LOG("Regular three in a row diagonal found");
+					count++;
+				}
+			}
+			if(board[j][i] == player && board[j+1][i+1] == player && board[j+2][i+2] == Tile::EMPTY && board[j+3][i+3] == player) {
+				LOG("We got a double three with empty space diagonal");
+				count++;
+			}
+
+		}
+	}
+	return count;
+}
+
+int DoubleThreeCheck::checkAntiDiagonal(const Coordinate &coords, Tile player,
+										const std::vector<std::vector<Tile>> &board)
+{
+	int count = 0;
+	for (int i = coords.x+3, j = coords.y-3; i >= coords.x-3 && j <= coords.y+3; i--, j++) {
+		if(i >= 0 && i-5 < BOARD_SIZE && j >= 0 && j+5 < BOARD_SIZE && i < BOARD_SIZE) {
+			if(board[j][i] == player && board[j+1][i-1] == player && board[j+2][i-2] == player) {
+				LOG("Found three in a row");
+				if(board[j+3][i-3] == Tile::EMPTY) {
+					LOG("Found regular three in a row anti diagonal");
+					count++;
+				}
+			}
+			if(board[j][i] == player && board[j+1][i-1] == player && board[j+2][i-2] == Tile::EMPTY && board[j+3][i-3] == player) {
+				LOG("We got a double three with empty space anti diagonal");
+				count++;
+			}
+		}
+	}
+	return count;
+}
+int DoubleThreeCheck::doubleThreeCheckLogic(const Coordinate &coords, Tile player, const std::vector<std::vector<Tile>> &board) {
+	int count = 0;
+
+	// check horizontal
+	count += checkHorizontal(coords, player, board);
+	// check vertical
+	count += checkVertical(coords,player, board);
+	// check diagonal
+	count += checkDiagonal(coords,player,board);
+
+	// check anti-diagonal
+	count += checkAntiDiagonal(coords,player,board);
+
+	if(count == 1) {
+		LOG("We found one double three");
+		return count;
+	} if(count > 1) {
+		LOG("We found multiple double three");
+		return count;
+	}
+	return count;
+}
+
 
 State DoubleThreeCheck::DoubleThreeChecker(const std::vector<std::vector<Tile>>& board, const Coordinate& newCoord,
-                                           const Player& player) {
-    State result;
-    this->setBoard(board);
-    auto size = _doubleTwoVector.size();
-    if (size > 0) {
-        if (this->findThree(newCoord, _doubleTwoVector)) {
-            for (auto elem : _doubleThreeVector) {
-                if (check_free_left(elem.leftBoundaryCoordinates, elem.direction, _board) &&
-                    check_free_right(elem.rightBoundaryCoordinates, elem.direction, _board)) {
-                    elem.fullFree = true;
-                    _fullFrees++;
-                } else {
-                    elem.fullFree = false;
-                }
-            }
-            if(_fullFrees > 1) {
-                result.errorReason = "second fully free for this player";
-                result.state = OkState::ERROR;
-                if(_fullFrees == 2) {
-                    flushDoubleThreeVec();
-                }
-                return result;
-            } else {
-                result.errorReason = "This is a valid move";
-                result.state = OkState::ACCEPTED;
-                return result;
-            }
-        }
-    }
-    if (this->twoInARow(board, newCoord, player)) {
-        result.errorReason = "creating two in a row";
-        result.state = ACCEPTED;
-        return result;
-    }
-    result.errorReason = "valid move openfield";
-    result.state = ACCEPTED;
-    return result;
-}
+                                           const Player& player)
+{
+	State 	returnValue;
+	Tile 	player_board;
+	int		playerThree;
+	if(player == Player::PLAYERONE) {
+		player_board = Tile::P1;
+		playerThree = p1_doubleThreeExists;
+	} else {
+		player_board = Tile::P2;
+		playerThree = p2_doubleThreeExists;
+	}
+	auto result = doubleThreeCheckLogic(newCoord, player_board, board);
+	if(result > 0 && result < 2 && playerThree < 1) {
+		playerThree++;
 
-void DoubleThreeCheck::setBoard(const std::vector<std::vector<Tile>>& board) {
-    this->_board = board;
-}
-
-void DoubleThreeCheck::setState(OkState newState, std::string& errorReason) {
-    _state.errorReason = errorReason;
-    _state.state = newState;
-}
-
-size_t DoubleThreeCheck::doubleTwoSize() {
-    return _doubleTwoVector.size();
-}
-
-bool DoubleThreeCheck::twoInARow(const std::vector<std::vector<Tile>>& board, const Coordinate& coord, const Player& play) {
-    auto result = _two->createTwo(board, coord, play);
-    if (result.rightBoundaryCoordinates.y != -1) {
-        _doubleTwoVector.push_back(result);
-        return true;
-    }
-    return false;
-}
-
-Threes DoubleThreeCheck::fillDoubleThreeStack(Coordinate boundCoordinates, Coordinate newCoords,
-                                              BoundaryCheckReturn type, bool left, Direction dir) {
-    Threes result{};
-    result.openSpaceCoordinates = type.openSpace;
-    result.direction = dir;
-    if (left) {
-        result.leftBoundaryCoordinates = newCoords;
-        result.rightBoundaryCoordinates = boundCoordinates;
-    } else {
-        result.leftBoundaryCoordinates = boundCoordinates;
-        result.rightBoundaryCoordinates = newCoords;
-    }
-    if (type.doubleType == NORMAL) {
-        result.openSpace = false;
-    }
-    if (type.doubleType == EMPTYSPACE) {
-        result.openSpace = true;
-    }
-    return result;
-}
-
-bool DoubleThreeCheck::findThree(Coordinate newCoords, const std::vector<Doubles>& doubleTwo) {
-    for (auto elem: doubleTwo) {
-        Threes three_in_a_row{};
-        auto result = check_right_boundary(elem.rightBoundaryCoordinates, newCoords, elem.direction, _board);
-        if (result.doubleType != NONE) {
-            three_in_a_row = fillDoubleThreeStack(elem.leftBoundaryCoordinates, newCoords, result, false,
-                                                  elem.direction);
-            _doubleThreeVector.push_back(three_in_a_row);
-        }
-        result = check_left_boundary(elem.leftBoundaryCoordinates, newCoords, elem.direction, _board);
-        if (result.doubleType != NONE) {
-            three_in_a_row = fillDoubleThreeStack(elem.rightBoundaryCoordinates, newCoords, result, true,
-                                                  elem.direction);
-            _doubleThreeVector.push_back(three_in_a_row);
-        }
-    }
-    if(_doubleThreeVector.size() > 0) {
-        return true;
-    } else {
-        return false;
-    }
+		returnValue.state = OkState::ACCEPTED;
+		returnValue.errorReason = "FIRST DOUBLE THREE";
+		if(player == Player::PLAYERONE) {
+			p1_doubleThreeExists = playerThree;
+		} else {
+			p2_doubleThreeExists = playerThree;
+		}
+		return returnValue;
+	} else if(result > 1 || (result == 1 && playerThree == 1)) {
+		returnValue.state = OkState::ERROR;
+		returnValue.errorReason = "SECOND DOUBLE THREE";
+		if(player == Player::PLAYERONE) {
+			p1_doubleThreeExists = playerThree;
+		} else {
+			p2_doubleThreeExists = playerThree;
+		}
+		return returnValue;
+	}
+	returnValue.state = OkState::ACCEPTED;
+	returnValue.errorReason = "NO DOUBLE THREE FOUND";
+	if(player == Player::PLAYERONE) {
+		p1_doubleThreeExists = playerThree;
+	} else {
+		p2_doubleThreeExists = playerThree;
+	}
+	return returnValue;
 }
 
 
-Threes DoubleThreeCheck::getLastThree() {
-    if (not _doubleThreeVector.empty()) {
-        return _doubleThreeVector.back();
-    } else {
-        return {};
-    }
-}
-
-bool DoubleThreeCheck::fullFreeCheck() {
-    auto three = getLastThree();
-    if (check_free_left(three.leftBoundaryCoordinates, three.direction, _board) &&
-        check_free_right(three.rightBoundaryCoordinates, three.direction, _board)) {
-        three.fullFree = true;
-        return true;
-    } else {
-        three.fullFree = false;
-        return false;
-    }
-}
-
-std::vector<Doubles> DoubleThreeCheck::getDoubleTwo() {
-    return _doubleTwoVector;
-}
-
-size_t DoubleThreeCheck::getFullFreeSize() {
-    return _fullFrees;
-}
-
-void DoubleThreeCheck::setDoubleTwoVec(std::vector<Doubles> double_two) {
-    _doubleTwoVector = double_two;
-}
-
-void DoubleThreeCheck::flushDoubleThreeVec() {
-    _doubleThreeVector.clear();
-    _fullFrees = 0;
-}

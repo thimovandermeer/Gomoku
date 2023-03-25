@@ -3,83 +3,66 @@
 //
 #include "Validator.hpp"
 #include "logger.hpp"
+#include "Gomoku.hpp"
 
-State Validator::validate(const std::vector<std::vector<Tile>>& board, const Coordinate& coord, const Player& player,
-                          const std::vector<Doubles>& opponentDoubles) {
-    this->setData(board, coord, player);
-    this->boardValidation();
-    LOG("OPPONENT DOUBLES SIZE = %i", opponentDoubles.size());
-    this->setOpponentDoubles(opponentDoubles);
+State Validator::validate(const std::vector<std::vector<Tile>>& board, const Coordinate& coord, const Player& player) {
+	// TODO: Remove this hack
+	LOG("WAT DOET DIT");
+	auto board_hack = board;
+	board_hack[coord.y][coord.x] = static_cast<Tile>(player);
+	LOG("The state on the second run is %s", _state.errorReason.c_str());
+	_state.state = OkState::ACCEPTED;
+    this->boardValidation(board_hack);
     if (_state.state == ERROR) {
+		LOG("Error board validation");
         return _state;
     }
-    this->coordinatesValidation();
+    this->coordinatesValidation(coord);
     if (_state.state == ERROR) {
+		LOG("COORDINATES VALIDATION ERROR");
         return _state;
     }
-    this->doubleThreeValidation();
+	LOG("Kom ik hier wel?");
+	this->doubleThreeValidation(board_hack, coord, player);
     if (_state.state == ERROR) {
+		LOG("Double three validation should error");
         return _state;
     }
-    updateDoubleList();
-    this->captureValidation();
 
+	LOG("Doet hij dus niet");
 
     return _state;
 }
 
-void Validator::setData(const std::vector<std::vector<Tile>>& board, const Coordinate& coord, const Player& player) {
-    this->setBoard(board);
-    this->setCoordinates(coord);
-    this->setPlayer(player);
-    std::string reason;
-    this->setState(ACCEPTED, reason);
-}
 
-void Validator::setBoard(const std::vector<std::vector<Tile>>& board) {
-    this->_board = board;
-}
-
-void Validator::setCoordinates(const Coordinate& coord) {
-    this->_coord = coord;
-}
-
-void Validator::setPlayer(const Player& player) {
-    this->_player = player;
-}
-
-void Validator::boardValidation() {
-    if (_board.size() > BOARD_SIZE) {
+void Validator::boardValidation(const std::vector<std::vector<Tile>>& board) {
+    if (board.size() > BOARD_SIZE) {
+		LOG("Kom ik hier?");
         std::string reason = "Board is bigger than max size";
         setState(ERROR, reason);
     }
 }
 
-void Validator::coordinatesValidation() {
-    this->boundaryChecking();
+void Validator::coordinatesValidation(const Coordinate &coords) {
+    this->boundaryChecking(coords);
     if (_state.state == ERROR) {
         return;
     }
-    this->takenCheck();
 }
 
-void Validator::playerValidation() {
-    //
-}
-
-void Validator::boundaryChecking() {
-    if (_coord.x >= BOARD_SIZE || _coord.y >= BOARD_SIZE) {
+void Validator::boundaryChecking(const Coordinate &coords) {
+    if (coords.x >= BOARD_SIZE || coords.y >= BOARD_SIZE) {
         std::string reason = "coords is bigger than max board size";
         setState(ERROR, reason);
     }
-    if (_coord.x < 0 || _coord.y < 0) {
+    if (coords.x < 0 || coords.y < 0) {
         std::string reason = "coords is smaller than 0";
         setState(ERROR, reason);
     }
 }
 
-void Validator::takenCheck() {
-    if (_board[_coord.y][_coord.x] != Tile::EMPTY) {
+void Validator::takenCheck(const std::vector<std::vector<Tile>>& board, const Coordinate& coord) {
+    if (board[coord.y][coord.x] != Tile::EMPTY) {
         std::string reason = "Coordinates are not free";
         setState(ERROR, reason);
     }
@@ -90,25 +73,17 @@ void Validator::setState(OkState newState, std::string& errorReason) {
     _state.state = newState;
 }
 
-void Validator::doubleThreeValidation() {
-    _state = _doubleThreeCheck->DoubleThreeChecker(_board, _coord, _player);
+void Validator::doubleThreeValidation(const std::vector<std::vector<Tile>>& board, const Coordinate& coord, const Player& player) {
+	auto result =  _doubleThreeCheck->DoubleThreeChecker(board, coord, player);
+	LOG("HALLOOOOO = %s", result.errorReason.c_str());
+	_state = result;
 }
 
-void Validator::captureValidation() {
-    _state = _capture->CaptureCheck(_opponentDoubles, _coord, _board, _player);
+void Validator::captureValidation(const std::vector<std::vector<Tile>>& board, const Coordinate& coord, const Player& player) {
+    _state = _capture->CaptureCheck( coord, board, player);
 }
 
-void Validator::updateDoubleList() {
-    _doubleVector = _doubleThreeCheck->getDoubleTwo();
-}
 
-void Validator::setOpponentDoubles(const std::vector<Doubles>& opponentDoubles) {
-    this->_opponentDoubles = opponentDoubles;
-}
-
-std::vector<Doubles> Validator::getDoubleTwoList() {
-    return _doubleVector;
-}
 
 
 
