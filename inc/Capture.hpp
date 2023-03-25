@@ -28,7 +28,26 @@ public:
 					   const std::vector<std::vector<Tile>> &board, const Player &player) override;
 
 private:
-	State captureLogic(const Coordinate &newCoords, const Tile &player, const std::vector<std::vector<Tile>> &board);
+	State captureLogic();
+	void 	setVars(const Coordinate &newCoords, const Tile &player, const std::vector<std::vector<Tile>>& board);
+	bool checkLeftHorizontal();
+	bool checkRightHorizontal();
+	bool checkLeftVertical();
+	bool checkRightVertical();
+	bool checkDiagonalLeftDown();
+	bool checkDiagonalLeftUp();
+	bool checkDiagonalRightDown();
+	bool checkDiagonalRightUp();
+
+	/*
+	 * vars
+	 */
+
+	Coordinate _newCoords;
+	Tile		_player;
+	Tile		_opponent;
+	std::vector<std::vector<Tile>> _board;
+
 };
 
 #endif //GOMOKU_CAPTURE_HPP
