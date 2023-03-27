@@ -31,7 +31,9 @@ State Validator::validate(const std::vector<std::vector<Tile>>& board, const Coo
 
 	this->captureValidation(board_hack, coord, player);
 	LOG("Doet hij dus niet");
-
+	if(_state.capture) {
+		this->doubleThreeBreaksValidation(board_hack, _state.capturePos ,player);
+	}
     return _state;
 }
 
@@ -81,6 +83,12 @@ void Validator::doubleThreeValidation(const std::vector<std::vector<Tile>>& boar
 
 void Validator::captureValidation(const std::vector<std::vector<Tile>>& board, const Coordinate& coord, const Player& player) {
     _state = _capture->CaptureCheck( coord, board, player);
+}
+
+void Validator::doubleThreeBreaksValidation(const std::vector<std::vector<Tile>>& board, const Doubles& capture_pos, const Player& player)
+{
+	LOG("Lets facking goooo");
+	_doubleThreeCheck->doubleThreeBreaks(board, capture_pos, player);
 }
 
 

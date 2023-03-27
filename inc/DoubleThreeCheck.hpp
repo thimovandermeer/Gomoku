@@ -10,12 +10,12 @@
 #include <vector>
 #include "types.hpp"
 
-class ITwo;
 
 class IDoubleThreeCheck {
 public:
     virtual ~IDoubleThreeCheck() = default;
     virtual State DoubleThreeChecker(const std::vector<std::vector<Tile>>& board, const Coordinate& coord, const Player& player) = 0;
+	virtual void doubleThreeBreaks(const std::vector<std::vector<Tile>>& board, const Doubles& capture_pos, const Player& player) = 0;
 };
 
 class DoubleThreeCheck : public IDoubleThreeCheck {
@@ -28,7 +28,7 @@ public:
     ~DoubleThreeCheck() override = default;
 
 	State DoubleThreeChecker(const std::vector<std::vector<Tile>>& board, const Coordinate& coord, const Player& player) override;
-
+	void doubleThreeBreaks(const std::vector<std::vector<Tile>>& board, const Doubles& capture_pos, const Player& player) override;
 
 private:
 	int doubleThreeCheckLogic(const Coordinate &coords, Tile player, const std::vector<std::vector<Tile>> &board);

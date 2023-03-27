@@ -34,6 +34,7 @@ private:
 	void takenCheck(const std::vector<std::vector<Tile>>& board, const Coordinate& coord);
 	void doubleThreeValidation(const std::vector<std::vector<Tile>>& board, const Coordinate& coord, const Player& player);
     void captureValidation(const std::vector<std::vector<Tile>>& board, const Coordinate& coord, const Player& player);
+	void doubleThreeBreaksValidation(const std::vector<std::vector<Tile>>& board, const Doubles& capture_pos, const Player& player);
 	State _state;
     std::unique_ptr<IDoubleThreeCheck> _doubleThreeCheck;
     std::unique_ptr<ICapture> _capture;

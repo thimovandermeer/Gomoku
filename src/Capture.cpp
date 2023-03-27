@@ -140,11 +140,9 @@ State Capture::captureLogic() {
 			return return_value;
 		}
 	}
-
 	// No capture found
 	return (State{ACCEPTED, "No capture found", false, {}});
 }
-
 
 State
 Capture::CaptureCheck(const Coordinate &newCoords, const std::vector<std::vector<Tile>> &board, const Player &player)
@@ -161,3 +159,4 @@ Capture::CaptureCheck(const Coordinate &newCoords, const std::vector<std::vector
 	LOG("Result = %s",result.errorReason.c_str());
 	return result;
 }
+

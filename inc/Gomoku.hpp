@@ -13,7 +13,7 @@
 
 #define DEBUG_STONE_COORDINATES
 
-#define BOARD_SIZE 19
+#define BOARD_SIZE 10
 
 class IValidator;
 class IGraphics;

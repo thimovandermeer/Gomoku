@@ -6,20 +6,21 @@
 #define GOMOKU_CAPTURE_HPP
 
 #include "types.hpp"
+#include "DoubleThreeCheck.hpp"
 #include <vector>
 
+class IDoubleThreeCheck;
 class ICapture {
 public:
     virtual ~ICapture() = default;
-    virtual State CaptureCheck(const Coordinate& newCoords,
-                               const std::vector<std::vector<Tile>>& board, const Player& player) = 0;
+    virtual State CaptureCheck(const Coordinate& newCoords, const std::vector<std::vector<Tile>>& board, const Player& player) = 0;
 };
 
 class Capture : public ICapture {
 public:
-	Capture() {};
+	Capture(std::unique_ptr<IDoubleThreeCheck> &doubleThree) :_doubleThreeCheck(std::move(doubleThree)) {};
 
-	Capture(const Capture &)
+	Capture()
 	{};
 
 	~Capture() override = default;
@@ -39,6 +40,7 @@ private:
 	bool checkDiagonalRightDown();
 	bool checkDiagonalRightUp();
 
+
 	/*
 	 * vars
 	 */
@@ -46,7 +48,8 @@ private:
 	Coordinate _newCoords;
 	Tile		_player;
 	Tile		_opponent;
-	std::vector<std::vector<Tile>> _board;
+	std::vector<std::vector<Tile>> 	_board;
+	std::unique_ptr<IDoubleThreeCheck> _doubleThreeCheck;
 
 };
 
