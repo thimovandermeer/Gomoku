@@ -6,6 +6,7 @@ target_sources(gomoku PRIVATE
 		DoubleThreeCheck.cpp
         Utils.cpp
 		Capture.cpp
+		AI/Ai.cpp
 		)
 
 target_sources(gomoku_test PRIVATE
@@ -16,4 +17,5 @@ target_sources(gomoku_test PRIVATE
 		DoubleThreeCheck.cpp
         Utils.cpp
 		Capture.cpp
+		AI/Ai.cpp
 		)
