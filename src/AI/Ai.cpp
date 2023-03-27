@@ -244,7 +244,7 @@ int Ai::evaluate(BoardState state)
 bestMove Ai::miniMax(BoardState state, int depth, int alpha, int beta, bool maximizingPlayer) {
 	if (depth == 0 || state.isTerminal()) {
 		// If we have reached the maximum search depth or the game is over, return the score and no move.
-		return { -1, -1 };
+		return {{ -1, -1 },-1};
 	}
 
 	// Initialize the best move to an invalid position and the best score to the opposite of the expected range.

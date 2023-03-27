@@ -42,7 +42,7 @@ public:
 		for (int i = 0; i < BOARD_SIZE; i++) {
 			for (int j = 0; j < BOARD_SIZE; j++) {
 				if (board[i][j] == Tile::EMPTY) {
-					moves.push_back(bestMove{i,j});
+					moves.push_back(bestMove{{i,j}, -1});
 				}
 			}
 		}
