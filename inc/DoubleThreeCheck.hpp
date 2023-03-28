@@ -29,7 +29,8 @@ public:
 
 	State DoubleThreeChecker(const std::vector<std::vector<Tile>>& board, const Coordinate& coord, const Player& player) override;
 	void doubleThreeBreaks(const std::vector<std::vector<Tile>>& board, const Doubles& capture_pos, const Player& player) override;
-
+	int		getSizeP1();
+	int		getSizeP2();
 private:
 	int doubleThreeCheckLogic(const Coordinate &coords, Tile player, const std::vector<std::vector<Tile>> &board);
 	int checkHorizontal(const Coordinate &coords, Tile player, const std::vector<std::vector<Tile>> &board);

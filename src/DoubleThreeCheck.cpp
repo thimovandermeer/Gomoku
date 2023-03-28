@@ -51,8 +51,11 @@ int DoubleThreeCheck::checkHorizontal(const Coordinate &coords, Tile player, con
 					LOG("We got a regular three in a row horizontal");
 					count++;
 				}
+				if(board[coords.y][i +3] == player) {
+					LOG("We got four in a row horizontal");
+					break;
+				}
 			}
-			// double three with open space afmaken
 			if(board[coords.y][i] == player && board[coords.y][i+1] == player && board[coords.y][i+2] == Tile::EMPTY && board[coords.y][i+3] == player) {
 				LOG("We got a double three with empty space");
 				count++;
@@ -72,6 +75,10 @@ int DoubleThreeCheck::checkVertical(const Coordinate &coords, Tile player, const
 				if(board[j+3][coords.x] == Tile::EMPTY) {
 					LOG("We got a regular three in a row vertical");
 					count++;
+				}
+				if(board[j+3][coords.x] == player) {
+					LOG("We got four in a row vertical");
+					break;
 				}
 			}
 			// double three with open space
@@ -96,6 +103,10 @@ int DoubleThreeCheck::checkDiagonal(const Coordinate &coords, Tile player, const
 					LOG("Regular three in a row diagonal found");
 					count++;
 				}
+				if(board[j+3][i+3] == player) {
+					LOG("We got four in a row diagonal");
+					break;
+				}
 			}
 			if(board[j][i] == player && board[j+1][i+1] == player && board[j+2][i+2] == Tile::EMPTY && board[j+3][i+3] == player) {
 				LOG("We got a double three with empty space diagonal");
@@ -119,6 +130,10 @@ int DoubleThreeCheck::checkAntiDiagonal(const Coordinate &coords, Tile player,
 				if(board[j+3][i-3] == Tile::EMPTY) {
 					LOG("Found regular three in a row anti diagonal");
 					count++;
+				}
+				if(board[j+3][i-3] == player) {
+					LOG("We got four in a row anti diagonal");
+					break;
 				}
 			}
 			if(board[j][i] == player && board[j+1][i-1] == player && board[j+2][i-2] == Tile::EMPTY && board[j+3][i-3] == player) {
@@ -198,4 +213,12 @@ State DoubleThreeCheck::DoubleThreeChecker(const std::vector<std::vector<Tile>>&
 	return returnValue;
 }
 
+int DoubleThreeCheck::getSizeP1()
+{
+	return p1_doubleThreeExists;
+}
 
+int DoubleThreeCheck::getSizeP2()
+{
+	return p2_doubleThreeExists;
+}

@@ -181,3 +181,79 @@ TEST(two_double_three_same_time, double_three_check_test) {
 	ASSERT_EQ(result.errorReason, "SECOND DOUBLE THREE");
 
 }
+
+TEST(two_double_three_same_time, four_horizontal_test) {
+	auto board = create_empty_board();
+
+	board[4][1] = Tile::P1;
+	board[4][2] = Tile::P1;
+	board[4][3] = Tile::P1;
+	board[4][4] = Tile::P1;
+	Coordinate newCoords{4,4};
+
+
+	auto threeCheck = DoubleThreeCheck();
+	auto result = threeCheck.DoubleThreeChecker(board,newCoords, Player::PLAYERONE);
+
+	ASSERT_EQ(result.state,ACCEPTED);
+	ASSERT_EQ(threeCheck.getSizeP1(), 0);
+
+}
+
+TEST(two_double_three_same_time, four_vertical_test) {
+	auto board = create_empty_board();
+
+	board[1][4] = Tile::P1;
+	board[2][4] = Tile::P1;
+	board[3][4] = Tile::P1;
+	board[4][4] = Tile::P1;
+	Coordinate newCoords{4,4};
+
+
+	auto threeCheck = DoubleThreeCheck();
+	auto result = threeCheck.DoubleThreeChecker(board,newCoords, Player::PLAYERONE);
+
+	ASSERT_EQ(result.state,ACCEPTED);
+	ASSERT_EQ(threeCheck.getSizeP1(), 0);
+
+}
+
+TEST(two_double_three_same_time, four_diagonal_test) {
+	auto board = create_empty_board();
+
+	board[1][1] = Tile::P1;
+	board[2][2] = Tile::P1;
+	board[3][3] = Tile::P1;
+	board[4][4] = Tile::P1;
+	Coordinate newCoords{4,4};
+
+
+	auto threeCheck = DoubleThreeCheck();
+	auto result = threeCheck.DoubleThreeChecker(board,newCoords, Player::PLAYERONE);
+
+	ASSERT_EQ(result.state,ACCEPTED);
+	ASSERT_EQ(threeCheck.getSizeP1(), 0);
+
+}
+
+
+
+Coordinate newCoords{2,7};
+
+TEST(two_double_three_same_time, four_anti_diagonal_test) {
+	auto board = create_empty_board();
+
+	board[0][9] = Tile::P1;
+	board[1][8] = Tile::P1;
+	board[2][7] = Tile::P1;
+	board[3][6] = Tile::P1;
+	Coordinate newCoords{3,6};
+
+
+	auto threeCheck = DoubleThreeCheck();
+	auto result = threeCheck.DoubleThreeChecker(board,newCoords, Player::PLAYERONE);
+
+	ASSERT_EQ(result.state,ACCEPTED);
+	ASSERT_EQ(threeCheck.getSizeP1(), 0);
+
+}
