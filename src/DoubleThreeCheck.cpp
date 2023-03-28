@@ -42,15 +42,11 @@ int DoubleThreeCheck::checkHorizontal(const Coordinate &coords, Tile player, con
 {
 	int count = 0;
 	LOG("Check horizontal");
-	LOG("y coordinaten %i X coordinaten %i", coords.y, coords.x);
 	for (int i = coords.x-3; i <= coords.x+3; i++) {
 		// check board boundaries
-		LOG("Kom ik in de eerste check");
 		if(i >= 0 && i+3 < BOARD_SIZE) {
-			LOG("Kom ik in de tweede check");
 			// check if we have three in line
 			if (board[coords.y][i] == player && board[coords.y][i+1] == player && board[coords.y][i+2] == player) {
-				LOG("We got three in a row");
 				if (board[coords.y][i+3] == Tile::EMPTY) {
 					LOG("We got a regular three in a row horizontal");
 					count++;
@@ -73,7 +69,6 @@ int DoubleThreeCheck::checkVertical(const Coordinate &coords, Tile player, const
 	for (int j = coords.y-3; j <= coords.y+3; j++) {
 		if(j >= 0 && j+3 < BOARD_SIZE) {
 			if(board[j][coords.x] == player && board[j+1][coords.x] == player && board[j+2][coords.x] == player) {
-				LOG("We have three in a row");
 				if(board[j+3][coords.x] == Tile::EMPTY) {
 					LOG("We got a regular three in a row vertical");
 					count++;
@@ -163,6 +158,7 @@ State DoubleThreeCheck::DoubleThreeChecker(const std::vector<std::vector<Tile>>&
 	State 	returnValue;
 	Tile 	player_board;
 	int		playerThree;
+	LOG("Player = %i", player);
 	if(player == Player::PLAYERONE) {
 		player_board = Tile::P1;
 		playerThree = p1_doubleThreeExists;

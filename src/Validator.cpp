@@ -7,7 +7,6 @@
 
 State Validator::validate(const std::vector<std::vector<Tile>>& board, const Coordinate& coord, const Player& player) {
 	// TODO: Remove this hack
-	LOG("WAT DOET DIT");
 	auto board_hack = board;
 	board_hack[coord.y][coord.x] = static_cast<Tile>(player);
 	LOG("The state on the second run is %s", _state.errorReason.c_str());

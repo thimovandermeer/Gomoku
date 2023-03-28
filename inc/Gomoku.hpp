@@ -10,13 +10,16 @@
 #include "Validator.hpp"
 #include "Graphics.hpp"
 #include "types.hpp"
+#include "Ai.hpp"
 
 #define DEBUG_STONE_COORDINATES
 
-#define BOARD_SIZE 10
 
 class IValidator;
 class IGraphics;
+class IAi;
+
+#define BOARD_SIZE 10
 
 class Gomoku {
 public:
@@ -24,8 +27,10 @@ public:
     Gomoku(const Gomoku&) = delete;
     Gomoku& operator=(const Gomoku&) = delete;
     ~Gomoku() = default;
-    Gomoku(std::unique_ptr<IValidator> &validator, std::unique_ptr<IGraphics>& graphics) :
-			_validator(std::move(validator)), _graphics(std::move(graphics)),
+    Gomoku(std::unique_ptr<IValidator> &validator, std::unique_ptr<IGraphics>& graphics, std::unique_ptr<IAi>& ai) :
+			_validator(std::move(validator)),
+			_graphics(std::move(graphics)),
+			_ai(std::move(ai)),
 			_board({BOARD_SIZE, {BOARD_SIZE, Tile::EMPTY}}), _player(Player::PLAYERTWO), _state{}, _gameEnd(false),
 			_p1Captures(0), _p2Captures(0) {}
 
@@ -34,6 +39,7 @@ public:
 private:
     std::unique_ptr<IValidator> _validator;
     std::unique_ptr<IGraphics> _graphics;
+	std::unique_ptr<IAi>		_ai;
     std::vector<std::vector<Tile>> _board;
     Player _player;
     State _state;
@@ -44,6 +50,8 @@ private:
     void handleMouseButtonPressed(const sf::Event& event);
     void doMove(const sf::Vector2<int>& moveLocation);
     void validateMove(Coordinate coords);
+	Coordinate aiMove();
+
     bool hasGameEnded(const sf::Vector2i& placedStone) const;
 };
 

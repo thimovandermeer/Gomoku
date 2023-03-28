@@ -50,12 +50,12 @@ void Gomoku::handleMouseButtonPressed(const sf::Event& event) {
 void Gomoku::gameLoop() {
     // draw board for the first time
     _graphics->update(_board, _p1Captures, _p2Captures);
-    while (true) {
+	// hack;
+	while (true) {
         if (not _graphics->isWindowOpen()) {
             // potential cleanup, but essentially the window is closed, so we exit
             return;
         }
-
         std::optional<sf::Event> eventWrapper = _graphics->getEvent();
         while (eventWrapper != std::nullopt) {
             sf::Event event = eventWrapper.value();
@@ -97,7 +97,18 @@ void Gomoku::doMove(const sf::Vector2<int>& moveLocation) {
         return;
     }
     if (_player == Player::PLAYERONE) {
-        _board[moveLocation.y][moveLocation.x] = Tile::P1;
+//		LOG("kom ik hier?");
+//		// ai call
+//		Coordinate newMove = aiMove();
+//		// do move
+//		if(newMove.y != -1 && newMove.x != -1) {
+//			sf::Vector2<int> move;
+//			move.y = newMove.y;
+//			move.x = newMove.x;
+//			LOG("We are going to do the move %i %i", move.y, move.x);
+//			_board[move.y][move.x] = Tile::P1;
+//		}
+		_board[moveLocation.y][moveLocation.x] = Tile::P1;
     } else {
         _board[moveLocation.y][moveLocation.x] = Tile::P2;
     }
@@ -127,10 +138,7 @@ void Gomoku::doMove(const sf::Vector2<int>& moveLocation) {
 }
 
 void Gomoku::validateMove(Coordinate coords) {
-    LOG("Coords zijn y:%i x: %i", coords.y, coords.x);
 	_state = _validator->validate(_board, coords, _player);
-    LOG("Result string = %s", _state.errorReason.c_str());
-	LOG("Result accepted or error  %i", _state.state);
 }
 
 static bool isCorrectTile(const std::vector<std::vector<Tile>>& board, const sf::Vector2i& pos, const Tile& val) {
@@ -176,4 +184,13 @@ bool Gomoku::hasGameEnded(const sf::Vector2i& placedStone) const {
     }
 
     return false;
+}
+
+Coordinate Gomoku::aiMove()
+{
+	LOG("Player which does the move %i", _player);
+	auto result = _ai->AiMove(_board, _player);
+	LOG("AI MOVE RESPONSE STRING = %s", result.errorString.c_str());
+	LOG("The move is [%i][%i]", result.move.bestCoords.y, result.move.bestCoords.x);
+	return result.move.bestCoords;
 }

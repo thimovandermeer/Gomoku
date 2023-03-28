@@ -6,7 +6,7 @@
 #define GOMOKU_TYPES_HPP
 
 #include <string>
-
+#include <vector>
 
 enum class Tile {
     P1, P2, EMPTY
@@ -14,10 +14,6 @@ enum class Tile {
 
 enum class Player {
     PLAYERONE, PLAYERTWO
-};
-
-enum Direction {
-    HORIZONTAL, VERTICAL, CROSS
 };
 
 struct Coordinate {
@@ -41,22 +37,18 @@ struct State {
     Doubles capturePos;
 };
 
-struct Threes {
-    Coordinate leftBoundaryCoordinates;
-    Coordinate rightBoundaryCoordinates;
-    Coordinate openSpaceCoordinates;
-    bool fullFree;
-    bool openSpace;
-    Direction direction;
+
+struct bestMove {
+	Coordinate 	bestCoords;
+	int 		maxScore;
 };
 
-enum DoubleType {
-    NORMAL, EMPTYSPACE, NONE
+struct GameState {
+	std::vector<std::vector<Tile>> board;
+	Player currentPlayer = Player::PLAYERONE;
+	int lastMoveRow = -1;
+	int lastMoveCol = -1;
 };
 
-struct BoundaryCheckReturn {
-    DoubleType doubleType;
-    Coordinate openSpace;
-};
 
 #endif //GOMOKU_TYPES_HPP

@@ -8,19 +8,12 @@
 #include <vector>
 #include "boardState.hpp"
 
-struct bestMove;
 struct AiResponse {
 	std::string errorString;
 	bestMove	move;
 };
 
-struct GameState {
-	std::vector<std::vector<Tile>> board;
-	Player currentPlayer = Player::PLAYERONE;
-	int lastMoveRow = -1;
-	int lastMoveCol = -1;
-};
-
+class BoardState;
 class IAi {
 public:
 	virtual ~IAi() = default;

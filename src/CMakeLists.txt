@@ -7,6 +7,7 @@ target_sources(gomoku PRIVATE
         Utils.cpp
 		Capture.cpp
 		AI/Ai.cpp
+		AI/boardState.cpp
 		)
 
 target_sources(gomoku_test PRIVATE
@@ -18,4 +19,5 @@ target_sources(gomoku_test PRIVATE
         Utils.cpp
 		Capture.cpp
 		AI/Ai.cpp
+		AI/boardState.cpp
 		)

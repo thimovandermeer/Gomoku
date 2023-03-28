@@ -79,7 +79,7 @@ State Capture::captureLogic() {
 	// Check for vertical captures
 	if (checkLeftVertical()) {
 		LOG("First vertical if");
-		if(_board[_newCoords.y -3][_newCoords.x] == _player) {
+		if(_newCoords.y -3 > 0 && _board[_newCoords.y -3][_newCoords.x] == _player) {
 			Coordinate one{_newCoords.y -2, _newCoords.x};
 			Coordinate two{_newCoords.y -1, _newCoords.x};
 			auto doubles = Doubles{one, two};
@@ -89,7 +89,7 @@ State Capture::captureLogic() {
 	}
 	if (checkRightVertical()) {
 		LOG("Second vertical if");
-		if(_board[_newCoords.y +3][_newCoords.x] == _player) {
+		if(_newCoords.y + 3 < BOARD_SIZE && _board[_newCoords.y +3][_newCoords.x] == _player) {
 			Coordinate one{_newCoords.y +2, _newCoords.x};
 			Coordinate two{_newCoords.y +1, _newCoords.x};
 			auto doubles = Doubles{one, two};
@@ -101,7 +101,7 @@ State Capture::captureLogic() {
 	// Check for diagonal captures
 	if (checkDiagonalLeftDown()) {
 		LOG("First diagonal if");
-		if(_board[_newCoords.y -3][_newCoords.x-3] == _player) {
+		if(_newCoords.y -3 > 0 && _board[_newCoords.y -3][_newCoords.x-3] == _player) {
 			Coordinate one{_newCoords.y -2, _newCoords.x-2};
 			Coordinate two{_newCoords.y -1, _newCoords.x-1};
 			auto doubles = Doubles{one, two};
@@ -112,7 +112,7 @@ State Capture::captureLogic() {
 	}
 	if (checkDiagonalLeftUp()) {
 		LOG("second diagonal if");
-		if(_board[_newCoords.y -3][_newCoords.x+3] == _player) {
+		if(_newCoords.y -3 > 0 && _board[_newCoords.y -3][_newCoords.x+3] == _player) {
 			Coordinate one{_newCoords.y -2, _newCoords.x-2};
 			Coordinate two{_newCoords.y -1, _newCoords.x-1};
 			auto doubles = Doubles{one, two};
