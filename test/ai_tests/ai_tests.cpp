@@ -50,13 +50,14 @@ TEST(evaluate_test, four_in_a_row) {
 TEST(evaluate_test, minimax) {
 	// create a current game stae with all different settings
 	auto board = create_empty_board();
-	board[1][1] = Tile::P1;
-	board[1][2] = Tile::P1;
-	board[1][3] = Tile::P1;
-	board[1][4] = Tile::P1;
+	board[5][5] = Tile::P1;
+	board[6][6] = Tile::P1;
+	board[7][7] = Tile::P1;
+	board[8][8] = Tile::P1;
 
 	auto result = AI.AiMove(board, Player::PLAYERONE);
-//	ASSERT_EQ(111, result);
+	ASSERT_EQ(result.move.bestCoords.y, 4);
+	ASSERT_EQ(result.move.bestCoords.x, 4);
 }
 
 

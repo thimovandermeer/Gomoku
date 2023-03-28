@@ -97,18 +97,18 @@ void Gomoku::doMove(const sf::Vector2<int>& moveLocation) {
         return;
     }
     if (_player == Player::PLAYERONE) {
-//		LOG("kom ik hier?");
-//		// ai call
-//		Coordinate newMove = aiMove();
-//		// do move
-//		if(newMove.y != -1 && newMove.x != -1) {
-//			sf::Vector2<int> move;
-//			move.y = newMove.y;
-//			move.x = newMove.x;
-//			LOG("We are going to do the move %i %i", move.y, move.x);
-//			_board[move.y][move.x] = Tile::P1;
-//		}
-		_board[moveLocation.y][moveLocation.x] = Tile::P1;
+		LOG("kom ik hier?");
+		// ai call
+		Coordinate newMove = aiMove();
+		// do move
+		if(newMove.y != -1 && newMove.x != -1) {
+			sf::Vector2<int> move;
+			move.y = newMove.y;
+			move.x = newMove.x;
+			LOG("We are going to do the move %i %i", move.y, move.x);
+			_board[move.y][move.x] = Tile::P1;
+		}
+//		_board[moveLocation.y][moveLocation.x] = Tile::P1;
     } else {
         _board[moveLocation.y][moveLocation.x] = Tile::P2;
     }

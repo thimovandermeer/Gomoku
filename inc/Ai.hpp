@@ -13,6 +13,11 @@ struct AiResponse {
 	bestMove	move;
 };
 
+enum AiPlayer{
+	AI_PLAYER,
+	HUMAN_PLAYER,
+};
+
 class BoardState;
 class IAi {
 public:

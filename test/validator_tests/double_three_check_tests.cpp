@@ -236,10 +236,6 @@ TEST(two_double_three_same_time, four_diagonal_test) {
 
 }
 
-
-
-Coordinate newCoords{2,7};
-
 TEST(two_double_three_same_time, four_anti_diagonal_test) {
 	auto board = create_empty_board();
 

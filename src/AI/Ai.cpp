@@ -8,7 +8,7 @@
 #include "utils.hpp"
 #include "logger.hpp"
 
-#define DEPTH 10
+#define DEPTH 4
 
 
 
@@ -18,11 +18,11 @@ AiResponse Ai::AiMove(const std::vector<std::vector<Tile>>& board,const Player &
 	BoardState state{board, player};
 	bool maximizingPlayer = false;
 	if(player == Player::PLAYERONE) {
-		maximizingPlayer = false;
-	} else {
 		maximizingPlayer = true;
+	} else {
+		maximizingPlayer = false;
 	}
-	auto score = miniMax(state, DEPTH, (-INFINITY + 1), +INFINITY, maximizingPlayer);
+	auto score = miniMax(state, DEPTH, INT_MIN, INT_MAX, maximizingPlayer);
 	LOG("Minimax Score = %i", score);
 	LOG("Next coordinates proposed by AI [%i][%i]", score.bestCoords.y, score.bestCoords.x);
 	return (AiResponse{"Valid ai move", score});
@@ -244,9 +244,10 @@ int Ai::evaluate(BoardState state)
 bestMove Ai::miniMax(BoardState state, int depth, int alpha, int beta, bool maximizingPlayer) {
 	if (depth == 0 || state.isTerminal()) {
 		LOG("Debt is %i",depth);
+		auto score = evaluate(state);
 		LOG("We terminated = %i", state.isTerminal());
 		// If we have reached the maximum search depth or the game is over, return the score and no move.
-		return {{ -1, -1 },-1};
+		return { {-1, -1} ,score};
 	}
 
 	// Initialize the best move to an invalid position and the best score to the opposite of the expected range.
@@ -260,10 +261,10 @@ bestMove Ai::miniMax(BoardState state, int depth, int alpha, int beta, bool maxi
 	for (const bestMove& move : moves) {
 		// Apply the current move to the board state.
 		state.makeMove(move);
-		LOG("How  many moves do we do?");
 		// Recursively search the game tree for the score of the resulting board state.
-		int score = miniMax(state, depth - 1, alpha, beta, maximizingPlayer).maxScore;
-
+		int score = miniMax(state, depth - 1, alpha, beta, !maximizingPlayer).maxScore;
+		LOG("What is this score exactly? %i", score);
+		LOG("Current move coords = [%i][%i]", move.bestCoords.y, move.bestCoords.x);
 		// Undo the current move to restore the board state.
 		state.undoMove(move);
 
@@ -275,12 +276,19 @@ bestMove Ai::miniMax(BoardState state, int depth, int alpha, int beta, bool maxi
 			alpha = std::max(alpha, best_score);
 		} else if (!maximizingPlayer && score < best_score) {
 			LOG("Minimizing player");
+			LOG("Score = %i", score);
+			LOG("Best score = %i", best_score);
 			best_score = score;
 			best_move = move;
 			beta = std::min(beta, best_score);
+			LOG("Mn beta is hier = %i", beta);
+			LOG("mn best score is hier = %i", best_score);
+			LOG("mn best move is hier = [%i] [%i]", best_move.bestCoords.y, best_move.bestCoords.x);
 		}
 
 		// Check whether we can prune the search based on the current alpha and beta values.
+		LOG("Alpha = %i", alpha);
+		LOG("Beta = %i", beta);
 		if (alpha >= beta) {
 			break;
 		}
