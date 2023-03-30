@@ -8,6 +8,7 @@
 #include "logger.hpp"
 #include "types.hpp"
 #include "Gomoku.hpp"
+#include "NewValidator.hpp"
 
 void Gomoku::handleKeyPressed(const sf::Event& event) {
     if (event.key.code == sf::Keyboard::Key::Escape) {
@@ -48,6 +49,7 @@ void Gomoku::handleMouseButtonPressed(const sf::Event& event) {
 }
 
 void Gomoku::gameLoop() {
+    setLogLevel(LOG_WARN);
     // draw board for the first time
     _graphics->update(_board, _p1Captures, _p2Captures);
 	// hack;
@@ -55,6 +57,25 @@ void Gomoku::gameLoop() {
         if (not _graphics->isWindowOpen()) {
             // potential cleanup, but essentially the window is closed, so we exit
             return;
+        }
+        if (_player == Player::PLAYERTWO) {
+        // TODO: AI move here
+
+//            WARN("before ai call");
+//             ai call
+//            Coordinate newMove = aiMove();
+//             do move
+//            WARN("after ai call");
+//            if(newMove.y != -1 && newMove.x != -1) {
+//                sf::Vector2<int> move;
+//                move.y = newMove.y;
+//                move.x = newMove.x;
+//                WARN("We are going to do the move %i %i", move.y, move.x);
+//                doMove({newMove.x, newMove.y});
+//                // assuming AI always does a valid move, board can be udpated
+//                _graphics->update(_board, _p1Captures, _p2Captures);
+//            }
+//            continue;
         }
         std::optional<sf::Event> eventWrapper = _graphics->getEvent();
         while (eventWrapper != std::nullopt) {
@@ -84,38 +105,20 @@ void Gomoku::gameLoop() {
 }
 
 void Gomoku::doMove(const sf::Vector2<int>& moveLocation) {
-    Coordinate coords{moveLocation.y, moveLocation.x};
-    LOG("coords y: %i, x: %i");
-
-    if (_state.state == OkState::ACCEPTED) {
-        _player = _player == Player::PLAYERONE ? Player::PLAYERTWO : Player::PLAYERONE;
-    }
     if (_board[moveLocation.y][moveLocation.x] != Tile::EMPTY) {
-        _state.state = OkState::ERROR;
-        _state.errorReason = "tile not empty";
-        _graphics->setHeader(fmt::format("{}\n\tat ({}, {})", _state.errorReason, moveLocation.x, moveLocation.y));
+        _graphics->setHeader(fmt::format("location not empty\n\tat ({}, {})", moveLocation.x, moveLocation.y));
         return;
     }
     if (_player == Player::PLAYERONE) {
-		LOG("kom ik hier?");
-		// ai call
-		Coordinate newMove = aiMove();
-		// do move
-		if(newMove.y != -1 && newMove.x != -1) {
-			sf::Vector2<int> move;
-			move.y = newMove.y;
-			move.x = newMove.x;
-			LOG("We are going to do the move %i %i", move.y, move.x);
-			_board[move.y][move.x] = Tile::P1;
-		}
-//		_board[moveLocation.y][moveLocation.x] = Tile::P1;
+		_board[moveLocation.y][moveLocation.x] = Tile::P1;
     } else {
         _board[moveLocation.y][moveLocation.x] = Tile::P2;
     }
-    validateMove(coords);
+
+    // TODO: do capture
 
     // probably this check will become part of the validator
-    if (_state.state == OkState::ACCEPTED) {
+    if (validateMove()) {
         // change _board to reflect new board state
         if (_state.capture) {
             Coordinate p = _state.capturePos.one;
@@ -129,16 +132,22 @@ void Gomoku::doMove(const sf::Vector2<int>& moveLocation) {
             }
         }
         _gameEnd = hasGameEnded(moveLocation);
+        _graphics->setHeader(fmt::format("placed stone\n\tat ({}, {})", moveLocation.x, moveLocation.y));
+
+        _player = _player == Player::PLAYERONE ? Player::PLAYERTWO : Player::PLAYERONE;
     } else {
         // undo move that is not ok
         _board[moveLocation.y][moveLocation.x] = Tile::EMPTY;
+        _graphics->setHeader(fmt::format("move creates 2 open threes\n\tat ({}, {})", moveLocation.x, moveLocation.y));
+        // TODO: undo capture if necessary
     }
     // set header to whatever we want it to be
-    _graphics->setHeader(fmt::format("{}\n\tat ({}, {})", _state.errorReason, moveLocation.x, moveLocation.y));
 }
 
-void Gomoku::validateMove(Coordinate coords) {
-	_state = _validator->validate(_board, coords, _player);
+bool Gomoku::validateMove() {
+//	_state = _validator->validate(_board, coords, _player);
+    NewValidator validator(_board, _player);
+    return validator.validate();
 }
 
 static bool isCorrectTile(const std::vector<std::vector<Tile>>& board, const sf::Vector2i& pos, const Tile& val) {

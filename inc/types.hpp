@@ -17,8 +17,8 @@ enum class Player {
 };
 
 struct Coordinate {
-    int y;
     int x;
+    int y;
 };
 
 enum OkState {

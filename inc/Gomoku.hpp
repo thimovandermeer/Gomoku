@@ -19,7 +19,7 @@ class IValidator;
 class IGraphics;
 class IAi;
 
-#define BOARD_SIZE 10
+#define BOARD_SIZE 19
 
 class Gomoku {
 public:
@@ -49,7 +49,7 @@ private:
     void handleKeyPressed(const sf::Event& event);
     void handleMouseButtonPressed(const sf::Event& event);
     void doMove(const sf::Vector2<int>& moveLocation);
-    void validateMove(Coordinate coords);
+    bool validateMove();
 	Coordinate aiMove();
 
     bool hasGameEnded(const sf::Vector2i& placedStone) const;

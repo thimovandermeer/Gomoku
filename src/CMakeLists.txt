@@ -6,6 +6,7 @@ target_sources(gomoku PRIVATE
 		DoubleThreeCheck.cpp
         Utils.cpp
 		Capture.cpp
+		NewValidator.cpp
 		AI/Ai.cpp
 		AI/boardState.cpp
 		)

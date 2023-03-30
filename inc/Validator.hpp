@@ -15,6 +15,7 @@ class IValidator {
 public:
     virtual ~IValidator() = default;
     virtual State validate(const std::vector<std::vector<Tile>>& board, const Coordinate& coord, const Player& player) = 0;
+    virtual bool validate() = 0;
 };
 
 class IDoubleThreeCheck;
@@ -26,6 +27,7 @@ public:
     ~Validator() override = default;
 
     State validate(const std::vector<std::vector<Tile>>& board, const Coordinate& coord, const Player& player) override;
+    bool validate() override {return false;}
 private:
     void setState(OkState newState, std::string& errorReason);
     void boardValidation(const std::vector<std::vector<Tile>>& board);
