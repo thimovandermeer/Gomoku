@@ -52,15 +52,20 @@ void Gomoku::gameLoop() {
     setLogLevel(LOG_WARN);
     // draw board for the first time
     _graphics->update(_board, _p1Captures, _p2Captures);
-	// hack;
-	while (true) {
+    // hack;
+    while (true) {
         if (not _graphics->isWindowOpen()) {
             // potential cleanup, but essentially the window is closed, so we exit
             return;
         }
+        // TODO: remove this tmp, only to print log msg 1 time per AI move
+        static bool tmp = true;
         if (_player == Player::PLAYERTWO) {
-        // TODO: AI move here
-
+            // TODO: AI move here
+            if (tmp) {
+                WARN("AI should move now");
+                tmp = false;
+            }
 //            WARN("before ai call");
 //             ai call
 //            Coordinate newMove = aiMove();
@@ -75,7 +80,6 @@ void Gomoku::gameLoop() {
 //                // assuming AI always does a valid move, board can be udpated
 //                _graphics->update(_board, _p1Captures, _p2Captures);
 //            }
-//            continue;
         }
         std::optional<sf::Event> eventWrapper = _graphics->getEvent();
         while (eventWrapper != std::nullopt) {
@@ -93,6 +97,7 @@ void Gomoku::gameLoop() {
                     if (not _gameEnd) {
                         handleMouseButtonPressed(event);
                     }
+                    tmp = true;
                     break;
                 }
                 default:
@@ -104,33 +109,84 @@ void Gomoku::gameLoop() {
     }
 }
 
+static bool isCorrectTile(const std::vector<std::vector<Tile>>& board, const sf::Vector2i& pos, const Tile& val) {
+    return board[pos.y][pos.x] == val;
+}
+
+static bool isInBounds(const sf::Vector2i& pos) {
+    return pos.x >= 0 && pos.x < BOARD_SIZE && pos.y >= 0 && pos.y < BOARD_SIZE;
+}
+
+
+bool Gomoku::findCaptureInDirection(const std::function<void(sf::Vector2i&)>& move, const sf::Vector2i& moveLocation) {
+    sf::Vector2i loc = moveLocation;
+    Tile own = _player == Player::PLAYERONE ? Tile::P1 : Tile::P2;
+    Tile toCapture = own == Tile::P1 ? Tile::P2 : Tile::P1;
+    move(loc);
+    sf::Vector2i first(loc);
+    move(loc);
+    sf::Vector2i second(loc);
+    move(loc);
+    sf::Vector2i third(loc);
+    if (not isInBounds(first) || not isInBounds(second) || not isInBounds(third)) {
+        return false;
+    }
+    if (isCorrectTile(_board, first, toCapture) && isCorrectTile(_board, second, toCapture) &&
+        isCorrectTile(_board, third, own)) {
+        _capturedCoords = {first, second};
+        return true;
+    }
+    return false;
+}
+
+bool Gomoku::findCapture(const sf::Vector2i& moveLocation) {
+    for (const auto& [dir1, dir2]: _moveDirections) {
+        if (findCaptureInDirection(dir1, moveLocation)) {
+            return true;
+        }
+        if (findCaptureInDirection(dir2, moveLocation)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void Gomoku::capture(const sf::Vector2i& moveLocation) {
+    // TODO: think about double capture
+    _capturedCoords = {{-1, -1}, {-1, -1}};
+    if (findCapture(moveLocation)) {
+        _board[_capturedCoords.first.y][_capturedCoords.first.x] = Tile::EMPTY;
+        _board[_capturedCoords.second.y][_capturedCoords.second.x] = Tile::EMPTY;
+        if (_player == Player::PLAYERONE) {
+            ++_p1Captures;
+        } else {
+            ++_p2Captures;
+        }
+    }
+}
+
+void Gomoku::undoCapture() {
+    Tile toSetBack = _player == Player::PLAYERONE ? Tile::P2 : Tile::P1;
+    _board[_capturedCoords.first.y][_capturedCoords.first.x] = toSetBack;
+    _board[_capturedCoords.second.y][_capturedCoords.second.x] = toSetBack;
+    if (_player == Player::PLAYERONE) {
+        --_p1Captures;
+    } else {
+        --_p2Captures;
+    }
+    _capturedCoords = {{-1, -1}, {-1, -1}};
+}
+
 void Gomoku::doMove(const sf::Vector2<int>& moveLocation) {
     if (_board[moveLocation.y][moveLocation.x] != Tile::EMPTY) {
         _graphics->setHeader(fmt::format("location not empty\n\tat ({}, {})", moveLocation.x, moveLocation.y));
         return;
     }
-    if (_player == Player::PLAYERONE) {
-		_board[moveLocation.y][moveLocation.x] = Tile::P1;
-    } else {
-        _board[moveLocation.y][moveLocation.x] = Tile::P2;
-    }
-
-    // TODO: do capture
+    _board[moveLocation.y][moveLocation.x] = _player == Player::PLAYERONE ? Tile::P1 : Tile::P2;
+    capture(moveLocation);
 
     // probably this check will become part of the validator
     if (validateMove()) {
-        // change _board to reflect new board state
-        if (_state.capture) {
-            Coordinate p = _state.capturePos.one;
-            _board[p.y][p.x] = Tile::EMPTY;
-            p = _state.capturePos.two;
-            _board[p.y][p.x] = Tile::EMPTY;
-            if (_player == Player::PLAYERONE) {
-                ++_p1Captures;
-            } else {
-                ++_p2Captures;
-            }
-        }
         _gameEnd = hasGameEnded(moveLocation);
         _graphics->setHeader(fmt::format("placed stone\n\tat ({}, {})", moveLocation.x, moveLocation.y));
 
@@ -139,23 +195,17 @@ void Gomoku::doMove(const sf::Vector2<int>& moveLocation) {
         // undo move that is not ok
         _board[moveLocation.y][moveLocation.x] = Tile::EMPTY;
         _graphics->setHeader(fmt::format("move creates 2 open threes\n\tat ({}, {})", moveLocation.x, moveLocation.y));
-        // TODO: undo capture if necessary
+        // undo capture if necessary
+        if (_capturedCoords.first.x != -1) {
+            undoCapture();
+        }
     }
-    // set header to whatever we want it to be
 }
 
 bool Gomoku::validateMove() {
 //	_state = _validator->validate(_board, coords, _player);
     NewValidator validator(_board, _player);
     return validator.validate();
-}
-
-static bool isCorrectTile(const std::vector<std::vector<Tile>>& board, const sf::Vector2i& pos, const Tile& val) {
-    return board[pos.y][pos.x] == val;
-}
-
-static bool isInBounds(const sf::Vector2i& pos) {
-    return pos.x >= 0 && pos.x < BOARD_SIZE && pos.y >= 0 && pos.y < BOARD_SIZE;
 }
 
 static int totalInDirection(const std::vector<std::vector<Tile>>& board, const std::function<void(sf::Vector2i&)>& move,
@@ -178,13 +228,7 @@ bool Gomoku::hasGameEnded(const sf::Vector2i& placedStone) const {
     }
     const Tile lastMoved = _player == Player::PLAYERONE ? Tile::P1 : Tile::P2;
 
-    std::vector<std::pair<std::function<void(sf::Vector2i&)>, std::function<void(sf::Vector2i&)>>> vec;
-    vec.emplace_back([](sf::Vector2i& v) { --v.x; }, [](sf::Vector2i& v) { ++v.x; });
-    vec.emplace_back([](sf::Vector2i& v) { --v.y; }, [](sf::Vector2i& v) { ++v.y; });
-    vec.emplace_back([](sf::Vector2i& v) { --v.x; --v.y; }, [](sf::Vector2i& v) { ++v.x; ++v.y; });
-    vec.emplace_back([](sf::Vector2i& v) { --v.x; ++v.y; }, [](sf::Vector2i& v) { ++v.x; --v.y; });
-
-    for (const auto& [f1, f2]: vec) {
+    for (const auto& [f1, f2]: _moveDirections) {
         if (totalInDirection(_board, f1, placedStone, lastMoved) +
             totalInDirection(_board, f2, placedStone, lastMoved) >= 4) {
             WARN("game has ended, player %d has won", static_cast<int>(_player) + 1);
@@ -192,14 +236,15 @@ bool Gomoku::hasGameEnded(const sf::Vector2i& placedStone) const {
         }
     }
 
+    // TODO: check if it can be broken by capture
+
     return false;
 }
 
-Coordinate Gomoku::aiMove()
-{
-	LOG("Player which does the move %i", _player);
-	auto result = _ai->AiMove(_board, _player);
-	LOG("AI MOVE RESPONSE STRING = %s", result.errorString.c_str());
-	LOG("The move is [%i][%i]", result.move.bestCoords.y, result.move.bestCoords.x);
-	return result.move.bestCoords;
+Coordinate Gomoku::aiMove() {
+    LOG("Player which does the move %i", _player);
+    auto result = _ai->AiMove(_board, _player);
+    LOG("AI MOVE RESPONSE STRING = %s", result.errorString.c_str());
+    LOG("The move is [%i][%i]", result.move.bestCoords.y, result.move.bestCoords.x);
+    return result.move.bestCoords;
 }
