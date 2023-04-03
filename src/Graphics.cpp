@@ -194,7 +194,7 @@ void Graphics::addStone(int x, int y, Tile player, std::vector<Sprite>& stones, 
     txt.setFillColor(player == Tile::P1 ? Color::White : Color::Black);
     txt.setCharacterSize(static_cast<unsigned int>(_stoneSize * 0.3));
     txt.setStyle(Text::Bold);
-    txt.setString(fmt::format("{},{}", x, y));
+    txt.setString(fmt::format("{},{}", y, x));
     auto center = txt.getGlobalBounds().getSize() / 2.f;
     auto localbounds = center + txt.getLocalBounds().getPosition();
     Vector2f rounded = {std::round(localbounds.x), std::round(localbounds.y)};

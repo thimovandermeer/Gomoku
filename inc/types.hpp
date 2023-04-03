@@ -43,12 +43,6 @@ struct bestMove {
 	int 		maxScore;
 };
 
-struct GameState {
-	std::vector<std::vector<Tile>> board;
-	Player currentPlayer = Player::PLAYERONE;
-	int lastMoveRow = -1;
-	int lastMoveCol = -1;
-};
 
 
 #endif //GOMOKU_TYPES_HPP

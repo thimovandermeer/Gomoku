@@ -22,3 +22,13 @@ void printBoard(const std::vector<std::vector<Tile>>& b) {
         std::cerr << "\n";
     }
 }
+
+void printBoardAi(const std::vector<std::vector<TileAi>>& b) {
+	for (const auto& elem: b) {
+		for (const auto& nr: elem) {
+			std::cerr << "[ " << (int)nr.pos << " ";
+			std::cerr << nr.Removable << "] ";
+		}
+		std::cerr << "\n";
+	}
+}

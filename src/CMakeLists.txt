@@ -17,6 +17,7 @@ target_sources(gomoku_test PRIVATE
 		Validator.cpp
 		logger.cpp
 		DoubleThreeCheck.cpp
+		NewValidator.cpp
         Utils.cpp
 		Capture.cpp
 		AI/Ai.cpp

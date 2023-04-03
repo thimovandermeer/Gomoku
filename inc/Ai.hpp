@@ -8,6 +8,12 @@
 #include <vector>
 #include "boardState.hpp"
 
+#ifndef TIMEOUT_VALUE
+# define TIMEOUT_VALUE 4900
+#endif
+
+struct TileAi;
+
 struct AiResponse {
 	std::string errorString;
 	bestMove	move;
@@ -39,8 +45,8 @@ public:
 
 private:
 	bestMove miniMax(BoardState state, int depth, int alpha, int beta, bool maximizingPlayer);
-	int evaluateOwnMoves(const std::vector<std::vector<Tile>> &board, Tile player);
-	int evaluateOpponentMoves(const std::vector<std::vector<Tile>> &board, Tile player);
+	int evaluateOwnMoves(const std::vector<std::vector<TileAi>> &board, Tile player);
+	int evaluateOpponentMoves(const std::vector<std::vector<TileAi>> &board, Tile opponent);
 };
 
 

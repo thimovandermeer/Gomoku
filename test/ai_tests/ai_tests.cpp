@@ -60,5 +60,15 @@ TEST(evaluate_test, minimax) {
 	ASSERT_EQ(result.move.bestCoords.x, 4);
 }
 
+//TEST(evaluate_test, getvalidmoves){
+//	auto board = create_empty_board();
+//
+//	board[0][1] = Tile::P1;
+//	board[0][2] = Tile::P2;
+//
+//	auto state = BoardState(board, Player::PLAYERONE);
+//
+//}
+
 
 

@@ -49,7 +49,6 @@ void Gomoku::handleMouseButtonPressed(const sf::Event& event) {
 }
 
 void Gomoku::gameLoop() {
-    setLogLevel(LOG_WARN);
     // draw board for the first time
     _graphics->update(_board, _p1Captures, _p2Captures);
     // hack;
@@ -66,20 +65,20 @@ void Gomoku::gameLoop() {
                 WARN("AI should move now");
                 tmp = false;
             }
-//            WARN("before ai call");
+            WARN("before ai call");
 //             ai call
-//            Coordinate newMove = aiMove();
+            Coordinate newMove = aiMove();
 //             do move
-//            WARN("after ai call");
-//            if(newMove.y != -1 && newMove.x != -1) {
-//                sf::Vector2<int> move;
-//                move.y = newMove.y;
-//                move.x = newMove.x;
-//                WARN("We are going to do the move %i %i", move.y, move.x);
-//                doMove({newMove.x, newMove.y});
-//                // assuming AI always does a valid move, board can be udpated
-//                _graphics->update(_board, _p1Captures, _p2Captures);
-//            }
+            WARN("after ai call");
+            if(newMove.y != -1 && newMove.x != -1) {
+                sf::Vector2<int> move;
+                move.y = newMove.y;
+                move.x = newMove.x;
+                WARN("We are going to do the move %i %i", move.y, move.x);
+                doMove({newMove.x, newMove.y});
+                // assuming AI always does a valid move, board can be udpated
+                _graphics->update(_board, _p1Captures, _p2Captures);
+            }
         }
         std::optional<sf::Event> eventWrapper = _graphics->getEvent();
         while (eventWrapper != std::nullopt) {
@@ -242,9 +241,6 @@ bool Gomoku::hasGameEnded(const sf::Vector2i& placedStone) const {
 }
 
 Coordinate Gomoku::aiMove() {
-    LOG("Player which does the move %i", _player);
     auto result = _ai->AiMove(_board, _player);
-    LOG("AI MOVE RESPONSE STRING = %s", result.errorString.c_str());
-    LOG("The move is [%i][%i]", result.move.bestCoords.y, result.move.bestCoords.x);
     return result.move.bestCoords;
 }

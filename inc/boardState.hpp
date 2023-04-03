@@ -7,20 +7,27 @@
 #include "Gomoku.hpp"
 #include "Ai.hpp"
 
+struct TileAi {
+	Tile pos;
+	bool Removable;
+};
+
 class BoardState {
 public:
-	std::vector<std::vector<Tile>> board;
-	Tile player;
-
+	std::vector<std::vector<TileAi>> board;
+	Tile player = Tile::P2;
+	Tile opponent = Tile::P1;
 	BoardState(std::vector<std::vector<Tile>> board, Player player) :
-	board(board), player((Tile)player)
+	player((Tile)player)
 	{
+		setBoard(board);
 	}
 	bool isValidMove(int row, int col);
-	void makeMove(bestMove move);
-	std::vector<bestMove> getValidMoves();
+	bool makeMove(Coordinate move);
+	std::vector<Coordinate> getValidMoves();
 	bool isTerminal();
 	void undoMove(bestMove move);
+	void setBoard(std::vector<std::vector<Tile>> board);
 
 };
 
