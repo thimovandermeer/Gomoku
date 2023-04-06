@@ -32,7 +32,7 @@ public:
     Gomoku(std::unique_ptr<IValidator>& validator, std::unique_ptr<IGraphics>& graphics, std::unique_ptr<IAi>& ai) :
             _validator(std::move(validator)), _graphics(std::move(graphics)), _ai(std::move(ai)),
             _board({BOARD_SIZE, {BOARD_SIZE, Tile::EMPTY}}), _player(Player::PLAYERONE), _state{}, _gameEnd(false),
-            _p1Captures(0), _p2Captures(0), _capturedCoords({{-1, -1}, {-1, -1}}) {
+            _p1Captures(0), _p2Captures(0), _capturedCoords{} {
         _moveDirections.emplace_back([](sf::Vector2i& v) { --v.x; }, [](sf::Vector2i& v) { ++v.x; });
         _moveDirections.emplace_back([](sf::Vector2i& v) { --v.y; }, [](sf::Vector2i& v) { ++v.y; });
         _moveDirections.emplace_back([](sf::Vector2i& v) { --v.x; --v.y; }, [](sf::Vector2i& v) { ++v.x; ++v.y; });
@@ -51,7 +51,7 @@ private:
     bool _gameEnd;
     int _p1Captures;
     int _p2Captures;
-    std::pair<sf::Vector2i, sf::Vector2i> _capturedCoords;
+    std::vector<std::pair<sf::Vector2i, sf::Vector2i>> _capturedCoords;
     std::vector<std::pair<std::function<void(sf::Vector2i&)>, std::function<void(sf::Vector2i&)>>> _moveDirections;
 
     void handleKeyPressed(const sf::Event& event);
@@ -59,7 +59,7 @@ private:
     void doMove(const sf::Vector2<int>& moveLocation);
     bool validateMove();
     void capture(const sf::Vector2i& moveLocation);
-    bool findCapture(const sf::Vector2i& moveLocation);
+    void findCapture(const sf::Vector2i& moveLocation);
     bool findCaptureInDirection(const std::function<void(sf::Vector2i&)>& move, const sf::Vector2i& moveLocation);
     void undoCapture();
     Coordinate aiMove();

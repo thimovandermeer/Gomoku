@@ -132,48 +132,50 @@ bool Gomoku::findCaptureInDirection(const std::function<void(sf::Vector2i&)>& mo
     }
     if (isCorrectTile(_board, first, toCapture) && isCorrectTile(_board, second, toCapture) &&
         isCorrectTile(_board, third, own)) {
-        _capturedCoords = {first, second};
+        _capturedCoords.emplace_back(first, second);
         return true;
     }
     return false;
 }
 
-bool Gomoku::findCapture(const sf::Vector2i& moveLocation) {
+void Gomoku::findCapture(const sf::Vector2i& moveLocation) {
     for (const auto& [dir1, dir2]: _moveDirections) {
-        if (findCaptureInDirection(dir1, moveLocation)) {
-            return true;
-        }
-        if (findCaptureInDirection(dir2, moveLocation)) {
-            return true;
-        }
+        findCaptureInDirection(dir1, moveLocation);
+        findCaptureInDirection(dir2, moveLocation);
     }
-    return false;
 }
 
 void Gomoku::capture(const sf::Vector2i& moveLocation) {
     // TODO: think about double capture
-    _capturedCoords = {{-1, -1}, {-1, -1}};
-    if (findCapture(moveLocation)) {
-        _board[_capturedCoords.first.y][_capturedCoords.first.x] = Tile::EMPTY;
-        _board[_capturedCoords.second.y][_capturedCoords.second.x] = Tile::EMPTY;
-        if (_player == Player::PLAYERONE) {
-            ++_p1Captures;
-        } else {
-            ++_p2Captures;
+    _capturedCoords.clear();
+    findCapture(moveLocation);
+    if (not _capturedCoords.empty()) {
+        for (const auto& [first, second]: _capturedCoords) {
+            _board[first.y][first.x] = Tile::EMPTY;
+            _board[second.y][second.x] = Tile::EMPTY;
+
+            if (_player == Player::PLAYERONE) {
+                ++_p1Captures;
+            } else {
+                ++_p2Captures;
+            }
         }
     }
 }
 
 void Gomoku::undoCapture() {
     Tile toSetBack = _player == Player::PLAYERONE ? Tile::P2 : Tile::P1;
-    _board[_capturedCoords.first.y][_capturedCoords.first.x] = toSetBack;
-    _board[_capturedCoords.second.y][_capturedCoords.second.x] = toSetBack;
-    if (_player == Player::PLAYERONE) {
-        --_p1Captures;
-    } else {
-        --_p2Captures;
+    for (const auto& [first, second]: _capturedCoords) {
+        _board[first.y][first.x] = toSetBack;
+        _board[second.y][second.x] = toSetBack;
+
+        if (_player == Player::PLAYERONE) {
+            --_p1Captures;
+        } else {
+            --_p2Captures;
+        }
     }
-    _capturedCoords = {{-1, -1}, {-1, -1}};
+    _capturedCoords.clear();
 }
 
 void Gomoku::doMove(const sf::Vector2<int>& moveLocation) {
@@ -195,7 +197,7 @@ void Gomoku::doMove(const sf::Vector2<int>& moveLocation) {
         _board[moveLocation.y][moveLocation.x] = Tile::EMPTY;
         _graphics->setHeader(fmt::format("move creates 2 open threes\n\tat ({}, {})", moveLocation.x, moveLocation.y));
         // undo capture if necessary
-        if (_capturedCoords.first.x != -1) {
+        if (not _capturedCoords.empty()) {
             undoCapture();
         }
     }
