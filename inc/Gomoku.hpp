@@ -63,7 +63,10 @@ private:
     void undoCapture();
     Coordinate aiMove();
 
-
+    bool canBeCapturedInDirection(
+            const std::pair<std::function<void(sf::Vector2i&)>, std::function<void(sf::Vector2i&)>>& dir,
+            const sf::Vector2i& location) const;
+    bool canBeCaptured(const sf::Vector2i& location) const;
     bool hasGameEnded(const sf::Vector2i& placedStone) const;
 };
 

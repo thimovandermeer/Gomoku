@@ -71,7 +71,7 @@ void Gomoku::gameLoop() {
             Coordinate newMove = aiMove();
 //             do move
             WARN("after ai call");
-            if(newMove.y != -1 && newMove.x != -1) {
+            if (newMove.y != -1 && newMove.x != -1) {
                 sf::Vector2<int> move;
                 move.y = newMove.y;
                 move.x = newMove.x;
@@ -223,6 +223,60 @@ static int totalInDirection(const std::vector<std::vector<Tile>>& board, const s
     return ret;
 }
 
+static bool capturableSequence(const std::vector<Tile>& seq) {
+    Tile middlePlayer = seq[2];
+    Tile capturingPlayer = middlePlayer == Tile::P1 ? Tile::P2 : Tile::P1;
+
+    // * doesn't matter
+    // . empty
+    // X middle player
+    // O capturing player
+    // * . X X O
+    if (seq[1] == Tile::EMPTY && seq[3] == middlePlayer && seq[4] == capturingPlayer) {
+        return true;
+    }
+    // O X X . *
+    if (seq[0] == capturingPlayer && seq[1] == middlePlayer && seq[3] == Tile::EMPTY) {
+        return true;
+    }
+    // . X X O *
+    if (seq[0] == Tile::EMPTY && seq[1] == middlePlayer && seq[3] == capturingPlayer) {
+        return true;
+    }
+    // * O X X .
+    if (seq[1] == capturingPlayer && seq[3] == middlePlayer && seq[4] == Tile::EMPTY) {
+        return true;
+    }
+
+    return false;
+}
+
+bool Gomoku::canBeCapturedInDirection(
+        const std::pair<std::function<void(sf::Vector2i&)>, std::function<void(sf::Vector2i&)>>& dir,
+        const sf::Vector2i& location) const {
+    auto current{location};
+    dir.first(current);
+    dir.first(current);
+    std::vector<Tile> sequence{};
+    for (int i = 0; i <= 5; ++i) {
+        sequence.emplace_back(_board[current.y][current.x]);
+        dir.second(current);
+    }
+    return capturableSequence(sequence);
+}
+
+bool Gomoku::canBeCaptured(const sf::Vector2i& location) const {
+    if (_board[location.y][location.x] == Tile::EMPTY) {
+        return false;
+    }
+    for (const auto& direction: _moveDirections) {
+        if (canBeCapturedInDirection(direction, location)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 bool Gomoku::hasGameEnded(const sf::Vector2i& placedStone) const {
     if (_p1Captures >= 5 || _p2Captures >= 5) {
         return true;
@@ -232,12 +286,11 @@ bool Gomoku::hasGameEnded(const sf::Vector2i& placedStone) const {
     for (const auto& [f1, f2]: _moveDirections) {
         if (totalInDirection(_board, f1, placedStone, lastMoved) +
             totalInDirection(_board, f2, placedStone, lastMoved) >= 4) {
+            // TODO: check if it can be broken by capture
             WARN("game has ended, player %d has won", static_cast<int>(_player) + 1);
             return true;
         }
     }
-
-    // TODO: check if it can be broken by capture
 
     return false;
 }
