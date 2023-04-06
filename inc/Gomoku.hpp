@@ -21,7 +21,7 @@ class IGraphics;
 
 class IAi;
 
-#define BOARD_SIZE 8
+#define BOARD_SIZE 19
 
 class Gomoku {
 public:
@@ -31,7 +31,7 @@ public:
     ~Gomoku() = default;
     Gomoku(std::unique_ptr<IValidator>& validator, std::unique_ptr<IGraphics>& graphics, std::unique_ptr<IAi>& ai) :
             _validator(std::move(validator)), _graphics(std::move(graphics)), _ai(std::move(ai)),
-            _board({BOARD_SIZE, {BOARD_SIZE, Tile::EMPTY}}), _player(Player::PLAYERONE), _state{}, _gameEnd(false),
+            _board({BOARD_SIZE, {BOARD_SIZE, Tile::EMPTY}}), _player(Player::PLAYERONE), _gameEnd(false),
             _p1Captures(0), _p2Captures(0), _capturedCoords{} {
         _moveDirections.emplace_back([](sf::Vector2i& v) { --v.x; }, [](sf::Vector2i& v) { ++v.x; });
         _moveDirections.emplace_back([](sf::Vector2i& v) { --v.y; }, [](sf::Vector2i& v) { ++v.y; });
@@ -47,7 +47,6 @@ private:
     std::unique_ptr<IAi> _ai;
     std::vector<std::vector<Tile>> _board;
     Player _player;
-    State _state;
     bool _gameEnd;
     int _p1Captures;
     int _p2Captures;

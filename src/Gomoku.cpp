@@ -42,7 +42,9 @@ void Gomoku::handleMouseButtonPressed(const sf::Event& event) {
     }
     doMove(moveLocation.value());
     if (_gameEnd) {
-        _graphics->setHeader(fmt::format("Player {} has won!", static_cast<int>(_player) + 1));
+        // player has swapped already in doMove(), so we report the opposite of the "current" player
+        int winningPlayer = _player == Player::PLAYERONE ? 2 : 1;
+        _graphics->setHeader(fmt::format("Player {} has won!", winningPlayer));
     }
     // only redraw the board in this case because we don't change the board for other events
     _graphics->update(_board, _p1Captures, _p2Captures);
@@ -51,7 +53,6 @@ void Gomoku::handleMouseButtonPressed(const sf::Event& event) {
 void Gomoku::gameLoop() {
     // draw board for the first time
     _graphics->update(_board, _p1Captures, _p2Captures);
-    // hack;
     while (true) {
         if (not _graphics->isWindowOpen()) {
             // potential cleanup, but essentially the window is closed, so we exit
@@ -146,7 +147,6 @@ void Gomoku::findCapture(const sf::Vector2i& moveLocation) {
 }
 
 void Gomoku::capture(const sf::Vector2i& moveLocation) {
-    // TODO: think about double capture
     _capturedCoords.clear();
     findCapture(moveLocation);
     if (not _capturedCoords.empty()) {
