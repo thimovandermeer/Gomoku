@@ -9,7 +9,7 @@
 #include <vector>
 
 enum class Tile {
-    P1, P2, EMPTY
+    P1, P2, EMPTY, OOB
 };
 
 enum class Player {

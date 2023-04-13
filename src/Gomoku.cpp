@@ -210,7 +210,7 @@ bool Gomoku::validateMove() {
 }
 
 static int totalInDirection(const std::vector<std::vector<Tile>>& board, const std::function<void(sf::Vector2i&)>& move,
-                            const sf::Vector2i& start, const Tile& val) {
+                            const sf::Vector2i& start, const Tile& val, std::vector<sf::Vector2i>& row) {
     sf::Vector2i checkPos = start;
     int ret = 0;
     for (int i = 0; i < 4; ++i) {
@@ -218,6 +218,7 @@ static int totalInDirection(const std::vector<std::vector<Tile>>& board, const s
         if (not isInBounds(checkPos) || not isCorrectTile(board, checkPos, val)) {
             return ret;
         }
+        row.push_back(checkPos);
         ++ret;
     }
     return ret;
@@ -259,7 +260,11 @@ bool Gomoku::canBeCapturedInDirection(
     dir.first(current);
     std::vector<Tile> sequence{};
     for (int i = 0; i <= 5; ++i) {
-        sequence.emplace_back(_board[current.y][current.x]);
+        if (isInBounds(current)) {
+            sequence.push_back(_board[current.y][current.x]);
+        } else {
+            sequence.push_back(Tile::OOB);
+        }
         dir.second(current);
     }
     return capturableSequence(sequence);
@@ -284,9 +289,15 @@ bool Gomoku::hasGameEnded(const sf::Vector2i& placedStone) const {
     const Tile lastMoved = _player == Player::PLAYERONE ? Tile::P1 : Tile::P2;
 
     for (const auto& [f1, f2]: _moveDirections) {
-        if (totalInDirection(_board, f1, placedStone, lastMoved) +
-            totalInDirection(_board, f2, placedStone, lastMoved) >= 4) {
-            // TODO: check if it can be broken by capture
+        std::vector<sf::Vector2i> winningRow{placedStone};
+        if (totalInDirection(_board, f1, placedStone, lastMoved, winningRow) +
+            totalInDirection(_board, f2, placedStone, lastMoved, winningRow) >= 4) {
+            for (const auto& pos: winningRow) {
+                if (canBeCaptured(pos)) {
+                    WARN("win can be broken by capture");
+                    return false;
+                }
+            }
             WARN("game has ended, player %d has won", static_cast<int>(_player) + 1);
             return true;
         }
