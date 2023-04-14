@@ -32,7 +32,7 @@ public:
     Gomoku(std::unique_ptr<IValidator>& validator, std::unique_ptr<IGraphics>& graphics, std::unique_ptr<IAi>& ai) :
             _validator(std::move(validator)), _graphics(std::move(graphics)), _ai(std::move(ai)),
             _board({BOARD_SIZE, {BOARD_SIZE, Tile::EMPTY}}), _player(Player::PLAYERONE), _gameEnd(false),
-            _p1Captures(0), _p2Captures(0), _capturedCoords{} {
+            _p1Captures(0), _p2Captures(0), _capturedCoords{}, _gameType(GameType::INVALID) {
         _moveDirections.emplace_back([](sf::Vector2i& v) { --v.x; }, [](sf::Vector2i& v) { ++v.x; });
         _moveDirections.emplace_back([](sf::Vector2i& v) { --v.y; }, [](sf::Vector2i& v) { ++v.y; });
         _moveDirections.emplace_back([](sf::Vector2i& v) { --v.x; --v.y; }, [](sf::Vector2i& v) { ++v.x; ++v.y; });
@@ -52,6 +52,7 @@ private:
     int _p2Captures;
     std::vector<std::pair<sf::Vector2i, sf::Vector2i>> _capturedCoords;
     std::vector<std::pair<std::function<void(sf::Vector2i&)>, std::function<void(sf::Vector2i&)>>> _moveDirections;
+    GameType _gameType;
 
     void handleKeyPressed(const sf::Event& event);
     void handleMouseButtonPressed(const sf::Event& event);

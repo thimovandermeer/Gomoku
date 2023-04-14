@@ -253,7 +253,7 @@ bestMove Ai::miniMax(BoardState state, int depth, int alpha, int beta, bool maxi
 		newState.makeMove(move);
 		int score = miniMax(newState, depth-1, alpha, beta, !maximizingPlayer).maxScore;
 
-		if (maximizingPlayer && score > bestScore || (score == bestScore && std::rand() % 2 == 0)) {
+		if ((maximizingPlayer && score > bestScore) || (score == bestScore && std::rand() % 2 == 0)) {
 			bestScore = score;
 			theMove = { move, bestScore };
 			alpha = std::max(alpha, bestScore);

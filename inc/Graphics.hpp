@@ -28,10 +28,11 @@ public:
     virtual std::optional<sf::Event> getEvent() = 0;
     virtual void setHeader(const std::string& text) = 0;
     virtual std::optional<sf::Vector2<int>> nearestIntersection(int x, int y) const = 0;
-    virtual std::optional<ButtonId> ButtonClick(const sf::Vector2i& loc) const = 0;
+    virtual std::optional<ButtonId> ButtonClick(const sf::Vector2i& loc, bool firstScreen) const = 0;
     virtual void setRulesActive(bool b) = 0;
     virtual bool getRulesActive() const = 0;
     virtual void update(const std::vector<std::vector<Tile>>& board, int p1Captures, int p2Captures) = 0;
+    virtual void drawGameSelect() = 0;
 };
 
 class Button : public sf::RectangleShape {
@@ -60,20 +61,23 @@ public:
     std::optional<sf::Event> getEvent() override;
     std::optional<sf::Vector2<int>> nearestIntersection(int x, int y) const override;
     void setHeader(const std::string& text) override;
-    std::optional<ButtonId> ButtonClick(const sf::Vector2i& loc) const override;
+    std::optional<ButtonId> ButtonClick(const sf::Vector2i& loc, bool firstScreen) const override;
     void setRulesActive(bool b) override;
     bool getRulesActive() const override;
 
     void update(const std::vector<std::vector<Tile>>& board, int p1Captures, int p2Captures) override;
+    void drawGameSelect() override;
 
 private:
     sf::Text _header;
     bool _rulesActive;
     Button _rulesButton;
-    Button _suggestMoveButton;
     sf::Text _captures;
 
 // these are (likely) set only once
+    Button _suggestMoveButton;
+    Button _singleplayerButton;
+    Button _multiplayerButton;
     std::unique_ptr<sf::RenderWindow> _window;
     sf::Font _font;
     std::vector<int> _xCoordinates;

@@ -26,7 +26,21 @@ void Gomoku::handleMouseButtonPressed(const sf::Event& event) {
         LOG("Right click at (%d, %d)", event.mouseButton.x, event.mouseButton.y);
         return;
     }
-    auto buttonClick = _graphics->ButtonClick({event.mouseButton.x, event.mouseButton.y});
+
+    auto buttonClick = _graphics->ButtonClick({event.mouseButton.x, event.mouseButton.y},
+                                              _gameType == GameType::INVALID);
+    if (_gameType == GameType::INVALID) {
+        if (buttonClick.has_value() && buttonClick.value() == ButtonId::SINGLEPLAYER_GAME) {
+            _gameType = GameType::SINGLEPLAYER;
+            _graphics->update(_board, _p1Captures, _p2Captures);
+        }
+        if (buttonClick.has_value() && buttonClick.value() == ButtonId::MULTIPLAYER_GAME) {
+            _gameType = GameType::MULTIPLAYER;
+            _graphics->update(_board, _p1Captures, _p2Captures);
+        }
+        return;
+    }
+
     if (buttonClick.has_value() && buttonClick.value() == ButtonId::RULES) {
         // toggle rules
         _graphics->setRulesActive(not _graphics->getRulesActive());
@@ -59,8 +73,7 @@ void Gomoku::handleMouseButtonPressed(const sf::Event& event) {
 }
 
 void Gomoku::gameLoop() {
-    // draw board for the first time
-    _graphics->update(_board, _p1Captures, _p2Captures);
+    _graphics->drawGameSelect();
     while (true) {
         if (not _graphics->isWindowOpen()) {
             // potential cleanup, but essentially the window is closed, so we exit
@@ -68,7 +81,7 @@ void Gomoku::gameLoop() {
         }
         // TODO: remove this tmp, only to print log msg 1 time per AI move
         static bool tmp = true;
-        if (_player == Player::PLAYERTWO && not _gameEnd) {
+        if (not _gameEnd && _gameType == GameType::SINGLEPLAYER && _player == Player::PLAYERTWO) {
             // TODO: AI move here
             if (tmp) {
                 WARN("AI should move now");

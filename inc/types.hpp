@@ -44,12 +44,13 @@ struct bestMove {
 
 enum class ButtonId {
     SINGLEPLAYER_GAME,
-    MULTIPLAYER_PGAME,
+    MULTIPLAYER_GAME,
     RULES,
     SUGGEST_MOVE
 };
 
 enum class GameType {
+    INVALID,
     SINGLEPLAYER,
     MULTIPLAYER
 };

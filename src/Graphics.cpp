@@ -36,14 +36,15 @@ void Graphics::createLines() {
     }
 }
 
-void createButton(Button& button, const std::string& content, const Vector2f& position, const Font& font) {
-    button.setSize({WINDOW_WIDTH * 0.125, WINDOW_HEIGHT * 0.03});
+void createButton(Button& button, const std::string& content, const Vector2f& position, const Vector2f& size,
+                  const Font& font) {
+    button.setSize(size);
     button.setFillColor(Color::Black);
     button.setPosition(position);
 
     auto& txt = button.mutableText();
     txt.setFont(font);
-    txt.setCharacterSize(WINDOW_WIDTH / 50);
+    txt.setCharacterSize(static_cast<unsigned int>(size.x / 6.5f));
     txt.setFillColor(Color::White);
     button.setText(content);
 
@@ -83,8 +84,18 @@ Graphics::Graphics() : _rulesActive(false), _pixelsPerSpace(0) {
     _captures.setFillColor(Color::Black);
     _captures.setCharacterSize(WINDOW_WIDTH * (0.08 / MAX_HEADER_LINES));
     createLines();
-    createButton(_rulesButton, "Rules", {WINDOW_WIDTH - (WINDOW_WIDTH * 0.175), WINDOW_HEIGHT * 0.014}, _font);
-    createButton(_suggestMoveButton, "Hint", {WINDOW_WIDTH - (WINDOW_WIDTH * 0.175), WINDOW_HEIGHT * 0.046}, _font);
+    Vector2f cornerButtonSize{WINDOW_WIDTH * 0.125, WINDOW_HEIGHT * 0.03};
+    createButton(_rulesButton, "Rules", {WINDOW_WIDTH - (WINDOW_WIDTH * 0.175), WINDOW_HEIGHT * 0.014},
+                 cornerButtonSize, _font);
+    createButton(_suggestMoveButton, "Hint", {WINDOW_WIDTH - (WINDOW_WIDTH * 0.175), WINDOW_HEIGHT * 0.046},
+                 cornerButtonSize, _font);
+    Vector2f gameModeSelectButtonSize{WINDOW_WIDTH * 0.3, WINDOW_HEIGHT * 0.06};
+    createButton(_singleplayerButton, "1 player game", {static_cast<float>(WINDOW_WIDTH) / 2 - WINDOW_WIDTH * 0.15,
+                                                        WINDOW_HEIGHT / 2 - WINDOW_HEIGHT * 0.03 -
+                                                        WINDOW_HEIGHT * 0.12}, gameModeSelectButtonSize, _font);
+    createButton(_multiplayerButton, "2 player game", {static_cast<float>(WINDOW_WIDTH) / 2 - WINDOW_WIDTH * 0.15,
+                                                       WINDOW_HEIGHT / 2 - WINDOW_HEIGHT * 0.03 + WINDOW_HEIGHT * 0.12},
+                 gameModeSelectButtonSize, _font);
     _stoneSize = static_cast<float>(_pixelsPerSpace) * CIRCLE_SCALE;
 
     if (not _boardTexture.loadFromFile(resourcePath + "board.jpg")) {
@@ -163,12 +174,21 @@ void Graphics::setHeader(const std::string& text) {
             {static_cast<float>(_window->getSize().x) / 2.f, static_cast<float>(_window->getSize().y) / 20.f});
 }
 
-std::optional<ButtonId> Graphics::ButtonClick(const Vector2i& loc) const {
+std::optional<ButtonId> Graphics::ButtonClick(const Vector2i& loc, bool firstScreen) const {
     if (_rulesButton.contains(loc)) {
         return ButtonId::RULES;
     }
     if (_suggestMoveButton.contains(loc)) {
         return ButtonId::SUGGEST_MOVE;
+    }
+    if (not firstScreen) {
+        return std::nullopt;
+    }
+    if (_singleplayerButton.contains(loc)) {
+        return ButtonId::SINGLEPLAYER_GAME;
+    }
+    if (_multiplayerButton.contains(loc)) {
+        return ButtonId::MULTIPLAYER_GAME;
     }
     return std::nullopt;
 }
@@ -272,5 +292,15 @@ void Graphics::update(const std::vector<std::vector<Tile>>& board, int p1Capture
         _window->draw(txt);
     }
 #endif
+    _window->display();
+}
+
+void Graphics::drawGameSelect() {
+    _window->clear(Color::White);
+    _window->draw(_boardImage);
+    _window->draw(_singleplayerButton);
+    _window->draw(_singleplayerButton.text());
+    _window->draw(_multiplayerButton);
+    _window->draw(_multiplayerButton.text());
     _window->display();
 }
