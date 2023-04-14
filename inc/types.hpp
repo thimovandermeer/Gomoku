@@ -37,12 +37,21 @@ struct State {
     Doubles capturePos;
 };
 
-
 struct bestMove {
-	Coordinate 	bestCoords;
-	int 		maxScore;
+    Coordinate bestCoords;
+    int maxScore;
 };
 
+enum class ButtonId {
+    SINGLEPLAYER_GAME,
+    MULTIPLAYER_PGAME,
+    RULES,
+    SUGGEST_MOVE
+};
 
+enum class GameType {
+    SINGLEPLAYER,
+    MULTIPLAYER
+};
 
 #endif //GOMOKU_TYPES_HPP

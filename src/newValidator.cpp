@@ -75,6 +75,9 @@ bool NewValidator::openThreeInDirection(
                 case Tile::EMPTY:
                     sequence.push_back(EMPTY);
                     break;
+                default:
+                    sequence.push_back(OOB);
+                    break;
             }
         }
         moves.second(current);

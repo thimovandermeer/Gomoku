@@ -7,6 +7,7 @@
 
 #include <memory>
 #include <SFML/Graphics.hpp>
+#include "types.hpp"
 
 #ifndef PROJECT_ROOT_DIR
 #define PROJECT_ROOT_DIR "."
@@ -27,10 +28,23 @@ public:
     virtual std::optional<sf::Event> getEvent() = 0;
     virtual void setHeader(const std::string& text) = 0;
     virtual std::optional<sf::Vector2<int>> nearestIntersection(int x, int y) const = 0;
-    virtual bool isRulesClick(const sf::Vector2i& loc) const = 0;
+    virtual std::optional<ButtonId> ButtonClick(const sf::Vector2i& loc) const = 0;
     virtual void setRulesActive(bool b) = 0;
     virtual bool getRulesActive() const = 0;
     virtual void update(const std::vector<std::vector<Tile>>& board, int p1Captures, int p2Captures) = 0;
+};
+
+class Button : public sf::RectangleShape {
+public:
+    void setText(const std::string& txt) { _text.setString(txt); }
+    const sf::Text& text() const { return _text; }
+    sf::Text& mutableText() { return _text; }
+    bool contains(const sf::Vector2i& loc) const {
+        sf::IntRect b(getGlobalBounds());
+        return b.contains(loc);
+    }
+private:
+    sf::Text _text;
 };
 
 class Graphics : public IGraphics {
@@ -46,7 +60,7 @@ public:
     std::optional<sf::Event> getEvent() override;
     std::optional<sf::Vector2<int>> nearestIntersection(int x, int y) const override;
     void setHeader(const std::string& text) override;
-    bool isRulesClick(const sf::Vector2i& loc) const override;
+    std::optional<ButtonId> ButtonClick(const sf::Vector2i& loc) const override;
     void setRulesActive(bool b) override;
     bool getRulesActive() const override;
 
@@ -55,7 +69,8 @@ public:
 private:
     sf::Text _header;
     bool _rulesActive;
-    sf::Text _rulesString;
+    Button _rulesButton;
+    Button _suggestMoveButton;
     sf::Text _captures;
 
 // these are (likely) set only once
@@ -64,7 +79,6 @@ private:
     std::vector<int> _xCoordinates;
     std::vector<int> _yCoordinates;
     std::vector<sf::RectangleShape> _lines;
-    sf::RectangleShape _rulesButton;
     int _pixelsPerSpace;
     float _stoneSize;
     sf::Texture _blackStone;
@@ -73,10 +87,8 @@ private:
     sf::Sprite _boardImage;
 
     void createLines();
-    void createButton();
     void addStone(int x, int y, Tile player, std::vector<sf::Sprite>& stones, std::vector<sf::Text>& stoneText);
     void drawRules();
 };
-
 
 #endif //GOMOKU_GRAPHICS_HPP

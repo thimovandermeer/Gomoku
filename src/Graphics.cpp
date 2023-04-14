@@ -36,22 +36,21 @@ void Graphics::createLines() {
     }
 }
 
-void Graphics::createButton() {
-    _rulesButton = RectangleShape({WINDOW_WIDTH * 0.125, WINDOW_HEIGHT * 0.03});
-    _rulesButton.setFillColor(Color::Black);
-    _rulesButton.setOutlineColor(Color::Black);
-    _rulesButton.setOutlineThickness(3);
-    _rulesButton.setPosition({WINDOW_WIDTH - (WINDOW_WIDTH * 0.175), WINDOW_HEIGHT * 0.03});
+void createButton(Button& button, const std::string& content, const Vector2f& position, const Font& font) {
+    button.setSize({WINDOW_WIDTH * 0.125, WINDOW_HEIGHT * 0.03});
+    button.setFillColor(Color::Black);
+    button.setPosition(position);
 
-    _rulesString.setFont(_font);
-    _rulesString.setCharacterSize(WINDOW_WIDTH / 50);
-    _rulesString.setFillColor(Color::White);
-    _rulesString.setString("Rules");
+    auto& txt = button.mutableText();
+    txt.setFont(font);
+    txt.setCharacterSize(WINDOW_WIDTH / 50);
+    txt.setFillColor(Color::White);
+    button.setText(content);
 
-    const FloatRect bounds(_rulesString.getLocalBounds());
-    const Vector2f box(_rulesButton.getSize());
-    _rulesString.setOrigin((bounds.width - box.x) / 2 + bounds.left, (bounds.height - box.y) / 2 + bounds.top);
-    _rulesString.setPosition(_rulesButton.getPosition());
+    const FloatRect bounds(txt.getLocalBounds());
+    const Vector2f box(button.getSize());
+    txt.setOrigin((bounds.width - box.x) / 2 + bounds.left, (bounds.height - box.y) / 2 + bounds.top);
+    txt.setPosition(button.getPosition());
 }
 
 Graphics::Graphics() : _rulesActive(false), _pixelsPerSpace(0) {
@@ -84,7 +83,8 @@ Graphics::Graphics() : _rulesActive(false), _pixelsPerSpace(0) {
     _captures.setFillColor(Color::Black);
     _captures.setCharacterSize(WINDOW_WIDTH * (0.08 / MAX_HEADER_LINES));
     createLines();
-    createButton();
+    createButton(_rulesButton, "Rules", {WINDOW_WIDTH - (WINDOW_WIDTH * 0.175), WINDOW_HEIGHT * 0.014}, _font);
+    createButton(_suggestMoveButton, "Hint", {WINDOW_WIDTH - (WINDOW_WIDTH * 0.175), WINDOW_HEIGHT * 0.046}, _font);
     _stoneSize = static_cast<float>(_pixelsPerSpace) * CIRCLE_SCALE;
 
     if (not _boardTexture.loadFromFile(resourcePath + "board.jpg")) {
@@ -163,13 +163,18 @@ void Graphics::setHeader(const std::string& text) {
             {static_cast<float>(_window->getSize().x) / 2.f, static_cast<float>(_window->getSize().y) / 20.f});
 }
 
-bool Graphics::isRulesClick(const Vector2i& loc) const {
-    IntRect bounds(_rulesButton.getGlobalBounds());
-    return bounds.contains(loc);
+std::optional<ButtonId> Graphics::ButtonClick(const Vector2i& loc) const {
+    if (_rulesButton.contains(loc)) {
+        return ButtonId::RULES;
+    }
+    if (_suggestMoveButton.contains(loc)) {
+        return ButtonId::SUGGEST_MOVE;
+    }
+    return std::nullopt;
 }
 
 void Graphics::setRulesActive(bool b) {
-    _rulesString.setString(b ? " Back" : "Rules");
+    _rulesButton.setText(b ? " Back" : "Rules");
     _rulesActive = b;
 }
 
@@ -225,7 +230,7 @@ void Graphics::drawRules() {
     rules.setPosition(WINDOW_WIDTH * 0.05, WINDOW_HEIGHT * 0.05);
 
     _window->draw(_rulesButton);
-    _window->draw(_rulesString);
+    _window->draw(_rulesButton.text());
     _window->draw(rules);
     _window->display();
 }
@@ -252,7 +257,9 @@ void Graphics::update(const std::vector<std::vector<Tile>>& board, int p1Capture
 
     _window->draw(_header);
     _window->draw(_rulesButton);
-    _window->draw(_rulesString);
+    _window->draw(_rulesButton.text());
+    _window->draw(_suggestMoveButton);
+    _window->draw(_suggestMoveButton.text());
     _window->draw(_captures);
     for (const auto& shape: _lines) {
         _window->draw(shape);
