@@ -118,12 +118,3 @@ bool NewValidator::validate() {
     }
     return true;
 }
-
-// necessary for interface
-State
-NewValidator::validate(const std::vector<std::vector<Tile>>& board, const Coordinate& moveLoc, const Player& player) {
-    (void)board;
-    (void)moveLoc;
-    (void)player;
-    return {};
-}

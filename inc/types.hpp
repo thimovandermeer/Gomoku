@@ -21,22 +21,6 @@ struct Coordinate {
     int y;
 };
 
-enum OkState {
-    ACCEPTED, ERROR
-};
-
-struct Doubles {
-    Coordinate one;
-    Coordinate two;
-};
-
-struct State {
-    OkState state;
-    std::string errorReason;
-    bool capture;
-    Doubles capturePos;
-};
-
 struct bestMove {
     Coordinate bestCoords;
     int maxScore;

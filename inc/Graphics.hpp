@@ -28,10 +28,10 @@ public:
     virtual std::optional<sf::Event> getEvent() = 0;
     virtual void setHeader(const std::string& text) = 0;
     virtual std::optional<sf::Vector2<int>> nearestIntersection(int x, int y) const = 0;
-    virtual std::optional<ButtonId> ButtonClick(const sf::Vector2i& loc, bool firstScreen) const = 0;
+    virtual std::optional<ButtonId> ButtonClick(const sf::Vector2i& loc, bool isGameSelect) const = 0;
     virtual void setRulesActive(bool b) = 0;
     virtual bool getRulesActive() const = 0;
-    virtual void update(const std::vector<std::vector<Tile>>& board, int p1Captures, int p2Captures) = 0;
+    virtual void update(const std::vector<std::vector<Tile>>& board, const std::pair<int, int>& captures) = 0;
     virtual void drawGameSelect() = 0;
 };
 
@@ -61,11 +61,11 @@ public:
     std::optional<sf::Event> getEvent() override;
     std::optional<sf::Vector2<int>> nearestIntersection(int x, int y) const override;
     void setHeader(const std::string& text) override;
-    std::optional<ButtonId> ButtonClick(const sf::Vector2i& loc, bool firstScreen) const override;
+    std::optional<ButtonId> ButtonClick(const sf::Vector2i& loc, bool isGameSelect) const override;
     void setRulesActive(bool b) override;
     bool getRulesActive() const override;
 
-    void update(const std::vector<std::vector<Tile>>& board, int p1Captures, int p2Captures) override;
+    void update(const std::vector<std::vector<Tile>>& board, const std::pair<int, int>& captures) override;
     void drawGameSelect() override;
 
 private:

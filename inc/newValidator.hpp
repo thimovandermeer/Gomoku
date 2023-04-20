@@ -6,8 +6,13 @@
 #define GOMOKU_NEWVALIDATOR_HPP
 
 #include "Gomoku.hpp"
-#include "Validator.hpp"
 #include "types.hpp"
+
+class IValidator {
+public:
+    virtual ~IValidator() = default;
+    virtual bool validate() = 0;
+};
 
 class NewValidator : public IValidator {
 public:
@@ -20,8 +25,6 @@ public:
         _movers.emplace_back([](Coordinate& v) { --v.x; ++v.y; }, [](Coordinate& v) { ++v.x; --v.y; });
     }
     ~NewValidator() override = default;
-    State
-    validate(const std::vector<std::vector<Tile>>& board, const Coordinate& moveLoc, const Player& player) override;
     bool validate() override;
 private:
     int isOpenThree(const Coordinate& pos);

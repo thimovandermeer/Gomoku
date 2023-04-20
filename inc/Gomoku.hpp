@@ -7,7 +7,6 @@
 
 #include <vector>
 #include <SFML/Graphics.hpp>
-#include "Validator.hpp"
 #include "Graphics.hpp"
 #include "types.hpp"
 #include "Ai.hpp"
@@ -29,10 +28,14 @@ public:
     Gomoku(const Gomoku&) = delete;
     Gomoku& operator=(const Gomoku&) = delete;
     ~Gomoku() = default;
-    Gomoku(std::unique_ptr<IValidator>& validator, std::unique_ptr<IGraphics>& graphics, std::unique_ptr<IAi>& ai) :
-            _validator(std::move(validator)), _graphics(std::move(graphics)), _ai(std::move(ai)),
-            _board({BOARD_SIZE, {BOARD_SIZE, Tile::EMPTY}}), _player(Player::PLAYERONE), _gameEnd(false),
-            _p1Captures(0), _p2Captures(0), _capturedCoords{}, _gameType(GameType::INVALID) {
+    Gomoku(std::unique_ptr<IGraphics>& graphics, std::unique_ptr<IAi>& ai) : _graphics(std::move(graphics)),
+                                                                             _ai(std::move(ai)), _board({BOARD_SIZE,
+                                                                                                         {BOARD_SIZE,
+                                                                                                          Tile::EMPTY}}),
+                                                                             _player(Player::PLAYERONE),
+                                                                             _gameEnd(false), _captures{0, 0},
+                                                                             _capturedCoords{},
+                                                                             _gameType(GameType::INVALID) {
         _moveDirections.emplace_back([](sf::Vector2i& v) { --v.x; }, [](sf::Vector2i& v) { ++v.x; });
         _moveDirections.emplace_back([](sf::Vector2i& v) { --v.y; }, [](sf::Vector2i& v) { ++v.y; });
         _moveDirections.emplace_back([](sf::Vector2i& v) { --v.x; --v.y; }, [](sf::Vector2i& v) { ++v.x; ++v.y; });
@@ -42,14 +45,12 @@ public:
     void gameLoop();
 
 private:
-    std::unique_ptr<IValidator> _validator;
     std::unique_ptr<IGraphics> _graphics;
     std::unique_ptr<IAi> _ai;
     std::vector<std::vector<Tile>> _board;
     Player _player;
     bool _gameEnd;
-    int _p1Captures;
-    int _p2Captures;
+    std::pair<int, int> _captures;
     std::vector<std::pair<sf::Vector2i, sf::Vector2i>> _capturedCoords;
     std::vector<std::pair<std::function<void(sf::Vector2i&)>, std::function<void(sf::Vector2i&)>>> _moveDirections;
     GameType _gameType;

@@ -174,14 +174,14 @@ void Graphics::setHeader(const std::string& text) {
             {static_cast<float>(_window->getSize().x) / 2.f, static_cast<float>(_window->getSize().y) / 20.f});
 }
 
-std::optional<ButtonId> Graphics::ButtonClick(const Vector2i& loc, bool firstScreen) const {
+std::optional<ButtonId> Graphics::ButtonClick(const Vector2i& loc, bool isGameSelect) const {
     if (_rulesButton.contains(loc)) {
         return ButtonId::RULES;
     }
     if (_suggestMoveButton.contains(loc)) {
         return ButtonId::SUGGEST_MOVE;
     }
-    if (not firstScreen) {
+    if (not isGameSelect) {
         return std::nullopt;
     }
     if (_singleplayerButton.contains(loc)) {
@@ -255,7 +255,7 @@ void Graphics::drawRules() {
     _window->display();
 }
 
-void Graphics::update(const std::vector<std::vector<Tile>>& board, int p1Captures, int p2Captures) {
+void Graphics::update(const std::vector<std::vector<Tile>>& board, const std::pair<int, int>& captures) {
     _window->clear(Color::White);
     _window->draw(_boardImage);
     if (_rulesActive) {
@@ -273,7 +273,7 @@ void Graphics::update(const std::vector<std::vector<Tile>>& board, int p1Capture
         }
     }
 
-    _captures.setString(fmt::format("P1 caps: {}\nP2 caps: {}", p1Captures, p2Captures));
+    _captures.setString(fmt::format("P1 caps: {}\nP2 caps: {}", captures.first, captures.second));
 
     _window->draw(_header);
     _window->draw(_rulesButton);

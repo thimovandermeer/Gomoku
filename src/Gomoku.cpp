@@ -14,7 +14,7 @@ void Gomoku::handleKeyPressed(const sf::Event& event) {
     if (event.key.code == sf::Keyboard::Key::Escape) {
         if (_graphics->getRulesActive()) {
             _graphics->setRulesActive(false);
-            _graphics->update(_board, _p1Captures, _p2Captures);
+            _graphics->update(_board, _captures);
         } else {
             _graphics->closeWindow();
         }
@@ -32,11 +32,11 @@ void Gomoku::handleMouseButtonPressed(const sf::Event& event) {
     if (_gameType == GameType::INVALID) {
         if (buttonClick.has_value() && buttonClick.value() == ButtonId::SINGLEPLAYER_GAME) {
             _gameType = GameType::SINGLEPLAYER;
-            _graphics->update(_board, _p1Captures, _p2Captures);
+            _graphics->update(_board, _captures);
         }
         if (buttonClick.has_value() && buttonClick.value() == ButtonId::MULTIPLAYER_GAME) {
             _gameType = GameType::MULTIPLAYER;
-            _graphics->update(_board, _p1Captures, _p2Captures);
+            _graphics->update(_board, _captures);
         }
         return;
     }
@@ -44,14 +44,14 @@ void Gomoku::handleMouseButtonPressed(const sf::Event& event) {
     if (buttonClick.has_value() && buttonClick.value() == ButtonId::RULES) {
         // toggle rules
         _graphics->setRulesActive(not _graphics->getRulesActive());
-        _graphics->update(_board, _p1Captures, _p2Captures);
+        _graphics->update(_board, _captures);
         return;
     } else if (buttonClick.has_value() && buttonClick.value() == ButtonId::SUGGEST_MOVE) {
         WARN("suggest move");
         // TODO: get AI suggestion
         Coordinate move{-1, -1};
         _graphics->setHeader(fmt::format("{}, {} is the suggested move", move.x, move.y));
-        _graphics->update(_board, _p1Captures, _p2Captures);
+        _graphics->update(_board, _captures);
         return;
     }
     if (_graphics->getRulesActive()) {
@@ -69,7 +69,7 @@ void Gomoku::handleMouseButtonPressed(const sf::Event& event) {
         _graphics->setHeader(fmt::format("Player {} has won!", winningPlayer));
     }
     // only redraw the board in this case because we don't change the board for other events
-    _graphics->update(_board, _p1Captures, _p2Captures);
+    _graphics->update(_board, _captures);
 }
 
 void Gomoku::gameLoop() {
@@ -93,13 +93,11 @@ void Gomoku::gameLoop() {
 //             do move
             WARN("after ai call");
             if (newMove.y != -1 && newMove.x != -1) {
-                sf::Vector2<int> move;
-                move.y = newMove.y;
-                move.x = newMove.x;
+                sf::Vector2i move{newMove.x, newMove.y};
                 WARN("We are going to do the move %i %i", move.y, move.x);
-                doMove({newMove.x, newMove.y});
+                doMove(move);
                 // assuming AI always does a valid move, board can be udpated
-                _graphics->update(_board, _p1Captures, _p2Captures);
+                _graphics->update(_board, _captures);
             }
         }
         std::optional<sf::Event> eventWrapper = _graphics->getEvent();
@@ -176,9 +174,9 @@ void Gomoku::capture(const sf::Vector2i& moveLocation) {
             _board[second.y][second.x] = Tile::EMPTY;
 
             if (_player == Player::PLAYERONE) {
-                ++_p1Captures;
+                ++_captures.first;
             } else {
-                ++_p2Captures;
+                ++_captures.second;
             }
         }
     }
@@ -191,9 +189,9 @@ void Gomoku::undoCapture() {
         _board[second.y][second.x] = toSetBack;
 
         if (_player == Player::PLAYERONE) {
-            --_p1Captures;
+            --_captures.first;
         } else {
-            --_p2Captures;
+            --_captures.second;
         }
     }
     _capturedCoords.clear();
@@ -225,7 +223,6 @@ void Gomoku::doMove(const sf::Vector2<int>& moveLocation) {
 }
 
 bool Gomoku::validateMove() {
-//	_state = _validator->validate(_board, coords, _player);
     NewValidator validator(_board, _player);
     return validator.validate();
 }
@@ -304,7 +301,7 @@ bool Gomoku::canBeCaptured(const sf::Vector2i& location) const {
 }
 
 bool Gomoku::hasGameEnded(const sf::Vector2i& placedStone) const {
-    if (_p1Captures >= 5 || _p2Captures >= 5) {
+    if (_captures.first >= 5 || _captures.second >= 5) {
         return true;
     }
     const Tile lastMoved = _player == Player::PLAYERONE ? Tile::P1 : Tile::P2;

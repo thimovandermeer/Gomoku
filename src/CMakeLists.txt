@@ -1,11 +1,11 @@
 target_sources(gomoku PRIVATE
 		Gomoku.cpp
 		Graphics.cpp
-		Validator.cpp
+#		Validator.cpp
 		logger.cpp
-		DoubleThreeCheck.cpp
+#		DoubleThreeCheck.cpp
         Utils.cpp
-		Capture.cpp
+#		Capture.cpp
 		NewValidator.cpp
 		AI/Ai.cpp
 		AI/boardState.cpp
