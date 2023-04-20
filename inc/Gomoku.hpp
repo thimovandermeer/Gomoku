@@ -22,6 +22,8 @@ class IAi;
 
 #define BOARD_SIZE 19
 
+typedef std::function<void(sf::Vector2i&)> move_f;
+
 class Gomoku {
 public:
     Gomoku() = delete;
@@ -52,7 +54,7 @@ private:
     bool _gameEnd;
     std::pair<int, int> _captures;
     std::vector<std::pair<sf::Vector2i, sf::Vector2i>> _capturedCoords;
-    std::vector<std::pair<std::function<void(sf::Vector2i&)>, std::function<void(sf::Vector2i&)>>> _moveDirections;
+    std::vector<std::pair<move_f, move_f>> _moveDirections;
     GameType _gameType;
 
     void handleKeyPressed(const sf::Event& event);
@@ -61,12 +63,12 @@ private:
     bool validateMove();
     void capture(const sf::Vector2i& moveLocation);
     void findCapture(const sf::Vector2i& moveLocation);
-    bool findCaptureInDirection(const std::function<void(sf::Vector2i&)>& move, const sf::Vector2i& moveLocation);
+    bool findCaptureInDirection(const move_f& move, const sf::Vector2i& moveLocation);
     void undoCapture();
     Coordinate aiMove();
 
     bool canBeCapturedInDirection(
-            const std::pair<std::function<void(sf::Vector2i&)>, std::function<void(sf::Vector2i&)>>& dir,
+            const std::pair<move_f, move_f>& dir,
             const sf::Vector2i& location) const;
     bool canBeCaptured(const sf::Vector2i& location) const;
     bool hasGameEnded(const sf::Vector2i& placedStone) const;

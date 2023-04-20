@@ -12,7 +12,7 @@ enum Seq {
     P2,
 };
 
-static bool isInBounds(const Coordinate& pos) {
+static bool isInBounds(const sf::Vector2i& pos) {
     return pos.x >= 0 && pos.x < BOARD_SIZE && pos.y >= 0 && pos.y < BOARD_SIZE;
 }
 
@@ -50,10 +50,8 @@ static bool Pattern_x_xx_(const std::vector<Seq>& sequence) {
            sequence[3] == sequence[4];
 }
 
-bool NewValidator::openThreeInDirection(
-        const std::pair<std::function<void(Coordinate&)>, std::function<void(Coordinate&)>>& moves,
-        const Coordinate& pos) {
-    Coordinate current = pos;
+bool NewValidator::openThreeInDirection(const std::pair<move_f, move_f>& moves, const sf::Vector2i& pos) {
+    sf::Vector2i current = pos;
     std::vector<Seq> sequence;
     // move 4 "left", in whatever of 4 directions it is
     for (int i = 0; i < 4; ++i) {
@@ -90,7 +88,7 @@ bool NewValidator::openThreeInDirection(
     return false;
 }
 
-int NewValidator::isOpenThree(const Coordinate& pos) {
+int NewValidator::isOpenThree(const sf::Vector2i& pos) {
     int foundForMove = 0;
     for (const auto& movers: _movers) {
         if (openThreeInDirection(movers, pos)) {

@@ -137,7 +137,7 @@ static bool isInBounds(const sf::Vector2i& pos) {
 }
 
 
-bool Gomoku::findCaptureInDirection(const std::function<void(sf::Vector2i&)>& move, const sf::Vector2i& moveLocation) {
+bool Gomoku::findCaptureInDirection(const move_f& move, const sf::Vector2i& moveLocation) {
     sf::Vector2i loc = moveLocation;
     Tile own = _player == Player::PLAYERONE ? Tile::P1 : Tile::P2;
     Tile toCapture = own == Tile::P1 ? Tile::P2 : Tile::P1;
@@ -227,8 +227,8 @@ bool Gomoku::validateMove() {
     return validator.validate();
 }
 
-static int totalInDirection(const std::vector<std::vector<Tile>>& board, const std::function<void(sf::Vector2i&)>& move,
-                            const sf::Vector2i& start, const Tile& val, std::vector<sf::Vector2i>& row) {
+static int totalInDirection(const std::vector<std::vector<Tile>>& board, const move_f& move, const sf::Vector2i& start,
+                            const Tile& val, std::vector<sf::Vector2i>& row) {
     sf::Vector2i checkPos = start;
     int ret = 0;
     for (int i = 0; i < 4; ++i) {
@@ -270,9 +270,7 @@ static bool capturableSequence(const std::vector<Tile>& seq) {
     return false;
 }
 
-bool Gomoku::canBeCapturedInDirection(
-        const std::pair<std::function<void(sf::Vector2i&)>, std::function<void(sf::Vector2i&)>>& dir,
-        const sf::Vector2i& location) const {
+bool Gomoku::canBeCapturedInDirection(const std::pair<move_f, move_f>& dir, const sf::Vector2i& location) const {
     auto current{location};
     dir.first(current);
     dir.first(current);
